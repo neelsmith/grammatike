@@ -6,7 +6,14 @@ This repository hosts a python package leveraging language models with `dspy` to
 
 1. Syntactic analysis must be consistent with morphological analysis.
 2. Analysis should be expressed in syntactic rather than semantic terms.
-3. 
+
+
+## Basic model
+
+SVO+.
+
+Citable passages. Canonically citable or scratch pad level (eg, homework).
+
 
 ## Implementation
 
@@ -15,6 +22,9 @@ In this scheme, analysis of a passage of Latin is expressed in two related struc
 
 - a list of verbal expressions, generally corresponding to clauses in an English translation
 - a token-level table capturing principal relations in a dependency graph
+
+Sentences are simply sequences of tokens that segment a text in syntactically coherent units.
+
 
 
 ### Table of verbal expressions
