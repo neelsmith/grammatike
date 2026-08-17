@@ -1,9 +1,11 @@
 # grammatike / γραμματικὴ τέχνη
 
 
-> *See release history.
+> *See [release history](https://github.com/neelsmith/grammatike/blob/main/releases.md)*.
 
 *grammatike* is a python package leveraging LLMs with [dspy](https://dspy.ai) to analyze the syntax of passages of ancient Greek.
+
+It offers an alternative analytic scheme to [Universal Dependencies](https://universaldependencies.org), designed to describe the syntax of ancient Greek in familiar terms that are convenient for research and teaching.
 
 
 ## Related work
