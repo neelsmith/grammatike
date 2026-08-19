@@ -1,3 +1,3 @@
 # Release history
 
-Work in planning stages only.
+Work currently in planning stages only.
