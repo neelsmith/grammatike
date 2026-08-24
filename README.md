@@ -43,4 +43,4 @@ See the [project issue tracker](https://github.com/neelsmith/grammatike/issues) 
 
 ## The analytic scheme
 
-The full syntactic scheme -- verbal expressions, relation labels, token types, and worked Greek examples for each -- is documented in `syntax_model.md`. It is adapted from `arsgrammatica`'s Latin scheme, with several Greek-specific extensions (for example, a three-way split of predicate-sense participles into `attributive`, `circumstantial`, and `indirect statement` verbal expressions, where Latin uses a single `dependent` value for all three).
+The full syntactic scheme -- verbal expressions, relation labels, token types, and worked Greek examples for each -- is documented in [`syntax_model.md`](https://github.com/neelsmith/grammatike/blob/main/syntax_model.md).
