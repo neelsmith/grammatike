@@ -24,6 +24,25 @@ classifiers = [
     "Topic :: Text Processing :: Linguistic",
 ]
 
+[project.optional-dependencies]
+# Needed to run `pytest` -- not a runtime dependency of the package itself,
+# so a plain `pip install -e .` (or installing from GitHub) does NOT pull
+# these in. Install with `pip install -e ".[test]"`.
+test = [
+    "pytest",
+    "python-dotenv",
+]
+# Everything `test` needs, plus the tools DEVELOPMENT.md/USAGE.md's other
+# workflows call for: `docs/build_api_docs.py` (pdoc), the `marimo/`
+# notebooks, and `optimize_gepa.py`/`model_bakeoff.py`'s GEPA runs.
+# Install with `pip install -e ".[dev]"`.
+dev = [
+    "pytest",
+    "python-dotenv",
+    "pdoc",
+    "marimo",
+]
+
 [project.urls]
 Homepage = "https://github.com/neelsmith/grammatike"
 Repository = "https://github.com/neelsmith/grammatike"

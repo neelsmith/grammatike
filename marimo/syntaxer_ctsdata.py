@@ -23,7 +23,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    > Read citable text from a delimited-text (CEX) file, then choose one or more passages to analyze together.
+    > Read citable text from a delimited-text (CEX) file, then choose one or more passages -- selecting them automatically segments them into sentences -- then choose which sentence(s) to analyze.
     """)
     return
 
@@ -35,7 +35,7 @@ def _(ctsdata_file_browser):
 
 
 @app.cell(hide_code=True)
-def _(analyze_button, ctsdata_error, ctsdata_rows, mo, passage_multiselect):
+def _(ctsdata_error, ctsdata_rows, mo, passage_multiselect):
     if ctsdata_error is not None:
         ctsdata_status = mo.callout(
             mo.md(f"Could not read this file as a `#!ctsdata` source: {ctsdata_error}"),
@@ -44,10 +44,10 @@ def _(analyze_button, ctsdata_error, ctsdata_rows, mo, passage_multiselect):
     elif not ctsdata_rows:
         ctsdata_status = mo.md("*Choose a source data file above to list its passages.*")
     else:
-        ctsdata_status = mo.md(f"## Passage selection\n\n*{len(ctsdata_rows)} passage(s) loaded from this file.*")
+        ctsdata_status = mo.md(f"## Passage selection\n\n*{len(ctsdata_rows)} passage(s) loaded from this file. Selecting one or more below automatically segments them into sentences.*")
 
     mo.vstack(
-        [ctsdata_status, mo.hstack([passage_multiselect, analyze_button], justify="start")]
+        [ctsdata_status, mo.hstack([passage_multiselect], justify="start")]
     )
     return
 
@@ -55,6 +55,25 @@ def _(analyze_button, ctsdata_error, ctsdata_rows, mo, passage_multiselect):
 @app.cell(hide_code=True)
 def _(rawpreview):
     rawpreview
+    return
+
+
+@app.cell(hide_code=True)
+def _(all_sentences, analyze_button, mo, sentence_multiselect):
+    if not all_sentences:
+        sentence_status = mo.md("*Select passage(s) above to automatically list their sentences.*")
+    else:
+        sentence_status = mo.md(f"## Sentence selection\n\n*{len(all_sentences)} sentence(s) found.*")
+
+    mo.vstack(
+        [sentence_status, mo.hstack([sentence_multiselect, analyze_button], justify="start")]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(sentence_rawpreview):
+    sentence_rawpreview
     return
 
 
@@ -163,7 +182,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## UI selections for analysis
+    ## UI selections for source passages
     """)
     return
 
@@ -217,9 +236,9 @@ def passage_label(row):
 @app.cell
 def _(ctsdata_rows, mo):
     # Menu for selecting one or more passages -- a multiselect rather than
-    # a dropdown, since analyze_sources() (see the Analysis cell below)
-    # accepts a list of sources and segments/analyzes them together, not
-    # just one at a time. Maps each label directly to a CtsDataRow, so
+    # a dropdown, since segment_sources() (see the Segmentation cell below)
+    # accepts a list of sources and segments them together, not just one at
+    # a time. Maps each label directly to a CtsDataRow, so
     # passage_multiselect.value is a list of the selected CtsDataRows (in
     # whatever order the widget itself reports them -- see selected_rows
     # below for why that order isn't used directly).
@@ -233,27 +252,97 @@ def _(ctsdata_rows, mo):
 
 @app.cell
 def _(ctsdata_rows, passage_multiselect):
-    # Always analyze selected passages in their original file order, not
+    # Always segment selected passages in their original file order, not
     # whatever order passage_multiselect.value happens to report them in
     # (multiselect widgets are free to report selections in click order) --
-    # segment_sources() (inside analyze_sources()) treats consecutive
-    # sources as potentially sharing a sentence, so an out-of-file-order
-    # source list could segment incorrectly or produce citations in a
-    # confusing order.
+    # segment_sources() treats consecutive sources as potentially sharing a
+    # sentence, so an out-of-file-order source list could segment
+    # incorrectly or produce citations in a confusing order.
     selected_rows = [row for row in ctsdata_rows if row in passage_multiselect.value]
     return (selected_rows,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Segmentation and sentence selection
+    """)
+    return
+
+
 @app.cell
-def _(mo, passage_multiselect):
+def _(CitedText, segment_sources, selected_rows):
+    # Segment every selected passage, together, automatically as soon as
+    # the passage selection is non-empty -- no separate button, since
+    # segmentation here is cheap enough (and useful enough as an immediate
+    # preview of what a passage selection contains) not to gate behind an
+    # extra click, unlike full SyntaxAnalysis below. Each selected row
+    # becomes its own CitedText source (same urnbase+citation concatenation
+    # the single-passage cell used to build) -- segment_sources() segments
+    # across all of them at once (a sentence may span two consecutive
+    # sources), in the file order selected_rows already established.
+    all_sentences = []
+    if selected_rows:
+        sources = [
+            CitedText(citation=row.urnbase + row.citation, text=row.text)
+            for row in selected_rows
+        ]
+        all_sentences = segment_sources(sources)
+    return (all_sentences,)
+
+
+@app.function
+# A readable (if approximate) surface rendering of one segmented Sentence's
+# tokens, for menu labels and previews -- puts a space before every token,
+# including punctuation and enclitics, same approximation pipeline.py's own
+# (private) _render_sentence_text() uses internally. Not meant to be exact;
+# tokengraph_to_text() is the faithful renderer, but it needs an *analyzed*
+# tokengraph (tokentype, relations, etc.), which a freshly-segmented
+# Sentence doesn't have yet.
+def sentence_preview_text(sentence):
+    return " ".join(tok.text for tok in sentence.tokens)
+
+
+@app.function
+# Format one menu entry as "<n>. <citation>: <first eight words>…" -- the
+# citation comes from the sentence's own first token (sentences drawn from
+# different selected passages carry different citations, unlike
+# syntaxer_workflow.py's single-source case), and the number keeps entries
+# unique even when two sentences share a citation or opening words.
+def sentence_menu_label(index, sentence):
+    preview_text = sentence_preview_text(sentence)
+    words = preview_text.split()
+    preview = " ".join(words[:8])
+    ellipsis = "…" if len(words) > 8 else ""
+    citation = sentence.tokens[0].citation if sentence.tokens else None
+    prefix = f"{citation}: " if citation else ""
+    return f"{index + 1}. {prefix}{preview}{ellipsis}"
+
+
+@app.cell
+def _(all_sentences, mo):
+    # Menu for selecting which segmented sentence(s) to analyze -- maps
+    # each label directly to that sentence's own index into all_sentences.
+    sentence_options = {
+        sentence_menu_label(i, sentence): i for i, sentence in enumerate(all_sentences)
+    }
+    sentence_multiselect = mo.ui.multiselect(
+        options=sentence_options,
+        label="*Sentence(s) to analyze*:",
+    )
+    return (sentence_multiselect,)
+
+
+@app.cell
+def _(mo, sentence_multiselect):
     # A new instance is created (and analyze_button.value resets to False)
-    # every time passage_multiselect's own selection changes, since this
-    # cell depends on passage_multiselect.value -- so changing the
+    # every time sentence_multiselect's own selection changes, since this
+    # cell depends on sentence_multiselect.value -- so changing the
     # selection always requires a fresh, deliberate Analyze click rather
     # than silently re-using a previous click.
     analyze_button = mo.ui.run_button(
-        label="Analyze",
-        disabled=not passage_multiselect.value,
+        label="Analyze selected sentences",
+        disabled=not sentence_multiselect.value,
     )
     return (analyze_button,)
 
@@ -283,18 +372,22 @@ def _(mo):
 
 
 @app.cell
-def _(selected_rows):
-    # A readable default filename base, drawn from every selected row's own
-    # urn (falling back to "analysis" if nothing's been selected yet) --
-    # the first row's urnbase plus every selected row's own citation, in
-    # file order. This can get long with many passages selected at once,
-    # but stays deterministic and collision-resistant; the extension is
-    # chosen separately.
-    filename_base = ""
-    if selected_rows:
-        filename_base = (selected_rows[0].urnbase or "") + "_".join(
-            row.citation or "" for row in selected_rows
-        )
+def _(sentences):
+    # A readable default filename base, drawn from every analyzed
+    # sentence's own citation (falling back to "analysis" if nothing's
+    # been analyzed yet), deduplicated and in analysis order -- unlike
+    # syntaxer_workflow.py's single passage, here `sentences` is already
+    # the *selected, analyzed* subset (see the Analysis cell below), not
+    # every sentence segmentation found -- so the filename reflects what's
+    # actually in the downloaded file. This can get long with many
+    # sentences selected across several citations, but stays deterministic
+    # and collision-resistant; the extension is chosen separately.
+    _citation_values = []
+    for _sentence in sentences:
+        _citation = _sentence.tokens[0].citation if _sentence.tokens else None
+        if _citation and _citation not in _citation_values:
+            _citation_values.append(_citation)
+    filename_base = "_".join(_citation_values)
     filename_base = "".join(c if c.isalnum() else "_" for c in filename_base).strip("_") or "analysis"
     return (filename_base,)
 
@@ -313,11 +406,6 @@ def _(analysis_text, filename_base, mo, results, save_extension):
     return (download_widget,)
 
 
-@app.cell
-def _():
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
@@ -327,22 +415,28 @@ def _(mo):
 
 
 @app.cell
-def _(CitedText, analyze_button, analyze_sources, selected_rows):
-    # Analyze every selected passage, together, when the Analyze button is
-    # clicked. analyze_button.value is True for exactly the one reactive
-    # cycle triggered by a click. Each selected row becomes its own
-    # CitedText source (same urnbase+citation concatenation the single-
-    # passage cell used to build) -- analyze_sources() segments across all
-    # of them at once (a sentence may span two consecutive sources) and
-    # returns one flat (sentences, results) pair spanning every selected
-    # passage, in the file order selected_rows already established.
+def _(all_sentences, analyze_button, analyze_with_retry, sentence_multiselect, validate):
+    # Run full syntax analysis only on the selected sentences, in original
+    # sentence order -- not everything segmentation found -- so you only
+    # spend an LM call on the sentence(s) you actually chose from the menu
+    # above. analyze_button.value is True for exactly the one reactive
+    # cycle triggered by a click. Mirrors pipeline.py's own
+    # analyze_sources(), which does the same segment-then-analyze-each-
+    # sentence loop over every selected passage; this is the same loop
+    # scoped to a subset of the sentences segmentation actually found.
     sentences, results = [], []
-    if analyze_button.value and selected_rows:
-        sources = [
-            CitedText(citation=row.urnbase + row.citation, text=row.text)
-            for row in selected_rows
-        ]
-        sentences, results = analyze_sources(sources)
+    if analyze_button.value and sentence_multiselect.value:
+        selected_indices = sorted(sentence_multiselect.value)
+        sentences = [all_sentences[i] for i in selected_indices]
+        for sentence in sentences:
+            result = analyze_with_retry(passage=sentence_preview_text(sentence), tokens=sentence.tokens)
+            problems = validate(sentence.tokens, result)
+            if problems:
+                first_id = sentence.tokens[0].id if sentence.tokens else "?"
+                print(f"Validation warnings (sentence starting at {first_id}):")
+                for p in problems:
+                    print(f"  - {p}")
+            results.append(result)
     return results, sentences
 
 
@@ -367,11 +461,6 @@ def _(results):
 
 
 @app.cell
-def _():
-    return
-
-
-@app.cell
 def _(lm):
     last_call = None
     if lm.history:
@@ -381,7 +470,6 @@ def _(lm):
 
 @app.cell
 def _(last_call):
-    #last_call = lm.history[-1]
     cost = last_call.get('cost')
     return (cost,)
 
@@ -399,9 +487,9 @@ def _(mo, selected_rows):
     # Show the raw, as-selected passage text (one block per selection, in
     # file order) as soon as the menu selection changes -- no LM call
     # involved, so this can update immediately and independently of
-    # whether Analyze has been clicked yet. Lets the reader browse a whole
-    # text passage-by-passage (the user's own stated goal of hunting for
-    # edge cases) without spending an LM call on every single selection.
+    # whether Segment has been clicked yet. Lets the reader browse a whole
+    # text passage-by-passage before spending an LM call on segmentation
+    # at all.
     import html as _html
 
     if selected_rows:
@@ -416,8 +504,36 @@ def _(mo, selected_rows):
 
 
 @app.cell
-def _(finaltokens, mo, selected_rows, tokengraph_to_text):
-    citation_label = ", ".join(row.citation for row in selected_rows)
+def _(all_sentences, mo, sentence_multiselect):
+    # Show the selected sentences' own segmented text (tokenization only,
+    # no syntax analysis) as soon as the sentence menu selection changes --
+    # no additional LM call beyond the segmentation that already ran, so
+    # this can update immediately and independently of whether Analyze has
+    # been clicked yet. Always shown in original sentence order, not
+    # whatever order the multiselect widget happens to report selections
+    # in.
+    import html as _html
+
+    _selected_indices = sorted(sentence_multiselect.value) if sentence_multiselect.value else []
+    if _selected_indices:
+        _blocks = [
+            f"## Sentence {i + 1}\n\n{_html.escape(sentence_preview_text(all_sentences[i]))}"
+            for i in _selected_indices
+        ]
+        sentence_rawpreview = mo.md("\n\n---\n\n".join(_blocks))
+    else:
+        sentence_rawpreview = mo.md("")
+    return (sentence_rawpreview,)
+
+
+@app.cell
+def _(finaltokens, mo, sentences, tokengraph_to_text):
+    _citation_values = []
+    for _sentence in sentences:
+        _citation = _sentence.tokens[0].citation if _sentence.tokens else None
+        if _citation and _citation not in _citation_values:
+            _citation_values.append(_citation)
+    citation_label = ", ".join(_citation_values)
     psghtml = mo.Html(
         f"<b><i>Reconstructed passage {citation_label}</i></b>: " + tokengraph_to_text(finaltokens)
     )
@@ -450,6 +566,9 @@ def _(finaltokens, results, sentences, serialize_analyses):
     # Flatten every sentence's own verbalunits into the one flat list
     # serialize_analyses()/write_analyses() expect, matching how
     # combined_tokengraph() already flattens tokengraph across sentences.
+    # `sentences` here is the selected-and-analyzed subset (see the
+    # Analysis cell above), so a saved file only ever covers what was
+    # actually analyzed, not every sentence segmentation found.
     all_verbalunits = [vu for result in results for vu in result.verbalunits]
     analysis_text, analysis_warnings = serialize_analyses(sentences, all_verbalunits, finaltokens)
     return analysis_text, analysis_warnings
@@ -480,9 +599,10 @@ def _(Path):
     sys.path.insert(0, str(Path(__file__).parent.parent))
 
     from grammatike import (
-        print_analysis,
-        analyze_sources,
         CitedText,
+        segment_sources,
+        analyze_with_retry,
+        validate,
         tokengraph_to_mermaid,
         combined_tokengraph,
         tokengraph_to_html,
@@ -490,20 +610,22 @@ def _(Path):
         tokengraph_to_depth_html,
         serialize_analyses,
         read_ctsdata,
-        max_subordination_depth
+        max_subordination_depth,
     )
 
     return (
         CitedText,
-        analyze_sources,
+        analyze_with_retry,
         combined_tokengraph,
         max_subordination_depth,
         read_ctsdata,
+        segment_sources,
         serialize_analyses,
         tokengraph_to_depth_html,
         tokengraph_to_html,
         tokengraph_to_mermaid,
         tokengraph_to_text,
+        validate,
     )
 
 

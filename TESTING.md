@@ -1,5 +1,17 @@
 # Testing without network access
 
+First time in a fresh checkout or virtual environment: `pytest` itself is a
+test-only dependency, not something a plain `pip install -e .` pulls in (see
+`pyproject.toml`'s `dependencies` vs. `[project.optional-dependencies]`), so
+install it explicitly before your first run:
+
+```bash
+pip install -e ".[test]"
+```
+
+(`.[dev]` instead of `.[test]` also pulls in `pdoc` and `marimo`, for
+`docs/build_api_docs.py` and the notebooks in `marimo/`.) Then:
+
 ```bash
 pytest
 ```

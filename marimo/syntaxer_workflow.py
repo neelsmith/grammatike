@@ -23,7 +23,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    *Enter values for a base URN, passage reference, and text to analyze, then submit the form with the `Analyze` button.*
+    *Enter values for a base URN, passage reference, and text to analyze, then submit the form with the `Analyze` button. Segmenting the text into sentences (and how many there turn out to be) is handled internally -- if you want to control segmentation yourself, enter one sentence per submission.*
     """)
     return
 
@@ -146,11 +146,14 @@ def _(mo):
 
 @app.cell
 def _(analyze_passage, input_form):
-    # Analyze text passage -- only once the form has been submitted at
-    # least once (input_form.value is None until then), and only again on
-    # each subsequent submission, not on every keystroke in the form's own
-    # inputs.
-    passage = ''
+    # Analyze the submitted text directly -- only once the form has been
+    # submitted at least once (input_form.value is None until then), and
+    # again on each subsequent submission, not on every keystroke in the
+    # form's own inputs. analyze_passage() segments the passage into
+    # sentences internally and analyzes each one in turn; there's no
+    # separate sentence-selection step here, so a passage with more than
+    # one sentence in it gets all of them analyzed together. If you want
+    # to control segmentation yourself, enter one sentence per submission.
     sentences, results = [], []
     if input_form.value and input_form.value.get("text_area"):
         passage = input_form.value["text_area"]
@@ -205,7 +208,7 @@ def _(mo):
 @app.cell
 def _(finaltokens, input_form, mo, tokengraph_to_text):
     citation_label = input_form.value["citation_context"] if input_form.value else ""
-    psghtml = mo.Html(f"<b><i>Passage {citation_label}</i></b>: " + tokengraph_to_text(finaltokens))
+    psghtml = mo.Html(f"<b><i>Analyzed passage {citation_label}</i></b>: " + tokengraph_to_text(finaltokens))
     return (psghtml,)
 
 
@@ -287,9 +290,7 @@ def _(mo):
 def _(citation_context, mo, text_area, urnbase):
     # All three inputs as one form -- marimo only updates input_form.value
     # (and so only re-triggers the Analysis cell below) when the whole form
-    # is submitted, never on every keystroke in an individual field. This
-    # is the same batch()/form() shape sketched out (but never wired up) in
-    # syntaxer.py's own commented-out UI cell.
+    # is submitted, never on every keystroke in an individual field.
     input_form = (
         mo.md(
             """
@@ -367,7 +368,15 @@ def _(Path):
 
     sys.path.insert(0, str(Path(__file__).parent.parent))
 
-    from grammatike import print_analysis, analyze_passage, tokengraph_to_mermaid, combined_tokengraph, tokengraph_to_html, tokengraph_to_text, tokengraph_to_depth_html, serialize_analyses
+    from grammatike import (
+        analyze_passage,
+        tokengraph_to_mermaid,
+        combined_tokengraph,
+        tokengraph_to_html,
+        tokengraph_to_text,
+        tokengraph_to_depth_html,
+        serialize_analyses,
+    )
 
     return (
         analyze_passage,

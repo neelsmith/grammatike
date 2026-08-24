@@ -26,7 +26,7 @@ pip install git+https://github.com/neelsmith/grammatike.git
 
 That installs whatever's currently on the `main` branch. Pin to a specific branch, tag, or commit by appending `@<ref>`, e.g. `pip install git+https://github.com/neelsmith/grammatike.git@wip` for the development branch, or `@v0.1.0` once a version is tagged. Either way, only `grammatike/` itself is installed as a package -- `dspy` and `pydantic` come along automatically as declared dependencies; the tests and other repo scripts are not part of the installed package and aren't needed to use it.
 
-Working on `grammatike` itself (this repo checked out locally) rather than depending on it from elsewhere: `pip install -e .` from the repo root installs it in editable mode, so source edits take effect immediately without reinstalling.
+Working on `grammatike` itself (this repo checked out locally) rather than depending on it from elsewhere: `pip install -e .` from the repo root installs it in editable mode, so source edits take effect immediately without reinstalling. Add `[test]` (or `[dev]`, which also covers `docs/build_api_docs.py` and the `marimo/` notebooks) to also install everything `pytest` needs -- `pip install -e ".[test]"` -- since those are test/tooling dependencies, not runtime ones, and a plain `pip install -e .` deliberately doesn't pull them in. See TESTING.md.
 
 
 ## Using `grammatike`
