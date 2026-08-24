@@ -123,6 +123,45 @@ def test_multiple_verbal_units_get_three_distinct_colors():
     assert "classDef vu3" not in diagram
 
 
+def test_sentence_connector_gets_its_own_dedicated_class():
+    """A token whose relationship1 is specifically 'sentence connector'
+    (e.g. γάρ tying this sentence back to the previous one) gets the
+    dedicated `sentenceconnector` classDef -- neon-yellow fill, strong
+    black border -- instead of its own verbal unit's vuN color, same
+    convention as the `implied` class for implied/elided tokens."""
+    from grammatike.models import TokenAnalysis
+
+    tg = [
+        TokenAnalysis(
+            id="t0", token="γάρ", tokentype="lexical",
+            relatedtoken1="t1", relationship1="sentence connector",
+        ),
+        TokenAnalysis(
+            id="t1", token="εἰμί", tokentype="lexical", verbalunitid="t1",
+            relatedtoken1="root", relationship1="unit verb",
+        ),
+        TokenAnalysis(id="t2", token=".", tokentype="punctuation"),
+    ]
+    diagram, warnings = tokengraph_to_mermaid(tg)
+    assert not warnings
+
+    assert (
+        "classDef sentenceconnector fill:#ffff00,stroke:#000000,"
+        "stroke-width:4px,color:#000000;" in diagram
+    )
+    connector_class_lines = [
+        line for line in diagram.splitlines() if line.strip().endswith("sentenceconnector;")
+    ]
+    assert len(connector_class_lines) == 1
+    assert connector_class_lines[0].split()[1] == "t0"
+
+    # t0 must not ALSO be claimed by any vuN class.
+    for line in diagram.splitlines():
+        if re.match(r"\s*class ([\w,]+) vu\d+;", line):
+            ids = line.split()[1].split(",")
+            assert "t0" not in ids
+
+
 def test_unrelated_token_gets_no_class():
     """οὖν and ὦ in aside_proton_men_oun_dei have no relation at all --
     must not be assigned any vuN/implied class."""

@@ -27,6 +27,13 @@ greek_syntax_dspy.analyze_passage) as a Mermaid flowchart.
   to display in reconstructed prose; the Mermaid diagram is where an
   implied token's presence (and what it stands in for, via its edges) is
   actually worth seeing.
+- A token whose `relationship1` is specifically "sentence connector" (e.g.
+  γάρ tying this sentence back to the previous one) similarly always gets
+  its own dedicated `sentenceconnector` node class -- neon-yellow fill,
+  strong black border -- instead of its own verbal unit's color, regardless
+  of which unit it's assigned to. rendering.py's tokengraph_to_html()/
+  tokengraph_to_depth_html() apply the equivalent inline style to the same
+  tokens, so the convention matches across both renderings.
 
 (These are the fields syntax_model.md calls `relation1`/`relationship1` and
 `relation2`/`relationship2` -- in models.py the "relation" side is named
@@ -179,7 +186,25 @@ def tokengraph_to_mermaid(
             if tok.id in node_ids and tok.tokentype in IMPLIED_TOKENTYPES
         ]
 
-        if colors or implied_ids:
+        # A token whose relationship1 is specifically "sentence connector"
+        # (e.g. γάρ tying this sentence back to the previous one -- see
+        # rendering.py's identical carve-out, and models.py's RelationLabel
+        # docstring for the distinction from the more general "connecting
+        # word") always gets its own dedicated `sentenceconnector` class --
+        # a neon-yellow fill with a strong black border -- instead of
+        # whatever color its own verbal unit would otherwise get,
+        # regardless of which unit it's assigned to. Excluded from
+        # implied_ids (in the never-really-expected case a token is somehow
+        # both) so the two classes never compete for the same node.
+        connector_ids = [
+            tok.id
+            for tok in tokengraph
+            if tok.id in node_ids
+            and tok.id not in implied_ids
+            and tok.relationship1 == "sentence connector"
+        ]
+
+        if colors or implied_ids or connector_ids:
             lines.append("")
             class_names = {}
             for i, (unit_id, (fill, stroke, text)) in enumerate(colors.items()):
@@ -195,6 +220,7 @@ def tokengraph_to_mermaid(
                     if tok.id in node_ids
                     and assignment.get(tok.id) == unit_id
                     and tok.id not in implied_ids
+                    and tok.id not in connector_ids
                 ]
                 if member_ids:
                     lines.append(f"    class {','.join(member_ids)} {class_names[unit_id]};")
@@ -204,6 +230,11 @@ def tokengraph_to_mermaid(
                     f"    classDef implied fill:{fill},stroke:{stroke},color:{text};"
                 )
                 lines.append(f"    class {','.join(implied_ids)} implied;")
+            if connector_ids:
+                lines.append(
+                    "    classDef sentenceconnector fill:#ffff00,stroke:#000000,stroke-width:4px,color:#000000;"
+                )
+                lines.append(f"    class {','.join(connector_ids)} sentenceconnector;")
 
     return "\n".join(lines), warnings
 

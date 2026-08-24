@@ -129,6 +129,23 @@ _NORMAL = "normal"
 # arsgrammatica documents for Latin "-que"/"-ve".
 _CONNECTING_RELATIONS = {"connecting word", "sentence connector"}
 
+# A token whose relationship1 is specifically "sentence connector" (not
+# "connecting word" -- e.g. γάρ tying a sentence back to the previous one,
+# vs. μέν/δέ coordinating within one) gets its own dedicated inline style
+# instead of the ordinary verbal-unit color: a bright, unmissable
+# "neon yellow" background with a strong black border, so a reader scanning
+# rendered HTML can immediately spot every sentence-connector without
+# tracing edges. This mirrors tokengraph_to_mermaid()'s identical
+# `sentenceconnector` node class -- see that module for the Mermaid side of
+# the same convention. Deliberately checked on relationship1 only (per the
+# scheme's own convention that a sentence-connecting particle's defining
+# relation is always its relationship1, never an overflow relationship2),
+# not the broader `_CONNECTING_RELATIONS` set above.
+_SENTENCE_CONNECTOR_STYLE = (
+    "background-color: #ffff00; color: #000000; "
+    "border: 3px solid #000000; border-radius: 3px; padding: 0 2px;"
+)
+
 
 def _classify(tok: TokenAnalysis, quote_counts: Dict[str, int]) -> str:
     """Return this token's join behavior: one of _LEFT, _RIGHT, _ENCLITIC,
@@ -252,6 +269,14 @@ def tokengraph_to_html(tokengraph: List[TokenAnalysis]) -> str:
     lexical or numeral token, since it's always a non-punctuation member of
     its own unit, but handled defensively rather than assumed).
 
+    A token whose relationship1 is specifically "sentence connector" (e.g.
+    γάρ tying this sentence back to the previous one) is a special case of
+    the connecting-word carve-out above: instead of the ordinary verbal-unit
+    color, it always gets `_SENTENCE_CONNECTOR_STYLE`'s neon-yellow
+    background and strong black border, regardless of which unit it's
+    assigned to -- the same override tokengraph_to_mermaid() applies to its
+    own `sentenceconnector` node class.
+
     An **implied/elided token** (models.py's IMPLIED_TOKENTYPES: "implied
     eimi", "implied repetition") is omitted entirely -- same as
     tokengraph_to_text() -- rather than rendered with any span: it has no
@@ -325,7 +350,15 @@ def _tokens_to_html(
             tok.relationship1 in _CONNECTING_RELATIONS
             or tok.relationship2 in _CONNECTING_RELATIONS
         )
-        if tok.tokentype in ("lexical", "numeral") or is_connecting_word:
+        is_sentence_connector = tok.relationship1 == "sentence connector"
+        if is_sentence_connector:
+            # Overrides the ordinary verbal-unit color entirely -- see
+            # _SENTENCE_CONNECTOR_STYLE's own comment. A sentence-connector
+            # token always satisfies is_connecting_word too (it's a member
+            # of _CONNECTING_RELATIONS), so without this branch it would
+            # otherwise fall into the plain unit-color case just below.
+            rendered = f'<span style="{_SENTENCE_CONNECTOR_STYLE}">{rendered}</span>'
+        elif tok.tokentype in ("lexical", "numeral") or is_connecting_word:
             unit_id = assignment.get(tok.id)
             color = colors.get(unit_id) if unit_id is not None else None
             if color is not None:

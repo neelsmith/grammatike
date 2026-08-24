@@ -313,6 +313,56 @@ def test_enclitic_connecting_word_gets_wrapped_too():
     assert tokengraph_to_html(tg) == f"{span0('ἠθέλησεν')} {span1('Ἑλένην')}{span0('τε')} {span1('ἤγαγεν')}."
 
 
+def test_sentence_connector_gets_neon_yellow_style_instead_of_unit_color():
+    """A token whose relationship1 is specifically 'sentence connector'
+    (e.g. γάρ tying this sentence back to the previous one) always gets
+    the dedicated neon-yellow/strong-black-border style, overriding
+    whatever color its own verbal unit would otherwise get -- unlike the
+    more general 'connecting word' relation, which just gets its unit's
+    ordinary color (see test_enclitic_connecting_word_gets_wrapped_too)."""
+    tg = [
+        _tok("t0", "ταύτην", "lexical", relatedtoken1="t2", relationship1="direct object"),
+        _tok(
+            "t1", "γάρ", "lexical",
+            relatedtoken1="t2", relationship1="sentence connector",
+        ),
+        _tok("t2", "ἡγοῦμαι", "lexical", verbalunitid="t2"),
+        _tok("t3", ".", "punctuation"),
+    ]
+    html_out = tokengraph_to_html(tg)
+    assert (
+        '<span style="background-color: #ffff00; color: #000000; '
+        'border: 3px solid #000000; border-radius: 3px; padding: 0 2px;">γάρ</span>'
+        in html_out
+    )
+    # ταύτην and ἡγοῦμαι, sharing t2's ordinary verbal-unit color, are
+    # unaffected by γάρ's special styling.
+    fill, _stroke, text_color = _VERBAL_UNIT_PALETTE[0]
+    assert f'<span style="background-color: {fill}; color: {text_color};">ταύτην</span>' in html_out
+    assert f'<span style="background-color: {fill}; color: {text_color};">ἡγοῦμαι</span>' in html_out
+
+
+def test_sentence_connector_style_matches_in_depth_html():
+    """tokengraph_to_depth_html() shares the same rendering core, so the
+    sentence-connector override applies there too, inside its own
+    indented <div> block."""
+    tg = [
+        _tok(
+            "t0", "γάρ", "lexical",
+            relatedtoken1="t1", relationship1="sentence connector",
+        ),
+        _tok("t1", "εἰμί", "lexical", verbalunitid="t1", relatedtoken1="root", relationship1="unit verb"),
+        _tok("t2", ".", "punctuation"),
+    ]
+    depth_html, warnings = tokengraph_to_depth_html(tg)
+    assert not warnings
+    assert (
+        '<span style="background-color: #ffff00; color: #000000; '
+        'border: 3px solid #000000; border-radius: 3px; padding: 0 2px;">γάρ</span>'
+        in depth_html
+    )
+
+
 def test_implied_tokens_are_omitted_from_html_entirely():
     """An implied/elided token (models.py's IMPLIED_TOKENTYPES) has no
     surface text of its own (tok.token is always None) -- tokengraph_to_html()
