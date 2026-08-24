@@ -1,0 +1,16 @@
+.env
+scratch/
+.venv/
+__pycache__/
+__marimo__/
+.DS_Store
+gepa_logs/
+# Left behind by `python -m build` / `pip install -e .` (packaging grammatike
+# for other projects -- see README.md's "Installing" section).
+build/
+dist/
+*.egg-info/
+# Written by calibrate_max_tokens.py; specific to whatever MODEL your own
+# .env points at, so it doesn't belong in version control -- re-run the
+# script after cloning rather than committing its output.
+grammatike/grammatike_token_budget_calibration.json

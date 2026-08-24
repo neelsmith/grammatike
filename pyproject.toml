@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grammatike"
+version = "0.1.0"
+description = "A DSPy-based analyzer of Ancient Greek syntax, using an alternative scheme to Universal Dependencies designed for research and teaching."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Neel Smith", email = "nsmith@holycross.edu" },
+]
+dependencies = [
+    "dspy>=3.0",
+    "pydantic>=2.0",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+[project.urls]
+Homepage = "https://github.com/neelsmith/grammatike"
+Repository = "https://github.com/neelsmith/grammatike"
+Issues = "https://github.com/neelsmith/grammatike/issues"
+
+[tool.setuptools.packages.find]
+include = ["grammatike*"]

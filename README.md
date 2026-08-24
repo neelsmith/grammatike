@@ -11,3 +11,36 @@ It offers an alternative analytic scheme to [Universal Dependencies](https://uni
 ## Related work
 
 `grammatike` shares similar goals and design principles with [arsgrammatica](https://github.com/neelsmith/arsgrammatica/tree/main), a parallel package for analyzing Latin syntax.
+
+
+Released under the [GNU General Public License v3 or later](LICENSE).
+
+
+## Installing
+
+To use `grammatike` from another project, install it straight from this repository (no PyPI account or release process needed):
+
+```sh
+pip install git+https://github.com/neelsmith/grammatike.git
+```
+
+That installs whatever's currently on the `main` branch. Pin to a specific branch, tag, or commit by appending `@<ref>`, e.g. `pip install git+https://github.com/neelsmith/grammatike.git@wip` for the development branch, or `@v0.1.0` once a version is tagged. Either way, only `grammatike/` itself is installed as a package -- `dspy` and `pydantic` come along automatically as declared dependencies; the tests and other repo scripts are not part of the installed package and aren't needed to use it.
+
+Working on `grammatike` itself (this repo checked out locally) rather than depending on it from elsewhere: `pip install -e .` from the repo root installs it in editable mode, so source edits take effect immediately without reinstalling.
+
+
+## Using `grammatike`
+
+- [USAGE.md](https://github.com/neelsmith/grammatike/blob/main/USAGE.md)
+- [TESTING.md](https://github.com/neelsmith/grammatike/blob/main/TESTING.md)
+- [OPTIMIZING.md](https://github.com/neelsmith/grammatike/blob/main/OPTIMIZING.md)
+- [BAKEOFF.md](https://github.com/neelsmith/grammatike/blob/main/BAKEOFF.md)
+- [DEVELOPMENT.md](https://github.com/neelsmith/grammatike/blob/main/DEVELOPMENT.md) -- how the above fit together into one development loop
+- [API documentation](https://neelsmith.github.io/grammatike/grammatike-api-docs.html)
+
+See the [project issue tracker](https://github.com/neelsmith/grammatike/issues) for known gaps and work in progress.
+
+
+## The analytic scheme
+
+The full syntactic scheme -- verbal expressions, relation labels, token types, and worked Greek examples for each -- is documented in `syntax_model.md`. It is adapted from `arsgrammatica`'s Latin scheme, with several Greek-specific extensions (for example, a three-way split of predicate-sense participles into `attributive`, `circumstantial`, and `indirect statement` verbal expressions, where Latin uses a single `dependent` value for all three).
