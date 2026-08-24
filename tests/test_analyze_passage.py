@@ -6,6 +6,12 @@ analyze_passage() wraps `passage` as one CitedText and returns exactly what
 analyze_sources() returns, (sentences, results), one entry per sentence
 segmentation finds -- no restriction to a single sentence.
 
+Segmentation itself is deterministic (segmentation.py, no LM call at all --
+see that module's own docstring), so DummyLM here only needs to supply
+canned answers for the SyntaxAnalysis call(s) analyze_passage() makes per
+sentence it actually finds -- not for segmentation, unlike an earlier
+version of this test file from when segmentation was itself LM-driven.
+
 Two things worth checking that nothing else in the suite exercises:
   - the single-sentence case still returns one-element (sentences, results)
     lists, with the right tokens/citation/verbalunits;
@@ -17,18 +23,6 @@ import dspy
 from dspy.utils.dummies import DummyLM
 
 from grammatike import analyze_passage
-
-_ONE_SENTENCE = {
-    "reasoning": "One sentence, four tokens.",
-    "sentences": [
-        {"tokens": [
-            {"id": "t0", "text": "τήν", "citation": "ex.1"},
-            {"id": "t1", "text": "θύραν", "citation": "ex.1"},
-            {"id": "t2", "text": "ἀνέῳξεν", "citation": "ex.1"},
-            {"id": "t3", "text": ".", "citation": "ex.1"},
-        ]},
-    ],
-}
 
 _ONE_SENTENCE_ANALYSIS = {
     "reasoning": "ἀνέῳξεν is the main verb; θύραν is its direct object.",
@@ -43,16 +37,6 @@ _ONE_SENTENCE_ANALYSIS = {
         {"id": "t2", "token": "ἀνέῳξεν", "tokentype": "lexical", "verbalunitid": "t2",
          "relatedtoken1": "root", "relationship1": "unit verb"},
         {"id": "t3", "token": ".", "tokentype": "punctuation"},
-    ],
-}
-
-_TWO_SENTENCES = {
-    "reasoning": "Two sentences.",
-    "sentences": [
-        {"tokens": [{"id": "t0", "text": "οὕτως", "citation": "ex.2"},
-                     {"id": "t1", "text": ".", "citation": "ex.2"}]},
-        {"tokens": [{"id": "t2", "text": "χαῖρε", "citation": "ex.2"},
-                     {"id": "t3", "text": ".", "citation": "ex.2"}]},
     ],
 }
 
@@ -79,7 +63,7 @@ _CHAIRE_ANALYSIS = {
 
 
 def test_analyze_passage_single_sentence_returns_one_sentence_and_result():
-    dspy.configure(lm=DummyLM([_ONE_SENTENCE, _ONE_SENTENCE_ANALYSIS]))
+    dspy.configure(lm=DummyLM([_ONE_SENTENCE_ANALYSIS]))
 
     sentences, results = analyze_passage("τήν θύραν ἀνέῳξεν.", citation="ex.1")
 
@@ -93,7 +77,7 @@ def test_analyze_passage_single_sentence_returns_one_sentence_and_result():
 
 
 def test_analyze_passage_multi_sentence_analyzes_every_sentence_in_order():
-    dspy.configure(lm=DummyLM([_TWO_SENTENCES, _HOUTOS_ANALYSIS, _CHAIRE_ANALYSIS]))
+    dspy.configure(lm=DummyLM([_HOUTOS_ANALYSIS, _CHAIRE_ANALYSIS]))
 
     sentences, results = analyze_passage("οὕτως. χαῖρε.", citation="ex.2")
 

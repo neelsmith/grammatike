@@ -40,7 +40,7 @@ def _sentence_from_tokengraph(tokengraph, citation=None):
     """Build a single Sentence spanning every real (non-implied) token in
     `tokengraph`, in order, with a uniform citation (None by default,
     matching how the gold fixtures -- built directly from canned
-    tokengraphs, not through segmentation_dspy.py -- never populate
+    tokengraphs, not through segmentation.py -- never populate
     Token.citation)."""
     return Sentence(
         tokens=[

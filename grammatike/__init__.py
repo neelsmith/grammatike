@@ -29,7 +29,7 @@ from .greek_syntax_dspy import (
     validate,
     print_analysis,
 )
-from .segmentation_dspy import SegmentPassage, segment_sources
+from .segmentation import segment_sources
 from .pipeline import analyze_sources, combined_tokengraph, analyze_passage
 from .serialization import serialize_analyses, write_analyses, read_analyses, split_analysis_by_sentence
 from .ctsdata import CtsDataRow, read_ctsdata
@@ -58,7 +58,6 @@ __all__ = [
     "analyze",
     "validate",
     "print_analysis",
-    "SegmentPassage",
     "segment_sources",
     "analyze_sources",
     "combined_tokengraph",

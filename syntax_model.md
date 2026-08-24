@@ -95,9 +95,23 @@ In the first phase of implementing our syntax model, we will record the followin
 
 
 
-- sentence-level coordination: true asyndeton is rare at the root level of a sentence: there is normally a connecting word  (coordinating conjunction or connecting particle) expressing the relation of the sentence to its predecessor. In this context, the connecting word takes the id of the verb for `relation1` with `sentence connector` for `relationship1`. Example: in ταύτην γὰρ ἐμαυτῷ μόνην ἡγοῦμαι σωτηρίαν, the particle γὰρ is a sentence connector implying that this sentence in some sense explains what precedes. γὰρ will take the id of the main verb ἡγοῦμαι for `relation1` with `sentence connector` for `relationship1`.
+- sentence-level coordination: true asyndeton is rare at the root level of a sentence: there is normally a connecting word  (coordinating conjunction or connecting particle) expressing the relation of the sentence to its predecessor. In this context, the connecting word takes the id of the verb for `relation1` with `sentence connector` for `relationship1`. Example: in ταύτην γὰρ ἐμαυτῷ μόνην ἡγοῦμαι σωτηρίαν, the particle γὰρ is a sentence connector implying that this sentence in some sense explains what precedes. γὰρ will take the id of the main verb ἡγοῦμαι for `relation1` with `sentence connector` for `relationship1`. The particle μὲν begins a list of items, further continued with additional itesm by the particle δέ, but sometimes these items are separated into distinct sentences. In that situation, μὲν or δέ will be identifed as sentence connectors. Examples: in this complete, terminated sentence:
 
-- other uses of *connecting words* (coordinating conjunctions or connecting particles):  connecting words may join pairs of nouns, adjectives, adverbs or whole clauses, or continue a series of any of those types of tokens. Examples: the connecting particle μὲν starts a series; δὲ continuies a series. Each takes the id of the first item as `relation1` and `connecting word` for `relationship1`. 
+περὶ μὲν οὖν τοῦ μεγέθους τῆς ζημίας ἅπαντας ὑμᾶς νομίζω τὴν αὐτὴν διάνοιαν ἔχειν, καὶ οὐδένα οὕτως ὀλιγώρως διακεῖσθαι, ὅστις οἴεται δεῖν συγγνώμης τυγχάνειν ἢ μικρᾶς ζημίας ἀξίους ἡγεῖται τοὺς τῶν τοιούτων ἔργων αἰτίους. 
+
+μὲν will have the id of the verb νομίζω as `relation1` and `sentence connector` as `relationship1`. In the sentence ἡγοῦμαι δέ,
+ὦ ἄνδρες, τοῦτό με δεῖν ἐπιδεῖξαι. the particle δέ will have the id of ἡγοῦμαι as `relation1` and `sentence connector` as `relationship1`. 
+
+- other uses of *connecting words* (coordinating conjunctions or connecting particles):  connecting words may join pairs of nouns, adjectives, adverbs or whole clauses, or continue a series of any of those types of tokens. There are several patterns to consider
+
+   - when a *single* connecting word joins a pair of elements, it should use the ID of the first connected element as `relation1` and the id of the second connected element as `relation2`. Examples: in ἐπιτηρῶν γὰρ τὴν θεράπαιναν τὴν εἰς τὴν ἀγορὰν βαδίζουσαν καὶ λόγους προσφέρων ἀπώλεσεν αὐτήν the independent verbal expression anchored on ἀπώλεσεν is the root with γὰρ as its sentence connector. The conjunction καὶ connects two participial expressions, ἐπιτηρῶν and προσφέρων. καὶ will have the ID of ἐπιτηρῶν as `relation1` and of προσφέρων as `relation2` with `connecting word` for both `relationship1` and `relationship2`.  In the sentence ἐγὼ τοίνυν ἐξ ἀρχῆς ὑμῖν ἅπαντα ἐπιδείξω τὰ ἐμαυτοῦ πράγματα, οὐδὲν παραλείπων, ἀλλὰ λέγων τἀληθῆ, the conjunction ἀλλὰ also connects two participial expressions. ἀλλὰ wil take the ID of παραλείπων as `relation1` and of λέγων as `relation2` with `connecting word` for both `relationship1` and `relationship2`.  In  οἰκίδιον ἔστι μοι διπλοῦν, ἴσα ἔχον τὰ ἄνω τοῖς κάτω κατὰ τὴν γυναικωνῖτιν καὶ κατὰ τὴν ἀνδρωνῖτιν, the conjunction καὶ connects two prepositional phrases,  κατὰ τὴν γυναικωνῖτιν and κατὰ τὴν ἀνδρωνῖτιν. καὶ wil have the ID of the first κατὰ for `relation1` and of the second κατὰ for `relation2`  with `connecting word` for both `relationship1` and `relationship2`.
+
+   - Greek can also use pairs of connecting words together. In this situation, we tag them a little differently. The first connector is given the id the connected item as `relation1` and the id of the next connecting word as `relation2`. The second connector takes the connected item as `relation1` and the preceding connector as `relation2`. One common pair is the postpositive particle τε and καὶ. Example: in ἐφύλαττόν τε καὶ προσεῖχον τὸν νοῦν the connecting words τε and καὶ join a pair of verbal expressions, ἐφύλαττόν and προσεῖχον. τε takes the ID of ἐφύλαττόν as `relation1` and the ID of καὶ as `relation2`, with `connecting word` for both `relationship1` and `relationship2`. καὶ has the ID of προσεῖχον for `relation1` and of τε for `relation2`, with `connecting word` for both `relationship1` and `relationship2`. 
+
+   Note that καὶ can also be repeated to form a connecting pair καὶ..καὶ. Example: in περὶ τούτου γὰρ μόνου τοῦ ἀδικήματος καὶ ἐν δημοκρατίᾳ καὶ ὀλιγαρχίᾳ ἡ αὐτὴ τιμωρία τοῖς ἀσθενεστάτοις πρὸς τοὺς τὰ μέγιστα δυναμένους ἀποδέδοται two nouns δημοκρατίᾳ and ὀλιγαρχίᾳ are joined by a pair of καὶ connectors. The first καὶ will have the ID of δημοκρατίᾳ as `relation1` and the id of the second καὶ as `relation2` with `connecting word` for both `relationship1` and `relationship2`.  The second καὶ will have the ID of ὀλιγαρχίᾳ as `relation1` and of the first καὶ as `relation2` with `connecting word` for both `relationship1` and `relationship2`.
+
+   - The same principle applies to *series* of connected items. In    οὔτε γὰρ συκοφαντῶν γραφάς με ἐγράψατο, οὔτε ἐκβάλλειν ἐκ τῆς πόλεως ἐπεχείρησεν, οὕτε ἰδίας δίκας ἐδικάζετο. three independent verbal expressions are coordinated by the negative connecting words οὔτε..οὔτε..οὔτε. The first οὔτε will have the ID of ἐγράψατο as `relation1` and the ID of the οὔτε as `relation2`. The second οὔτε will have the ID 
+   of ἐπεχείρησεν as `relation1` and the ID of the first οὔτε as `relation2`. The third οὔτε will have the ID of ἐδικάζετο as `relation1` and the ID of the second οὔτε as `relation2`. Similar patterns can appear when the connecting particle μὲν starts a series and δὲ continuies the series. 
 
 
 
@@ -168,55 +182,6 @@ ACC OF TIME:
 - exclamatory words: exclamatory words have the value `exclamation` for `relationship1`. They may be related to the verb of their verbal unit, but note tha the frequent exclamatory particle ὦ introducing a vocative will have the vocative noun or pronoun as `relation1`. Example: in ἐγὼ μὲν οὖν, ὦ ἄνδρες, οὐκ ἰδίαν ὑπὲρ ἐμαυτοῦ νομίζω ταύτην γενέσθαι τὴν τιμωρίαν, ἀλλ' ὑπὲρ τῆς πόλεως ἁπάσης the particle ὦ will have the ID of the vocative ἄνδρες as `relation1` with `exclamation` for `relationship1`.
 
 
-## Segementation into sentences
+## Segmentation into sentences
 
-There are two major challenges to segmenting a sequence of tokens into sentences.
-
-First, Greek's avoidance of asyndeton makes the distinction between successive coordinated main clauses and successive sentences difficult or even arbitrary at times.
-
-Second, the Unicode definition for Greek question mark has the worst decomposition in all of Unicode. The code point (U+037E) can be legally decomposed to x003B, the Latin alphabet semicolon, which has completely different semantics! The Greek high stop x0387 can also cause some difficulty. It can be decomposed to the infrequently used middle dot x00B7 (`·`), and may in practice be replaced with ASCII colon `:` in some editions. All of which means that punctuation is a less reliable guide to sentence segmentation than it might be.
-
-As a general rule, periods and question marks end a sentence, and prefer interpreting syntactically coherent high point/mid dot/colon divisions as end sentences too.
-
-
-Example: Lysias 1, 1.2, in this edition:
-
-> καὶ ταῦτα οὐκ ἂν εἴη μόνον παρ' ὑμῖν οὕτως ἐγνωσμένα, ἀλλ' ἐν ἁπάσῃ τῇ ̔Ελλάδι: περὶ τούτου γὰρ μόνου τοῦ ἀδικήματος καὶ ἐν δημοκρατίᾳ καὶ ὀλιγαρχίᾳ ἡ αὐτὴ τιμωρία τοῖς ἀσθενεστάτοις πρὸς τοὺς τὰ μέγιστα δυναμένους ἀποδέδοται, ὥστε τὸν χείριστον τῶν αὐτῶν τυγχάνειν τῷ βελτίστῳ: οὕτως, ὦ ἄνδρες, ταύτην τὴν ὕβριν ἅπαντες ἄνθρωποι δεινοτάτην ἡγοῦνται.
-
-should segment as 
-
-1. καὶ ταῦτα οὐκ ἂν εἴη μόνον παρ' ὑμῖν οὕτως ἐγνωσμένα, ἀλλ' ἐν ἁπάσῃ τῇ ̔Ελλάδι:
-2. περὶ τούτου γὰρ μόνου τοῦ ἀδικήματος καὶ ἐν δημοκρατίᾳ καὶ ὀλιγαρχίᾳ ἡ αὐτὴ τιμωρία τοῖς ἀσθενεστάτοις πρὸς τοὺς τὰ μέγιστα δυναμένους ἀποδέδοται, ὥστε τὸν χείριστον τῶν αὐτῶν τυγχάνειν τῷ βελτίστῳ:
-3. οὕτως, ὦ ἄνδρες, ταύτην τὴν ὕβριν ἅπαντες ἄνθρωποι δεινοτάτην ἡγοῦνται.
-
-Rationale: segmenting on period and semicolons leaves syntactially coherent units in each of the 3 divisions.
-
-Example: Lysias 1, 1.1, in this edition:
-
->  περὶ πολλοῦ ἂν ποιησαίμην, ὦ ἄνδρες, τὸ τοιούτους ὑμᾶς ἐμοὶ δικαστὰς περὶ τούτου τοῦ πράγματος γενέσθαι, οἷοίπερ ἂν ὑμῖν αὐτοῖς εἴητε τοιαῦτα πεπονθότες: εὖ γὰρ οἶδ' ὅτι, εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, ἥνπερ περὶ ὑμῶν αὐτῶν, οὐκ ἂν εἴη: ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη, ἀλλὰ πάντες ἂν περὶ τῶν τὰ τοιαῦτα ἐπιτηδευόντων τὰς ζημίας μικρὰς ἡγοῖσθε.
-
-should segment as 
-
-1. περὶ πολλοῦ ἂν ποιησαίμην, ὦ ἄνδρες, τὸ τοιούτους ὑμᾶς ἐμοὶ δικαστὰς περὶ τούτου τοῦ πράγματος γενέσθαι, οἷοίπερ ἂν ὑμῖν αὐτοῖς εἴητε τοιαῦτα πεπονθότες:
-
-2. εὖ γὰρ οἶδ' ὅτι, εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, ἥνπερ περὶ ὑμῶν αὐτῶν, οὐκ ἂν εἴη: ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη, ἀλλὰ πάντες ἂν περὶ τῶν τὰ τοιαῦτα ἐπιτηδευόντων τὰς ζημίας μικρὰς ἡγοῖσθε.
-
-Rationale breaking after the semicolon following πεπονθότες leaves syntactically coherent pieces but in sentence 2, breaking after the semicolon following εἴη would leave the subordinate phrase ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη, which goes with what precedes not with what follows, standing alone, so we continue the sentence.
-
-A further note: segmentation can includes sentences spanning citation boundaries. Example: the successive passages 1.3 and 1.4 in this edition:
-
-Lysias 1, 1.3:
-
-> περὶ μὲν οὖν τοῦ μεγέθους τῆς ζημίας ἅπαντας ὑμᾶς νομίζω τὴν αὐτὴν διάνοιαν ἔχειν, καὶ οὐδένα οὕτως ὀλιγώρως διακεῖσθαι, ὅστις οἴεται δεῖν συγγνώμης τυγχάνειν ἢ μικρᾶς ζημίας ἀξίους ἡγεῖται τοὺς τῶν τοιούτων ἔργων αἰτίους: ἡγοῦμαι δέ,
-
-Lysias 1, 1.4
-
-> ὦ ἄνδρες, τοῦτό με δεῖν ἐπιδεῖξαι, ὡς ἐμοίχευεν ̓Ερατοσθένης τὴν γυναῖκα τὴν ἐμὴν καὶ ἐκείνην τε διέφθειρε καὶ τοὺς παῖδας τοὺς ἐμοὺς ᾔσχυνε καὶ ἐμὲ αὐτὸν ὕβρισεν εἰς τὴν οἰκίαν τὴν ἐμὴν εἰσιών, καὶ οὔτε ἔχθρα ἐμοὶ καὶ ἐκείνῳ οὐδεμία ἦν πλὴν ταύτης, οὔτε χρημάτων ἕνεκα ἔπραξα ταῦτα, ἵνα πλούσιος ἐκ πένητος γένωμαι, οὔτε ἄλλου κέρδους οὐδενὸς πλὴν τῆς κατὰ τοὺς νόμους τιμωρίας.
-
-This should be segmented as 
-
-1. περὶ μὲν οὖν τοῦ μεγέθους τῆς ζημίας ἅπαντας ὑμᾶς νομίζω τὴν αὐτὴν διάνοιαν ἔχειν, καὶ οὐδένα οὕτως ὀλιγώρως διακεῖσθαι, ὅστις οἴεται δεῖν συγγνώμης τυγχάνειν ἢ μικρᾶς ζημίας ἀξίους ἡγεῖται τοὺς τῶν τοιούτων ἔργων αἰτίους:
-
-2. ἡγοῦμαι δέ, ὦ ἄνδρες, τοῦτό με δεῖν ἐπιδεῖξαι, ὡς ἐμοίχευεν ̓Ερατοσθένης τὴν γυναῖκα τὴν ἐμὴν καὶ ἐκείνην τε διέφθειρε καὶ τοὺς παῖδας τοὺς ἐμοὺς ᾔσχυνε καὶ ἐμὲ αὐτὸν ὕβρισεν εἰς τὴν οἰκίαν τὴν ἐμὴν εἰσιών, καὶ οὔτε ἔχθρα ἐμοὶ καὶ ἐκείνῳ οὐδεμία ἦν πλὴν ταύτης, οὔτε χρημάτων ἕνεκα ἔπραξα ταῦτα, ἵνα πλούσιος ἐκ πένητος γένωμαι, οὔτε ἄλλου κέρδους οὐδενὸς πλὴν τῆς κατὰ τοὺς νόμους τιμωρίας.
-
-Note that sentence 2 begins in passage 1.3 and ends in 1.4. This is not a problem when these two sections are analyzed together since tokens will always have unique ids within the context of their analysis and citation.
+Continous text passages are segemented into sentences for analysis. Sentences are terminated by a period or interrogative (either the Greek interrogative, U+037E, or its valid decomposition, the Latin semicolon `;`). Editors of texts are responsible for consistent punctuation of sentence boundareis. 

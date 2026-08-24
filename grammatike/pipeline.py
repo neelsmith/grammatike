@@ -2,19 +2,19 @@
 grammatike: orchestrates the two-stage pipeline over Greek passages. Greek
 analogue of arsgrammatica's pipeline.py.
 
-Orchestrates the two-stage pipeline: segmentation_dspy.py's citation-aware
-sentence/token segmentation, feeding greek_syntax_dspy.py's unmodified
-SyntaxAnalysis one sentence at a time.
+Orchestrates the two-stage pipeline: segmentation.py's deterministic,
+citation-aware sentence/token segmentation, feeding greek_syntax_dspy.py's
+unmodified SyntaxAnalysis one sentence at a time.
 
 Kept as its own module, separate from both stages, so neither stage needs
-to know the other exists -- segmentation_dspy.py doesn't import
+to know the other exists -- segmentation.py doesn't import
 greek_syntax_dspy.py or vice versa. This is the only place that does.
 """
 
 from typing import List, Tuple
 
 from .models import CitedText, Sentence
-from .segmentation_dspy import segment_sources
+from .segmentation import segment_sources
 from .greek_syntax_dspy import validate
 from .token_budget import analyze_with_retry
 

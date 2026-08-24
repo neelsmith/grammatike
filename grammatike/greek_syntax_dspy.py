@@ -10,8 +10,8 @@ This module covers only the analysis stage:
      its output actually exists in the input token list, so malformed
      output is easy to spot.
 
-Tokens are not produced here -- they come from an LLM-driven,
-citation-aware segmentation stage (segmentation_dspy.py, mirroring
+Tokens are not produced here -- they come from a deterministic,
+citation-aware segmentation stage (segmentation.py, mirroring
 arsgrammatica's own pipeline split). See pipeline.py for the module that
 ties the two stages together, including its analyze_passage() convenience
 wrapper.
@@ -262,6 +262,15 @@ class SyntaxAnalysis(dspy.Signature):
           expression here. Example: in 'ἔξεστι ἑλέσθαι', ἑλέσθαι has
           relatedtoken1 -> ἔξεστι, relationship1 'complementary
           infinitive'.
+        - modal particle: the particle ἄν has relatedtoken1 -> the id of
+          the verb of ITS OWN verbal unit (not some other unit's verb),
+          relationship1 = 'modal particle'. Example: in 'εἰ τὴν αὐτὴν
+          γνώμην περὶ τῶν ἄλλων ἔχοιτε, οὐκ ἂν εἴη, ὅστις οὐκ ἐπὶ τοῖς
+          γεγενημένοις ἀγανακτοίη' (two dependent verbal expressions plus
+          one independent verbal expression anchored to εἴη), ἂν has
+          relatedtoken1 -> εἴη, relationship1 'modal particle' -- εἴη is
+          ἂν's own verbal unit's verb, the same verb οὐκ (adverbial) also
+          relates to.
         - infinitive used as a noun: an infinitive can also function as an
           ordinary noun -- most often a verb's subject or object -- rather
           than anchoring an indirect statement or completing another verb.
@@ -287,20 +296,86 @@ class SyntaxAnalysis(dspy.Signature):
           word has relatedtoken1 -> the verb of THIS sentence (not the
           previous one), relationship1 = 'sentence connector'. Example: in
           'ταύτην γὰρ ἐμαυτῷ μόνην ἡγοῦμαι σωτηρίαν', γάρ has relatedtoken1
-          -> ἡγοῦμαι, relationship1 'sentence connector'.
+          -> ἡγοῦμαι, relationship1 'sentence connector'. The particle μέν
+          begins a list of items, continued by δέ -- ordinarily WITHIN one
+          sentence (see 'connecting word' below), but when the items are
+          instead split across distinct, separately terminated sentences,
+          μέν or δέ is a 'sentence connector' too, exactly like γάρ, rather
+          than a 'connecting word': it has relatedtoken1 -> the verb of
+          ITS OWN sentence, relationship1 'sentence connector', with no
+          relation at all to the other sentence's verb (a sentence
+          connector never records a cross-sentence link -- only "this
+          sentence's own verb"). Examples: in the complete, terminated
+          sentence 'περὶ μὲν οὖν τοῦ μεγέθους τῆς ζημίας ἅπαντας ὑμᾶς
+          νομίζω τὴν αὐτὴν διάνοιαν ἔχειν, καὶ οὐδένα οὕτως ὀλιγώρως
+          διακεῖσθαι, ὅστις οἴεται δεῖν συγγνώμης τυγχάνειν ἢ μικρᾶς
+          ζημίας ἀξίους ἡγεῖται τοὺς τῶν τοιούτων ἔργων αἰτίους.', μέν has
+          relatedtoken1 -> νομίζω, relationship1 'sentence connector'; in
+          the following, separate sentence 'ἡγοῦμαι δέ, ὦ ἄνδρες, τοῦτό με
+          δεῖν ἐπιδεῖξαι.', δέ has relatedtoken1 -> ἡγοῦμαι, relationship1
+          'sentence connector'.
         - connecting word: when a connecting word (coordinating conjunction
-          or connecting particle, e.g. καί, μέν, δέ) joins a pair or series
-          of nouns, adjectives, adverbs, or whole clauses WITHIN a
-          sentence, it has relatedtoken1 -> the id of the FIRST item in
-          the series or pair, relationship1 = 'connecting word' -- unlike
-          Latin's dual-linked 'coordinating conjunction', there is no
-          relatedtoken2/relationship2 pairing here, and this applies
-          uniformly whether the word starts a series (e.g. μέν) or
-          continues one (e.g. δέ): BOTH point to the same first item, not
-          to whichever item they happen to precede. Example: in 'ἐγὼ μὲν
-          ἄνω διῃτώμην, αἱ δὲ γυναῖκες κάτω', both μέν and δέ have
-          relatedtoken1 -> διῃτώμην (the first clause's own verb),
-          relationship1 'connecting word'.
+          or connecting particle, e.g. καί, ἀλλά, τε, μέν, δέ, οὔτε) joins
+          a pair or series of nouns, adjectives, adverbs, or whole clauses
+          WITHIN a sentence (as opposed to linking one sentence to the
+          previous one -- see 'sentence connector' above), it uses
+          relationship1 = 'connecting word', in one of three shapes:
+            - a SINGLE connecting word joining a pair: relatedtoken1 -> the
+              id of the FIRST connected item, relatedtoken2 -> the id of
+              the SECOND connected item, relationship2 = 'connecting word'
+              too (both fields on the one connecting-word token). Examples:
+              in 'ἐπιτηρῶν γὰρ τὴν θεράπαιναν τὴν εἰς τὴν ἀγορὰν
+              βαδίζουσαν καὶ λόγους προσφέρων ἀπώλεσεν αὐτήν', καί joins
+              the participles ἐπιτηρῶν and προσφέρων: relatedtoken1 ->
+              ἐπιτηρῶν, relatedtoken2 -> προσφέρων. In 'ἐγὼ τοίνυν ἐξ
+              ἀρχῆς ὑμῖν ἅπαντα ἐπιδείξω τὰ ἐμαυτοῦ πράγματα, οὐδὲν
+              παραλείπων, ἀλλὰ λέγων τἀληθῆ', ἀλλά joins the participles
+              παραλείπων and λέγων the same way. In 'οἰκίδιον ἔστι μοι
+              διπλοῦν, ἴσα ἔχον τὰ ἄνω τοῖς κάτω κατὰ τὴν γυναικωνῖτιν καὶ
+              κατὰ τὴν ἀνδρωνῖτιν', καί joins the two prepositional
+              phrases' own prepositions (the first and second κατά).
+            - a PAIRED correlative (e.g. postpositive τε...καί, or a
+              repeated καὶ...καί, or -- within a single sentence -- μέν
+              continued by δέ): each of the two connecting words has
+              relatedtoken1 -> ITS OWN adjacent connected item (not "the
+              first item" generically -- whichever item that particular
+              connector itself sits next to), and relatedtoken2 -> the id
+              of the OTHER connecting word (not another connected item).
+              Example: in 'ἐφύλαττόν τε καὶ προσεῖχον τὸν νοῦν', τε and
+              καί join the verbal expressions ἐφύλαττον and προσεῖχον: τε
+              has relatedtoken1 -> ἐφύλαττον, relatedtoken2 -> καί
+              (relationship2 'connecting word' too); καί has relatedtoken1
+              -> προσεῖχον, relatedtoken2 -> τε. Example (repeated καί):
+              in 'περὶ τούτου γὰρ μόνου τοῦ ἀδικήματος καὶ ἐν δημοκρατίᾳ
+              καὶ ὀλιγαρχίᾳ ἡ αὐτὴ τιμωρία τοῖς ἀσθενεστάτοις πρὸς τοὺς τὰ
+              μέγιστα δυναμένους ἀποδέδοται', the first καί has
+              relatedtoken1 -> δημοκρατίᾳ, relatedtoken2 -> the second
+              καί; the second καί has relatedtoken1 -> ὀλιγαρχίᾳ,
+              relatedtoken2 -> the first καί. Example (μέν...δέ within one
+              sentence, not split across sentences -- contrast 'sentence
+              connector' above): in 'ἐγὼ μὲν ἄνω διῃτώμην, αἱ δὲ γυναῖκες
+              κάτω', μέν has relatedtoken1 -> διῃτώμην (its own,
+              first clause's verb), relatedtoken2 -> δέ; δέ has
+              relatedtoken1 -> the second clause's own verb (here the
+              implied-repetition token standing in for the elided verb --
+              see 'implied repetition' below), relatedtoken2 -> μέν.
+            - a SERIES of 3 or more connected items: every connecting word
+              still has relatedtoken1 -> ITS OWN adjacent item, same as the
+              paired case; relatedtoken2 chains the series together --
+              the FIRST connecting word's relatedtoken2 -> the SECOND
+              connecting word's id (forward), and every LATER connecting
+              word's relatedtoken2 -> the id of the connecting word
+              immediately BEFORE it (backward) -- so the whole series is
+              still traceable by following relatedtoken2 links between the
+              connecting-word tokens, even though no single token names
+              every member. Example: in 'οὔτε γὰρ συκοφαντῶν γραφάς με
+              ἐγράψατο, οὔτε ἐκβάλλειν ἐκ τῆς πόλεως ἐπεχείρησεν, οὔτε
+              ἰδίας δίκας ἐδικάζετο.', the first οὔτε has relatedtoken1 ->
+              ἐγράψατο, relatedtoken2 -> the second οὔτε; the second οὔτε
+              has relatedtoken1 -> ἐπεχείρησεν, relatedtoken2 -> the first
+              οὔτε; the third οὔτε has relatedtoken1 -> ἐδικάζετο,
+              relatedtoken2 -> the second οὔτε. The same pattern can occur
+              with μέν starting a series and δέ continuing it.
           # TODO: syntax_model.md does not discuss καί's double life as
           # connective ("and") vs. adverb ("also"/"even"), unlike Latin's
           # explicit treatment of 'et'. By analogy: when καί modifies a
@@ -489,11 +564,24 @@ class SyntaxAnalysis(dspy.Signature):
           # 'Δημοσθένης ὁ ῥήτωρ ἦλθεν', ῥήτωρ has relatedtoken1 ->
           # Δημοσθένης, relationship1 'apposition' (and ὁ has
           # relatedtoken1 -> ῥήτωρ, relationship1 'article').
+        - exclamation: an exclamatory word has relatedtoken1 -> the id of
+          the verb of its own verbal unit, relationship1 = 'exclamation' --
+          EXCEPT the frequent exclamatory particle ὦ introducing a
+          vocative, which instead has relatedtoken1 -> the id of the
+          vocative noun/pronoun it introduces (not the verb directly).
+          Example: in 'ἐγὼ μὲν οὖν, ὦ ἄνδρες, οὐκ ἰδίαν ὑπὲρ ἐμαυτοῦ
+          νομίζω ταύτην γενέσθαι τὴν τιμωρίαν, ἀλλ' ὑπὲρ τῆς πόλεως
+          ἁπάσης', ὦ has relatedtoken1 -> ἄνδρες (the vocative it
+          introduces), relationship1 'exclamation' -- NOT relatedtoken1 ->
+          νομίζω directly, even though ἄνδρες's own relatedtoken1 does
+          point to νομίζω (relationship1 'vocative'). This same pattern
+          applies wherever ὦ introduces a vocative elsewhere in a passage,
+          e.g. 'πρῶτον μὲν οὖν, ὦ ἄνδρες, ...': ὦ -> ἄνδρες, 'exclamation'.
 
         Only assign relations described above. Leave relatedtoken/
         relationship fields unset for tokens with no relation of these
-        kinds -- not every token will have one (e.g. a connecting particle
-        like ὦ, or a bare accusative of respect not covered above). Use
+        kinds -- not every token will have one (e.g. a bare accusative of
+        respect not covered above). Use
         only the token ids given in the input `tokens` list, the sentinel
         'root', or a NEW id you create for an implied token (see below), in
         your output; never invent an id for anything else.

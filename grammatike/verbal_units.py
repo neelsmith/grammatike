@@ -518,69 +518,68 @@ def max_subordination_depth(
 
 def find_unanchored_coordinated_verbs(tokengraph: List[TokenAnalysis]) -> List[str]:
     """Heuristic sanity check, adapted from arsgrammatica's original, for a
-    class of live-LM mistake that Greek's simpler coordination scheme makes
-    harder to catch precisely -- see below for why this function's
-    mechanism had to change, not just its relation-label names.
+    class of live-LM mistake: a "connecting word" correctly marks a series
+    of coordinate CLAUSES, but one of the later clauses' own verb never
+    gets flagged as its own verbal-unit anchor (no `verbalunitid` set) --
+    e.g. an explicit verb the LM forgot to add to `verbalunits`, or a
+    missing 'implied repetition' token for an elided one.
 
-    Latin's version of this check exploited a specific feature of Latin's
-    "coordinating conjunction" relation: when it joined two verbal
-    expressions, BOTH conjuncts' ids were recorded, one on relatedtoken1
-    and one on relatedtoken2 of the same conjunction token. That gave a
-    precise, name-both-sides asymmetry check: if exactly one side was a
-    recognized verbal-unit anchor and the other wasn't, something was
-    almost certainly wrong.
-
-    Greek's analytic scheme has no such two-sided relation.
-    syntax_model.md's "connecting word" (the construction used when a
-    coordinating conjunction or particle "continue[s] a series" of nouns,
-    adjectives, adverbs, OR whole clauses) records only ONE id on
-    relation1: "the id of the first item" in the series -- never the id of
-    the item the connecting word itself is attached to. So a "connecting
-    word" that continues a series of CLAUSES points at the FIRST clause's
-    verb, and says nothing at all, anywhere in the graph, about which
-    token is the second (or later) clause's own verb. If an LM drops that
-    second verb's verbalunitid entirely -- the exact failure this check
-    was designed to catch in Latin (see gold_examples.py's
+    This check USED to need a coarse, imprecise proxy (does some OTHER
+    verbal expression merely exist at the same subordination depth as the
+    series' first member?), because an earlier version of syntax_model.md's
+    "connecting word" relation recorded only ONE id anywhere in the graph
+    -- "the id of the first item" in the series -- never the id of the
+    item the connecting word itself was attached to, so there was nothing
+    to name the second (or later) member directly and compare against.
+    (Latin's own "coordinating conjunction", by contrast, always named
+    both conjuncts, one on relatedtoken1 and one on relatedtoken2 of the
+    same token -- see gold_examples.py's
     coordinating_conjunction_dedit_et_dixit_esse fixture for the original,
-    Latin-side observation) -- there is no longer a second id anywhere to
-    compare against the first. That specific, precise check is not
-    portable; rebuilding it exactly would mean inventing data the schema
-    doesn't record.
+    Latin-side observation this function is adapted from.)
 
-    What this function checks instead, as the closest sound analogue:
-    "connecting word" (never "sentence connector" -- see below) relations
-    whose relation1 target IS a recognized verbal-unit anchor mark that
-    anchor as the first member of a coordinate clause series, which by
-    definition needs at least one more member. Coordinate clauses are
-    ordinarily syntactic peers, so this function looks for at least one
-    OTHER verbal expression at the SAME subordination depth (via
-    `compute_subordination_depths()`) as the first member -- a plausible
-    sibling. If none exists anywhere in `tokengraph`, that's flagged: the
-    series' other member(s) may be missing their own verbalunitid (an
-    explicit verb that was never flagged as an anchor, or a missing
-    'implied repetition' token for an elided one).
+    syntax_model.md's current "connecting word" rules (its "other uses of
+    connecting words" section) removed that limitation: every connecting
+    word now names ITS OWN adjacent item on relation1 (never generically
+    "the first item"), and relation2 completes the pair or series, in one
+    of three shapes -- see SyntaxAnalysis's own docstring for the full
+    account with worked examples:
+      - a single connecting word joining a pair: relation1 = the first
+        item's id, relation2 = the second item's id, both directly on the
+        SAME token.
+      - a paired correlative (τε...καί, a repeated καὶ...καί, or a
+        within-sentence μέν...δέ pair): each connector's own relation1 =
+        its own adjacent item, relation2 = the id of the OTHER connector.
+      - a 3+-member series (e.g. οὔτε...οὔτε...οὔτε): each connector's own
+        relation1 = its own adjacent item again; relation2 chains the
+        connectors together instead of naming an item -- the first
+        connector's relation2 points forward to the second connector, and
+        every later connector's relation2 points backward to the one
+        immediately before it.
 
-    "sentence connector" is deliberately excluded from this check:
-    syntax_model.md defines it as pointing at "the verb of THIS sentence"
-    -- i.e. the sentence it introduces, not a cross-clause pairing with
-    whatever precedes it ("we only mark the conjunction as related to the
-    explicit verb" -- no implied relation to a preceding sentence is ever
-    recorded). A sentence connector therefore never asserts "there are two
-    coordinate members" the way a series-continuing "connecting word"
-    does, so there is nothing here for it to be checked against.
+    This function exploits that added precision. It first groups every
+    "connecting word" token into its own coordinate chain: a lone token by
+    itself for the single-pair shape, or several tokens linked together
+    (by relation2 pointing from one connecting word to another) for a
+    correlative pair or series. For each chain, it collects every member's
+    own coordinated ITEM -- relation1 always, plus relation2 whenever that
+    ISN'T itself another connecting word in the same chain (i.e. the
+    direct second-item pointer the single-pair shape uses). If ANY item in
+    a chain turns out to be a recognized verbal-unit anchor, the whole
+    chain is coordinating CLAUSES (not nouns/adjectives/adverbs), so every
+    OTHER item in that chain is expected to be an anchor too -- one that
+    isn't gets named directly in a warning, the same precision Latin's
+    original dual-linked check had. A lone connecting word whose relation1
+    already points at an anchor but that has no relation2 at all (and no
+    correlative partner pointing back at it either) is flagged separately:
+    it looks like one half of a pair whose other half was never recorded.
 
-    This is a coarser, lower-precision check than Latin's: it can only
-    say "this coordinate series looks like it's missing a member
-    SOMEWHERE in the passage," not name the specific missing token the
-    way Latin's version could (Latin named the unanchored id directly).
-    It can also under-report: if `tokengraph` happens to contain some
-    OTHER, unrelated verbal expression at the same depth, this check will
-    treat that as a plausible sibling and stay silent even when the real
-    partner is genuinely missing.
-    # TODO: if a future revision of the tokengraph threads sentence/clause
-    # boundaries through to this module, this check could be tightened to
-    # look only within the same sentence rather than across the whole
-    # passage.
+    "sentence connector" is deliberately excluded from this check, exactly
+    as before: syntax_model.md defines it as pointing at "the verb of THIS
+    sentence" -- the sentence it introduces, not a cross-clause pairing
+    with whatever precedes it (a sentence connector never records a
+    cross-sentence link) -- so it never asserts "there are two coordinate
+    members" the way "connecting word" does, and there is nothing here for
+    it to be checked against.
 
     Returns a list of warning strings (empty if nothing looks suspicious),
     the same "degrade visibly, don't raise" convention every other
@@ -591,43 +590,76 @@ def find_unanchored_coordinated_verbs(tokengraph: List[TokenAnalysis]) -> List[s
     """
     by_id = {tok.id: tok for tok in tokengraph}
     anchor_ids = {tok.id for tok in tokengraph if tok.verbalunitid == tok.id}
-    depths, _depth_warnings = compute_subordination_depths(tokengraph)
-
-    # Every anchor that is the recorded "first item" of at least one
-    # "connecting word" relation -- i.e. every anchor that syntax_model.md
-    # says is the head of a coordinate clause series.
-    coordinated_first_items = {
-        tok.relatedtoken1
-        for tok in tokengraph
-        if tok.relationship1 == _CONNECTING_WORD
-        and tok.relatedtoken1 is not None
-        and tok.relatedtoken1 in anchor_ids
+    connecting_word_ids = {
+        tok.id for tok in tokengraph if tok.relationship1 == _CONNECTING_WORD
     }
 
-    warnings: List[str] = []
-    for first_id in sorted(coordinated_first_items):
-        first_depth = depths.get(first_id)
-        if first_depth is None:
-            # compute_subordination_depths() already warned about this
-            # anchor's own depth; piling on here wouldn't add information.
-            continue
+    # Union-find over connecting-word tokens: two are in the same
+    # coordinate chain if either's relatedtoken2 names the other -- the
+    # correlative-pair/series-chaining shape described above. A lone
+    # connecting word (the single-pair shape) ends up its own singleton
+    # chain.
+    parent: Dict[str, str] = {cid: cid for cid in connecting_word_ids}
 
-        has_sibling = any(
-            other_id != first_id and depths.get(other_id) == first_depth
-            for other_id in anchor_ids
-        )
-        if not has_sibling:
-            tok = by_id.get(first_id)
-            text = tok.token if tok is not None else first_id
+    def find(x: str) -> str:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    for cid in connecting_word_ids:
+        partner = by_id[cid].relatedtoken2
+        if partner in connecting_word_ids:
+            union(cid, partner)
+
+    chains: Dict[str, List[str]] = {}
+    for cid in connecting_word_ids:
+        chains.setdefault(find(cid), []).append(cid)
+
+    warnings: List[str] = []
+    for members in sorted(chains.values(), key=lambda m: sorted(m)):
+        items: List[Tuple[str, str]] = []  # (connecting word id, item id)
+        for cid in sorted(members):
+            tok = by_id[cid]
+            for target in (tok.relatedtoken1, tok.relatedtoken2):
+                if target is None or target == "root" or target in connecting_word_ids:
+                    continue
+                items.append((cid, target))
+
+        if not any(target in anchor_ids for _cid, target in items):
+            continue  # not a clause-coordinating chain -- nouns/adjectives/etc.
+
+        for cid, target in items:
+            if target in anchor_ids:
+                continue
+            item_tok = by_id.get(target)
+            text = item_tok.token if item_tok is not None else target
+            connector_tok = by_id[cid]
             warnings.append(
-                f"{first_id} ({text!r}) is the first item of a coordinate "
-                f"clause series (a 'connecting word' relation points at it) "
-                f"at subordination depth {first_depth}, but no other verbal "
-                "expression in the passage shares that depth -- the "
-                "clause(s) it coordinates with may be missing their own "
-                "verbalunitid/anchor (an explicit verb that wasn't flagged, "
-                "or a missing 'implied repetition' token if the verb was "
-                "elided)."
+                f"{cid} ({connector_tok.token!r}) is a 'connecting word' "
+                "coordinating clauses (another member of its chain points "
+                "at a recognized verbal-unit anchor), but its own item "
+                f"{target!r} ({text!r}) is not itself anchored -- it may "
+                "be missing its own verbalunitid (an explicit verb that "
+                "wasn't flagged, or a missing 'implied repetition' token "
+                "if the verb was elided)."
             )
+
+        if len(members) == 1:
+            only_cid = members[0]
+            tok = by_id[only_cid]
+            if tok.relatedtoken1 in anchor_ids and tok.relatedtoken2 is None:
+                warnings.append(
+                    f"{only_cid} ({tok.token!r}) is a 'connecting word' "
+                    "whose relation1 points at a recognized verbal-unit "
+                    "anchor, but it has no relation2 and no correlative "
+                    "partner -- it looks like one half of a coordinated "
+                    "pair whose other member was never recorded."
+                )
 
     return warnings

@@ -20,7 +20,7 @@ from dspy.utils.dummies import DummyLM
 
 from grammatike import analyze
 from grammatike.models import IMPLIED_TOKENTYPES, Token
-from grammatike.segmentation_dspy import segment_sources
+from grammatike.segmentation import segment_sources
 
 
 def tokens_from_canned_answer(canned_answer):
@@ -62,10 +62,13 @@ def run_gold_example(example):
 
 
 def run_segmentation_example(example):
-    """Run a SegmentationExample's sources through segment_sources(), with
-    DummyLM returning that example's canned_sentences. Returns the
-    resulting list of Sentence."""
-    dspy.configure(lm=DummyLM([example.canned_sentences]))
+    """Run a SegmentationExample's sources through segment_sources().
+
+    segment_sources() is a deterministic function now (see segmentation.py's
+    own module docstring) -- no DummyLM, no dspy.configure() at all needed
+    here; the point of this helper is just to keep the same call shape
+    test_segmentation_examples.py already uses. Returns the resulting list
+    of Sentence, to compare against example.expected_sentences."""
     return segment_sources(example.sources)
 
 

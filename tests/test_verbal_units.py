@@ -10,9 +10,11 @@ pointing at the OUTER clause, while the token itself belongs to the INNER
 clause it introduces; a genitive-absolute noun redirecting to its
 circumstantial participle instead of the verb it points at -- only really
 show up in genuine sentences. See verbal_units.py's module docstring for
-the reasoning, and its own docstring's explanation of why
-find_unanchored_coordinated_verbs() had to change mechanism (not just
-relation-label names) for Greek's "connecting word" scheme.
+the reasoning, and find_unanchored_coordinated_verbs()'s own docstring for
+how it exploits syntax_model.md's three "connecting word" shapes (single
+pair, paired correlative, 3+-member series) to name a missing coordinate
+verb precisely, rather than the coarser subordination-depth proxy an
+earlier version of that relation forced it to use.
 """
 
 import pytest
@@ -110,8 +112,20 @@ def test_unrelated_and_punctuation_tokens_get_none():
     tokengraph = _tokengraph("aside_proton_men_oun_dei")
     assignment = assign_verbal_units(tokengraph)
     assert assignment["t2"] is None  # οὖν: bare discourse particle, no relation at all
-    assert assignment["t4"] is None  # ὦ: vocative interjection, no relation of its own
     assert assignment["t19"] is None  # trailing "."
+
+
+def test_exclamation_o_resolves_through_the_vocative_it_introduces():
+    """ὦ (t4) has relatedtoken1 -> ἄνδρες (t5), relationship1 'exclamation'
+    -- per syntax_model.md's own rule that ὦ introducing a vocative takes
+    the vocative noun/pronoun as relation1, not the verb directly -- so it
+    should resolve through ἄνδρες's own 'vocative' relation to ἔστι (t16)
+    exactly like ἄνδρες itself, via the same generic fallback chase any
+    two-hop relation uses (see assign_verbal_units's own docstring)."""
+    tokengraph = _tokengraph("aside_proton_men_oun_dei")
+    assignment = assign_verbal_units(tokengraph)
+    assert assignment["t5"] == "t16"  # ἄνδρες -> ἔστι, via 'vocative'
+    assert assignment["t4"] == "t16"  # ὦ -> ἄνδρες -> ἔστι, via 'exclamation'
 
 
 def test_cycle_in_relations_does_not_infinite_loop():
@@ -276,18 +290,19 @@ def test_cycle_in_relations_leaves_depth_unresolved_with_warning():
 
 def test_correctly_coordinated_verbs_produce_no_warning():
     """διῃτώμην and the implied repetition of it are both anchors of their
-    own verbal unit, and both μέν and δέ point at διῃτώμην (the first
-    item of the series) per syntax_model.md's own convention -- a
-    plausible sibling exists at the same depth, so nothing is flagged."""
+    own verbal unit. μέν and δέ are a paired correlative: μέν's own
+    relation1 -> διῃτώμην, δέ's own relation1 -> t8_implied (each its OWN
+    clause's verb, chained to each other via relation2) -- both named
+    items are anchored, so nothing is flagged."""
     tokengraph = _tokengraph("implied_repetition_ego_men_ano_dietomen")
     assert find_unanchored_coordinated_verbs(tokengraph) == []
 
 
 def test_connecting_word_pointing_at_a_non_anchor_produces_no_warning():
     """καί in "εἶδον δύο ἄνδρας καὶ γʹ γυναῖκας" joins two nouns
-    (ἄνδρας/γυναῖκας), not two verbs -- its relatedtoken1 (ἄνδρας) is not
-    itself a verbal-unit anchor, so this must not be mistaken for a broken
-    coordinate-clause pair."""
+    (ἄνδρας/γυναῖκας), not two verbs -- neither its relatedtoken1 (ἄνδρας)
+    nor its relatedtoken2 (γυναῖκας) is a verbal-unit anchor, so this must
+    not be mistaken for a broken coordinate-clause pair."""
     tokengraph = _tokengraph("numeral_vs_lexical_eidon_duo_andras")
     assert find_unanchored_coordinated_verbs(tokengraph) == []
 
@@ -308,7 +323,11 @@ def test_flags_a_coordinated_verb_that_lost_its_own_anchor():
     relation) -- exactly what a live model might produce for an elided
     verb it failed to record as 'implied repetition' -- and confirm the
     resulting asymmetry (διῃτώμην still anchored, its coordinate partner
-    no longer) is flagged."""
+    no longer) is flagged BY NAME: δέ's own relation1 (t8_implied) is what
+    lost its anchor, so the warning names t8_implied directly -- the
+    precision the old, pre-relation2 version of this check couldn't
+    achieve (it could only point back at the series' first, already-fine
+    member, t3)."""
     tokengraph = _tokengraph("implied_repetition_ego_men_ano_dietomen")
     for tok in tokengraph:
         if tok.id == "t8_implied":
@@ -318,4 +337,35 @@ def test_flags_a_coordinated_verb_that_lost_its_own_anchor():
 
     warnings = find_unanchored_coordinated_verbs(tokengraph)
     assert len(warnings) == 1
-    assert "t3" in warnings[0]  # διῃτώμην, the first item of the series
+    assert "t8_implied" in warnings[0]  # the specific token that lost its anchor
+    assert "t6" in warnings[0]  # δέ, the connecting word naming it
+
+
+def test_flags_a_lone_connecting_word_missing_its_second_member_entirely():
+    """A single connecting word whose relation1 already points at a
+    recognized anchor, but with relation2 entirely unset and no
+    correlative partner naming it either, looks like one half of a
+    coordinated pair whose other half was never recorded at all -- a
+    distinct, cheaper-to-detect failure from the "recorded but unanchored"
+    case above."""
+    tokengraph = _tokengraph("circumstantial_fits_clause_ego_hapanta_epideixo")
+    for tok in tokengraph:
+        if tok.id == "t10":  # ἀλλά
+            tok.relatedtoken2 = None
+            tok.relationship2 = None
+
+    warnings = find_unanchored_coordinated_verbs(tokengraph)
+    assert len(warnings) == 1
+    assert "t10" in warnings[0]
+
+
+def test_paired_connecting_words_resolve_to_their_own_respective_clauses():
+    """μέν and δέ each belong to the clause they themselves introduce --
+    μέν to διῃτώμην's unit, δέ to t8_implied's unit -- not both to the
+    first clause the way an earlier version of syntax_model.md's
+    'connecting word' relation (before relation2 named the correlative
+    partner) would have resolved them."""
+    tokengraph = _tokengraph("implied_repetition_ego_men_ano_dietomen")
+    assignment = assign_verbal_units(tokengraph)
+    assert assignment["t1"] == "t3"  # μέν -> διῃτώμην's own unit
+    assert assignment["t6"] == "t8_implied"  # δέ -> t8_implied's own unit

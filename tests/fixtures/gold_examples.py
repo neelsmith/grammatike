@@ -200,7 +200,15 @@ _DIRECT_QUOTE_HINA_SU_GE_ANSWER = {
 # verbal expression δεῖ of type aside") AND for the *vocative* relation --
 # reusing the same sentence rather than syntax_model.md's separate, purely
 # illustrative vocative example, since ἄνδρες/ὦ appear in this sentence
-# too and a relation is needed here regardless. διηγήσασθαι is δεῖ's
+# too and a relation is needed here regardless. Also now doubles as the
+# *exclamation* example: syntax_model.md's own worked example for that
+# relation is a different sentence ("ἐγὼ μὲν οὖν, ὦ ἄνδρες, οὐκ ἰδίαν
+# ὑπὲρ ἐμαυτοῦ νομίζω..."), but its stated rule -- "the frequent
+# exclamatory particle ὦ introducing a vocative will have the vocative
+# noun or pronoun as relation1" -- applies identically to this sentence's
+# own ὦ ἄνδρες, so ὦ here gets relatedtoken1 -> ἄνδρες (NOT -> ἔστι
+# directly), relationship1 'exclamation', rather than being left
+# unrelated as in this fixture's pre-'exclamation' version. διηγήσασθαι is δεῖ's
 # *complementary infinitive*, per the general rule for δεῖ/βούλομαι/
 # ἐθέλω-type verbs, NOT its own verbal expression. γάρ is treated as a
 # sentence connector for the aside's own little clause (by the same logic
@@ -218,7 +226,9 @@ _ASIDE_PROTON_MEN_OUN_DEI_ANSWER = {
         "ἔστι is the independent main verb (root, intransitive, "
         "existential 'there is'), with οἰκίδιον as its subject, μοι "
         "dative, διπλοῦν attributive to οἰκίδιον, πρῶτον adverbial, ἄνδρες "
-        "vocative, and μέν a sentence connector. δεῖ anchors an 'aside' "
+        "vocative (relating to ἔστι), and ὦ an exclamation relating to "
+        "the vocative ἄνδρες it introduces (not to ἔστι directly). μέν a "
+        "sentence connector. δεῖ anchors an 'aside' "
         "verbal expression (intransitive, impersonal 'it is necessary'), "
         "relating back to ἔστι via 'aside'; γάρ is its own sentence "
         "connector; καί is adverbial, emphasizing the single word "
@@ -237,7 +247,8 @@ _ASIDE_PROTON_MEN_OUN_DEI_ANSWER = {
          "relatedtoken1": "t16", "relationship1": "sentence connector"},
         {"id": "t2", "token": "οὖν", "tokentype": "lexical", "lemma": "οὖν"},
         {"id": "t3", "token": ",", "tokentype": "punctuation"},
-        {"id": "t4", "token": "ὦ", "tokentype": "lexical", "lemma": "ὦ"},
+        {"id": "t4", "token": "ὦ", "tokentype": "lexical", "lemma": "ὦ",
+         "relatedtoken1": "t5", "relationship1": "exclamation"},
         {"id": "t5", "token": "ἄνδρες", "tokentype": "lexical", "lemma": "ἀνήρ",
          "relatedtoken1": "t16", "relationship1": "vocative"},
         {"id": "t6", "token": ",", "tokentype": "punctuation"},
@@ -497,7 +508,8 @@ _CIRCUMSTANTIAL_FITS_CLAUSE_EGO_HAPANTA_ANSWER = {
         "circumstantial participles (transitive active) relating to ἐγώ "
         "via 'circumstantial participle', with οὐδέν and τἀληθῆ as their "
         "respective direct objects; ἀλλά is a connecting word joining the "
-        "two participial clauses, pointing at the first (παραλείπων)."
+        "two participial clauses, with relation1 -> παραλείπων (the "
+        "first) and relation2 -> λέγων (the second)."
     ),
     "verbalunits": [
         {"id": "t2", "syntactic_type": "independent", "semantic_type": "transitive active"},
@@ -524,7 +536,8 @@ _CIRCUMSTANTIAL_FITS_CLAUSE_EGO_HAPANTA_ANSWER = {
          "verbalunitid": "t8", "relatedtoken1": "t0", "relationship1": "circumstantial participle"},
         {"id": "t9", "token": ",", "tokentype": "punctuation"},
         {"id": "t10", "token": "ἀλλά", "tokentype": "lexical", "lemma": "ἀλλά",
-         "relatedtoken1": "t8", "relationship1": "connecting word"},
+         "relatedtoken1": "t8", "relationship1": "connecting word",
+         "relatedtoken2": "t11", "relationship2": "connecting word"},
         {"id": "t11", "token": "λέγων", "tokentype": "lexical", "lemma": "λέγω",
          "verbalunitid": "t11", "relatedtoken1": "t0", "relationship1": "circumstantial participle"},
         {"id": "t12", "token": "τἀληθῆ", "tokentype": "lexical", "lemma": "ἀληθής",
@@ -689,6 +702,75 @@ _COMPLEMENTARY_INFINITIVE_EXESTI_ANSWER = {
         {"id": "t1", "token": "ἑλέσθαι", "tokentype": "lexical", "lemma": "αἱρέω",
          "relatedtoken1": "t0", "relationship1": "complementary infinitive"},
         {"id": "t2", "token": ".", "tokentype": "punctuation"},
+    ],
+}
+
+
+# ---------------------------------------------------------------------------
+# "εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, οὐκ ἂν εἴη."
+#   t0 εἰ  t1 τήν  t2 αὐτήν  t3 γνώμην  t4 περί  t5 τῶν  t6 ἄλλων
+#   t7 ἔχοιτε  t8 ,  t9 οὐκ  t10 ἄν  t11 εἴη  t12 .
+#
+# syntax_model.md's own worked example for the *modal particle* relation:
+# "the sentence εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, οὐκ ἂν εἴη,
+# ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη has two dependent verbal
+# expressions, and one independent verbal expression anchored to εἴη. The
+# particle ἂν will have the ID of εἴη for relation1 with modal particle
+# for relationship1." Truncated here to the first two clauses (dropping
+# the trailing ὅστις-relative clause) so this stays a self-contained,
+# fully-specifiable sentence: that dropped clause is a generalizing
+# relative ("whoever...") whose ὅστις has no explicit antecedent to point
+# at, a construction syntax_model.md doesn't otherwise document a relation
+# for -- see this file's own module docstring re: fixtures that are
+# necessarily adapted, rather than transcribed verbatim, when the source's
+# own example runs into an unspecified construction elsewhere in it. The
+# two clauses kept here are still real, unaltered syntax_model.md text,
+# not invented.
+# ---------------------------------------------------------------------------
+
+_MODAL_PARTICLE_EI_TEN_AUTEN_GNOMEN_ANSWER = {
+    "reasoning": (
+        "ἔχοιτε is a dependent verb (optative, 'you might hold/have', "
+        "transitive active) introduced by the subordinating conjunction "
+        "εἰ ('if'), which itself points to the sentence's independent "
+        "verb εἴη. γνώμην is ἔχοιτε's direct object (τήν its article, "
+        "αὐτήν attributive 'the same'); περὶ τῶν ἄλλων is an attributive "
+        "prepositional phrase on γνώμην ('opinion concerning other "
+        "things'), τῶν the article for ἄλλων, ἄλλων the object of περί. "
+        "εἴη (optative of εἰμί, 'would be') is the independent main verb "
+        "(root, linking verb); οὐκ negates it (adverbial); ἄν marks it as "
+        "a potential/hypothetical statement, relating to εἴη via the "
+        "'modal particle' relation."
+    ),
+    "verbalunits": [
+        {"id": "t7", "syntactic_type": "dependent", "semantic_type": "transitive active"},
+        {"id": "t11", "syntactic_type": "independent", "semantic_type": "linking verb"},
+    ],
+    "tokengraph": [
+        {"id": "t0", "token": "εἰ", "tokentype": "lexical", "lemma": "εἰ",
+         "relatedtoken1": "t11", "relationship1": "subordinating conjunction"},
+        {"id": "t1", "token": "τήν", "tokentype": "lexical", "lemma": "ὁ",
+         "relatedtoken1": "t3", "relationship1": "article"},
+        {"id": "t2", "token": "αὐτήν", "tokentype": "lexical", "lemma": "αὐτός",
+         "relatedtoken1": "t3", "relationship1": "attributive"},
+        {"id": "t3", "token": "γνώμην", "tokentype": "lexical", "lemma": "γνώμη",
+         "relatedtoken1": "t7", "relationship1": "direct object"},
+        {"id": "t4", "token": "περί", "tokentype": "lexical", "lemma": "περί",
+         "relatedtoken1": "t3", "relationship1": "attributive"},
+        {"id": "t5", "token": "τῶν", "tokentype": "lexical", "lemma": "ὁ",
+         "relatedtoken1": "t6", "relationship1": "article"},
+        {"id": "t6", "token": "ἄλλων", "tokentype": "lexical", "lemma": "ἄλλος",
+         "relatedtoken1": "t4", "relationship1": "object of preposition"},
+        {"id": "t7", "token": "ἔχοιτε", "tokentype": "lexical", "lemma": "ἔχω",
+         "verbalunitid": "t7", "relatedtoken1": "t0", "relationship1": "unit verb"},
+        {"id": "t8", "token": ",", "tokentype": "punctuation"},
+        {"id": "t9", "token": "οὐκ", "tokentype": "lexical", "lemma": "οὐ",
+         "relatedtoken1": "t11", "relationship1": "adverbial"},
+        {"id": "t10", "token": "ἄν", "tokentype": "lexical", "lemma": "ἄν",
+         "relatedtoken1": "t11", "relationship1": "modal particle"},
+        {"id": "t11", "token": "εἴη", "tokentype": "lexical", "lemma": "εἰμί",
+         "verbalunitid": "t11", "relatedtoken1": "root", "relationship1": "unit verb"},
+        {"id": "t12", "token": ".", "tokentype": "punctuation"},
     ],
 }
 
@@ -882,7 +964,15 @@ _DEMONSTRATIVE_TAUTEN_ELABON_ANSWER = {
 #
 # syntax_model.md's own worked example for the substantive use of a
 # pronoun: "the pronoun ἐκείνη is the subject of ἀπηλλάγη; it will have
-# the id of ἀπηλλάγη as relation1 and subject for relationship1."
+# the id of ἀπηλλάγη as relation1 and subject for relationship1." μέν here
+# is sentence-initial in a complete, separately terminated sentence, with
+# no partner δέ (or further item) anywhere in this same sentence -- per
+# syntax_model.md's "sentence-level coordination" clarification (the same
+# shape as its own "περὶ μὲν οὖν τοῦ μεγέθους..."/"ἡγοῦμαι δέ..." example
+# pair, two distinct sentences each carrying one half of a μέν...δέ list),
+# that makes μέν a 'sentence connector' here, not a 'connecting word' --
+# the item it would otherwise pair with is presumably carried by a
+# following sentence outside this fixture's own scope.
 # ---------------------------------------------------------------------------
 
 _SUBSTANTIVE_PRONOUN_EKEINE_MEN_ANSWER = {
@@ -890,7 +980,9 @@ _SUBSTANTIVE_PRONOUN_EKEINE_MEN_ANSWER = {
         "ἀπηλλάγη is the independent main verb (root, transitive "
         "passive, 'was released/dismissed'), with ἐκείνη (substantive "
         "use of the pronoun, standing in for a noun) as its subject; μέν "
-        "is a connecting word, sentence-initial, pointing at ἀπηλλάγη."
+        "is sentence-initial with no partner δέ in this same, complete "
+        "sentence, so it is a sentence connector -> ἀπηλλάγη, not a "
+        "connecting word."
     ),
     "verbalunits": [
         {"id": "t2", "syntactic_type": "independent", "semantic_type": "transitive passive"},
@@ -899,7 +991,7 @@ _SUBSTANTIVE_PRONOUN_EKEINE_MEN_ANSWER = {
         {"id": "t0", "token": "ἐκείνη", "tokentype": "lexical", "lemma": "ἐκεῖνος",
          "relatedtoken1": "t2", "relationship1": "subject"},
         {"id": "t1", "token": "μέν", "tokentype": "lexical", "lemma": "μέν",
-         "relatedtoken1": "t2", "relationship1": "connecting word"},
+         "relatedtoken1": "t2", "relationship1": "sentence connector"},
         {"id": "t2", "token": "ἀπηλλάγη", "tokentype": "lexical", "lemma": "ἀπαλλάττω",
          "verbalunitid": "t2", "relatedtoken1": "root", "relationship1": "unit verb"},
         {"id": "t3", "token": ".", "tokentype": "punctuation"},
@@ -1045,8 +1137,9 @@ _DATIVE_VERB_LINKED_ECHTHRA_ANSWER = {
         "ἦν is the independent main verb (root, intransitive, "
         "existential 'there was'), with ἔχθρα as its subject (οὐδεμία "
         "attributive, 'no enmity'). ἐμοί and ἐκείνῳ are both dative, "
-        "depending on ἦν; καί is a connecting word joining them, pointing "
-        "at the first (ἐμοί)."
+        "depending on ἦν; καί is a connecting word joining them, with "
+        "relation1 -> ἐμοί (the first) and relation2 -> ἐκείνῳ (the "
+        "second)."
     ),
     "verbalunits": [
         {"id": "t5", "syntactic_type": "independent", "semantic_type": "intransitive"},
@@ -1057,7 +1150,8 @@ _DATIVE_VERB_LINKED_ECHTHRA_ANSWER = {
         {"id": "t1", "token": "ἐμοί", "tokentype": "lexical", "lemma": "ἐγώ",
          "relatedtoken1": "t5", "relationship1": "dative"},
         {"id": "t2", "token": "καί", "tokentype": "lexical", "lemma": "καί",
-         "relatedtoken1": "t1", "relationship1": "connecting word"},
+         "relatedtoken1": "t1", "relationship1": "connecting word",
+         "relatedtoken2": "t3", "relationship2": "connecting word"},
         {"id": "t3", "token": "ἐκείνῳ", "tokentype": "lexical", "lemma": "ἐκεῖνος",
          "relatedtoken1": "t5", "relationship1": "dative"},
         {"id": "t4", "token": "οὐδεμία", "tokentype": "lexical", "lemma": "οὐδείς",
@@ -1261,23 +1355,30 @@ _IMPLIED_EIMI_TAUTEN_TEN_HYBRIN_ANSWER = {
 # with subject ἐγὼ, the second has a nominative subject γυναῖκες but no
 # explicit verb... It will repeat the same values for semantic and
 # syntactic type as the implicitly repeated verb διῃτώμην, namely
-# intransitive for semantic type, and independent for syntactic type." Per
-# SyntaxAnalysis's docstring ("both μέν and δέ have relatedtoken1 ->
-# διῃτώμην"), both connecting words point at the FIRST clause's own verb.
-# Named t8_implied per the naming rule (appended to κάτω, the last real
-# token before where the elided verb would stand).
+# intransitive for semantic type, and independent for syntactic type."
+# ALSO doubles as syntax_model.md's own worked example for the PAIRED
+# correlative shape of "other uses of connecting words" (μέν continued by
+# δέ within one sentence): each connector's own relation1 is its OWN
+# adjacent item (μέν -> διῃτώμην, the first clause's verb; δέ ->
+# t8_implied, the SECOND clause's own [elided] verb -- not, as an earlier
+# version of this fixture had it, both pointing at the first clause's verb
+# generically), and relation2 links the two connectors to each other (μέν
+# -> δέ, δέ -> μέν). Named t8_implied per the naming rule (appended to
+# κάτω, the last real token before where the elided verb would stand).
 # ---------------------------------------------------------------------------
 
 _IMPLIED_REPETITION_EGO_MEN_ANO_ANSWER = {
     "reasoning": (
         "διῃτώμην is the first, explicit independent verb (root, "
         "intransitive, 'I was living'), with ἐγώ as its subject, ἄνω "
-        "adverbial, and μέν a connecting word pointing at it (starting "
-        "the series). The second clause's own verb is elided, repeating "
+        "adverbial, and μέν a connecting word: relation1 -> διῃτώμην (its "
+        "own, first clause's verb), relation2 -> δέ (its correlative "
+        "partner). The second clause's own verb is elided, repeating "
         "διῃτώμην's own classification: t8_implied (tokentype 'implied "
         "repetition', independent, intransitive), with γυναῖκες as its "
         "subject (αἱ its article), κάτω adverbial, and δέ a connecting "
-        "word pointing at διῃτώμην, the first item of the series."
+        "word: relation1 -> t8_implied (its own, second clause's verb), "
+        "relation2 -> μέν (its correlative partner)."
     ),
     "verbalunits": [
         {"id": "t3", "syntactic_type": "independent", "semantic_type": "intransitive"},
@@ -1287,7 +1388,8 @@ _IMPLIED_REPETITION_EGO_MEN_ANO_ANSWER = {
         {"id": "t0", "token": "ἐγώ", "tokentype": "lexical", "lemma": "ἐγώ",
          "relatedtoken1": "t3", "relationship1": "subject"},
         {"id": "t1", "token": "μέν", "tokentype": "lexical", "lemma": "μέν",
-         "relatedtoken1": "t3", "relationship1": "connecting word"},
+         "relatedtoken1": "t3", "relationship1": "connecting word",
+         "relatedtoken2": "t6", "relationship2": "connecting word"},
         {"id": "t2", "token": "ἄνω", "tokentype": "lexical", "lemma": "ἄνω",
          "relatedtoken1": "t3", "relationship1": "adverbial"},
         {"id": "t3", "token": "διῃτώμην", "tokentype": "lexical", "lemma": "διαιτάω",
@@ -1296,7 +1398,8 @@ _IMPLIED_REPETITION_EGO_MEN_ANO_ANSWER = {
         {"id": "t5", "token": "αἱ", "tokentype": "lexical", "lemma": "ὁ",
          "relatedtoken1": "t7", "relationship1": "article"},
         {"id": "t6", "token": "δέ", "tokentype": "lexical", "lemma": "δέ",
-         "relatedtoken1": "t3", "relationship1": "connecting word"},
+         "relatedtoken1": "t8_implied", "relationship1": "connecting word",
+         "relatedtoken2": "t1", "relationship2": "connecting word"},
         {"id": "t7", "token": "γυναῖκες", "tokentype": "lexical", "lemma": "γυνή",
          "relatedtoken1": "t8_implied", "relationship1": "subject"},
         {"id": "t8", "token": "κάτω", "tokentype": "lexical", "lemma": "κάτω",
@@ -1332,7 +1435,8 @@ _NUMERAL_VS_LEXICAL_EIDON_DUO_ANSWER = {
         "notation -- tokentype numeral) is attributive to γυναῖκας, the "
         "second direct object, the same relation δύο uses despite the "
         "different tokentype; καί is a connecting word joining the two "
-        "objects, pointing at the first (ἄνδρας)."
+        "objects, with relation1 -> ἄνδρας (the first) and relation2 -> "
+        "γυναῖκας (the second)."
     ),
     "verbalunits": [
         {"id": "t0", "syntactic_type": "independent", "semantic_type": "transitive active"},
@@ -1345,7 +1449,8 @@ _NUMERAL_VS_LEXICAL_EIDON_DUO_ANSWER = {
         {"id": "t2", "token": "ἄνδρας", "tokentype": "lexical", "lemma": "ἀνήρ",
          "relatedtoken1": "t0", "relationship1": "direct object"},
         {"id": "t3", "token": "καί", "tokentype": "lexical", "lemma": "καί",
-         "relatedtoken1": "t2", "relationship1": "connecting word"},
+         "relatedtoken1": "t2", "relationship1": "connecting word",
+         "relatedtoken2": "t5", "relationship2": "connecting word"},
         {"id": "t4", "token": "γʹ", "tokentype": "numeral",
          "relatedtoken1": "t5", "relationship1": "attributive"},
         {"id": "t5", "token": "γυναῖκας", "tokentype": "lexical", "lemma": "γυνή",
@@ -1384,8 +1489,10 @@ _ENCLITIC_EIPER_HOUTOS_ECHEI_ANSWER = {
         "have need'), with ἐγώ as its subject, γάρ its sentence "
         "connector, and οὐδέν an accusative depending on it ('not at "
         "all'/'no [need]'), with λόγων a partitive genitive on οὐδέν "
-        "('of talk'). ἀλλά is a connecting word pointing back at δέομαι, "
-        "coordinating a second thing needed: γενέσθαι, an infinitive used "
+        "('of talk'). ἀλλά is a connecting word joining a pair of things "
+        "needed, with relation1 -> δέομαι (the first, standing for the "
+        "οὐδέν λόγων need) and relation2 -> γενέσθαι (the second): "
+        "γενέσθαι, an infinitive used "
         "as an ordinary noun (δέομαι's second direct object, 'the deed "
         "to become manifest'), NOT its own verbal expression -- ἔργον is "
         "its subject (τό its article), φανερόν its predicate. εἴ is the "
@@ -1413,7 +1520,8 @@ _ENCLITIC_EIPER_HOUTOS_ECHEI_ANSWER = {
          "relatedtoken1": "t2", "relationship1": "genitive"},
         {"id": "t5", "token": ",", "tokentype": "punctuation"},
         {"id": "t6", "token": "ἀλλά", "tokentype": "lexical", "lemma": "ἀλλά",
-         "relatedtoken1": "t3", "relationship1": "connecting word"},
+         "relatedtoken1": "t3", "relationship1": "connecting word",
+         "relatedtoken2": "t10", "relationship2": "connecting word"},
         {"id": "t7", "token": "τό", "tokentype": "lexical", "lemma": "ὁ",
          "relatedtoken1": "t8", "relationship1": "article"},
         {"id": "t8", "token": "ἔργον", "tokentype": "lexical", "lemma": "ἔργον",
@@ -1431,6 +1539,154 @@ _ENCLITIC_EIPER_HOUTOS_ECHEI_ANSWER = {
         {"id": "t15", "token": "ἔχει", "tokentype": "lexical", "lemma": "ἔχω",
          "verbalunitid": "t15", "relatedtoken1": "t12", "relationship1": "unit verb"},
         {"id": "t16", "token": ".", "tokentype": "punctuation"},
+    ],
+}
+
+
+# ---------------------------------------------------------------------------
+# "ἐφύλαττόν τε καὶ προσεῖχον τὸν νοῦν."
+#   t0 ἐφύλαττόν  t1 τε  t2 καί  t3 προσεῖχον  t4 τόν  t5 νοῦν  t6 .
+#
+# syntax_model.md's own worked example for the PAIRED correlative shape of
+# "other uses of connecting words": "the connecting words τε and καὶ join
+# a pair of verbal expressions, ἐφύλαττόν and προσεῖχον. τε takes the ID
+# of ἐφύλαττόν as relation1 and the ID of καὶ as relation2... καὶ has the
+# ID of προσεῖχον for relation1 and of τε for relation2." Each connector's
+# own relation1 is the item IT sits next to (not "the first item"
+# generically); relation2 links the two connectors to each other.
+# ---------------------------------------------------------------------------
+
+_PAIRED_CONNECTING_WORDS_EPHYLATTON_TE_KAI_ANSWER = {
+    "reasoning": (
+        "ἐφύλαττόν and προσεῖχον are two coordinate independent verbs "
+        "(root, 'I was guarding'/'I was paying', imperfect active), "
+        "ἐφύλαττόν intransitive (no object given) and προσεῖχον "
+        "transitive active with τὸν νοῦν as its direct object ('paying "
+        "attention', literally 'holding the mind toward'). τε and καὶ are "
+        "a paired correlative connecting word: τε's own relation1 -> "
+        "ἐφύλαττόν (its own, first item), relation2 -> καί; καὶ's own "
+        "relation1 -> προσεῖχον (its own, second item), relation2 -> τε."
+    ),
+    "verbalunits": [
+        {"id": "t0", "syntactic_type": "independent", "semantic_type": "intransitive"},
+        {"id": "t3", "syntactic_type": "independent", "semantic_type": "transitive active"},
+    ],
+    "tokengraph": [
+        {"id": "t0", "token": "ἐφύλαττόν", "tokentype": "lexical", "lemma": "φυλάττω",
+         "verbalunitid": "t0", "relatedtoken1": "root", "relationship1": "unit verb"},
+        {"id": "t1", "token": "τε", "tokentype": "lexical", "lemma": "τε",
+         "relatedtoken1": "t0", "relationship1": "connecting word",
+         "relatedtoken2": "t2", "relationship2": "connecting word"},
+        {"id": "t2", "token": "καί", "tokentype": "lexical", "lemma": "καί",
+         "relatedtoken1": "t3", "relationship1": "connecting word",
+         "relatedtoken2": "t1", "relationship2": "connecting word"},
+        {"id": "t3", "token": "προσεῖχον", "tokentype": "lexical", "lemma": "προσέχω",
+         "verbalunitid": "t3", "relatedtoken1": "root", "relationship1": "unit verb"},
+        {"id": "t4", "token": "τόν", "tokentype": "lexical", "lemma": "ὁ",
+         "relatedtoken1": "t5", "relationship1": "article"},
+        {"id": "t5", "token": "νοῦν", "tokentype": "lexical", "lemma": "νοῦς",
+         "relatedtoken1": "t3", "relationship1": "direct object"},
+        {"id": "t6", "token": ".", "tokentype": "punctuation"},
+    ],
+}
+
+
+# ---------------------------------------------------------------------------
+# "οὔτε γὰρ συκοφαντῶν γραφάς με ἐγράψατο, οὔτε ἐκβάλλειν ἐκ τῆς πόλεως
+# ἐπεχείρησεν, οὔτε ἰδίας δίκας ἐδικάζετο."
+#   t0 οὔτε  t1 γάρ  t2 συκοφαντῶν  t3 γραφάς  t4 με  t5 ἐγράψατο  t6 ,
+#   t7 οὔτε  t8 ἐκβάλλειν  t9 ἐκ  t10 τῆς  t11 πόλεως  t12 ἐπεχείρησεν
+#   t13 ,  t14 οὔτε  t15 ἰδίας  t16 δίκας  t17 ἐδικάζετο  t18 .
+#
+# syntax_model.md's own worked example for the 3+-member SERIES shape of
+# "other uses of connecting words": "three independent verbal expressions
+# are coordinated by the negative connecting words οὔτε..οὔτε..οὔτε. The
+# first οὔτε will have the ID of ἐγράψατο as relation1 and the ID of the
+# [second] οὔτε as relation2. The second οὔτε will have the ID of
+# ἐπεχείρησεν as relation1 and the ID of the first οὔτε as relation2. The
+# third οὔτε will have the ID of ἐδικάζετο as relation1 and the ID of the
+# second οὔτε as relation2." (syntax_model.md's own text spells the third
+# occurrence "οὕτε" -- a diacritic slip, not a different word -- spelled
+# consistently "οὔτε" here.) Each connecting word's own relation1 is its
+# own adjacent clause's verb; relation2 chains the three connecting words
+# together, first->second forward, each later one back to its predecessor
+# -- no single token names every member, but the whole chain is still
+# traceable by following relation2 between the connecting-word tokens.
+# γάρ (sentence connector) ties the whole sentence back to whatever
+# precedes it, pointing at the first clause's own verb, the same
+# convention used elsewhere when a sentence connector opens a sentence
+# that itself contains further-nested structure (see
+# aside_proton_men_oun_dei's γάρ, similarly scoped to the clause it sits
+# in). συκοφαντῶν is a genitive plural noun ("of sycophants") attributive
+# to γραφάς, itself an accusative "of respect" alongside the direct
+# object με ("indicted ME with indictments of sycophancy"); ἐκβάλλειν is
+# ἐπεχείρησεν's complementary infinitive (ἐπιχειρέω + infinitive,
+# "attempt to do X" -- the same governing-verb pattern as δεῖ/βούλομαι/
+# ἐθέλω), not its own verbal expression; ἰδίας is attributive to δίκας.
+# ---------------------------------------------------------------------------
+
+_SERIES_CONNECTING_WORDS_OUTE_OUTE_OUTE_ANSWER = {
+    "reasoning": (
+        "Three independent verbs are coordinated by a three-member series "
+        "of connecting words, οὔτε..οὔτε..οὔτε: ἐγράψατο (root, "
+        "transitive active, 'he indicted'), ἐπεχείρησεν (root, "
+        "intransitive, 'he attempted', governing the complementary "
+        "infinitive ἐκβάλλειν), and ἐδικάζετο (root, transitive active, "
+        "'he prosecuted'). The first οὔτε has relation1 -> ἐγράψατο, "
+        "relation2 -> the second οὔτε (forward). The second οὔτε has "
+        "relation1 -> ἐπεχείρησεν, relation2 -> the first οὔτε (backward). "
+        "The third οὔτε has relation1 -> ἐδικάζετο, relation2 -> the "
+        "second οὔτε (backward). γάρ is a sentence connector -> ἐγράψατο, "
+        "the clause it sits in. συκοφαντῶν is genitive attributive to "
+        "γραφάς; γραφάς is an accusative alongside the direct object με; "
+        "ἐκβάλλειν is ἐπεχείρησεν's complementary infinitive, with ἐκ "
+        "adverbial to it and πόλεως (τῆς its article) the object of ἐκ; "
+        "ἰδίας is attributive to δίκας, ἐδικάζετο's direct object."
+    ),
+    "verbalunits": [
+        {"id": "t5", "syntactic_type": "independent", "semantic_type": "transitive active"},
+        {"id": "t12", "syntactic_type": "independent", "semantic_type": "intransitive"},
+        {"id": "t17", "syntactic_type": "independent", "semantic_type": "transitive active"},
+    ],
+    "tokengraph": [
+        {"id": "t0", "token": "οὔτε", "tokentype": "lexical", "lemma": "οὔτε",
+         "relatedtoken1": "t5", "relationship1": "connecting word",
+         "relatedtoken2": "t7", "relationship2": "connecting word"},
+        {"id": "t1", "token": "γάρ", "tokentype": "lexical", "lemma": "γάρ",
+         "relatedtoken1": "t5", "relationship1": "sentence connector"},
+        {"id": "t2", "token": "συκοφαντῶν", "tokentype": "lexical", "lemma": "συκοφάντης",
+         "relatedtoken1": "t3", "relationship1": "genitive"},
+        {"id": "t3", "token": "γραφάς", "tokentype": "lexical", "lemma": "γραφή",
+         "relatedtoken1": "t5", "relationship1": "accusative"},
+        {"id": "t4", "token": "με", "tokentype": "lexical", "lemma": "ἐγώ",
+         "relatedtoken1": "t5", "relationship1": "direct object"},
+        {"id": "t5", "token": "ἐγράψατο", "tokentype": "lexical", "lemma": "γράφω",
+         "verbalunitid": "t5", "relatedtoken1": "root", "relationship1": "unit verb"},
+        {"id": "t6", "token": ",", "tokentype": "punctuation"},
+        {"id": "t7", "token": "οὔτε", "tokentype": "lexical", "lemma": "οὔτε",
+         "relatedtoken1": "t12", "relationship1": "connecting word",
+         "relatedtoken2": "t0", "relationship2": "connecting word"},
+        {"id": "t8", "token": "ἐκβάλλειν", "tokentype": "lexical", "lemma": "ἐκβάλλω",
+         "relatedtoken1": "t12", "relationship1": "complementary infinitive"},
+        {"id": "t9", "token": "ἐκ", "tokentype": "lexical", "lemma": "ἐκ",
+         "relatedtoken1": "t8", "relationship1": "adverbial"},
+        {"id": "t10", "token": "τῆς", "tokentype": "lexical", "lemma": "ὁ",
+         "relatedtoken1": "t11", "relationship1": "article"},
+        {"id": "t11", "token": "πόλεως", "tokentype": "lexical", "lemma": "πόλις",
+         "relatedtoken1": "t9", "relationship1": "object of preposition"},
+        {"id": "t12", "token": "ἐπεχείρησεν", "tokentype": "lexical", "lemma": "ἐπιχειρέω",
+         "verbalunitid": "t12", "relatedtoken1": "root", "relationship1": "unit verb"},
+        {"id": "t13", "token": ",", "tokentype": "punctuation"},
+        {"id": "t14", "token": "οὔτε", "tokentype": "lexical", "lemma": "οὔτε",
+         "relatedtoken1": "t17", "relationship1": "connecting word",
+         "relatedtoken2": "t7", "relationship2": "connecting word"},
+        {"id": "t15", "token": "ἰδίας", "tokentype": "lexical", "lemma": "ἴδιος",
+         "relatedtoken1": "t16", "relationship1": "attributive"},
+        {"id": "t16", "token": "δίκας", "tokentype": "lexical", "lemma": "δίκη",
+         "relatedtoken1": "t17", "relationship1": "direct object"},
+        {"id": "t17", "token": "ἐδικάζετο", "tokentype": "lexical", "lemma": "δικάζω",
+         "verbalunitid": "t17", "relatedtoken1": "root", "relationship1": "unit verb"},
+        {"id": "t18", "token": ".", "tokentype": "punctuation"},
     ],
 }
 
@@ -1564,7 +1820,7 @@ _LINKING_VERB_MESTOS_E_ANSWER = {
 
 
 # ---------------------------------------------------------------------------
-# RelationLabel coverage is complete: all 27 documented labels have at
+# RelationLabel coverage is complete: all 29 documented labels have at
 # least one tagged example above -- unit verb (unit_verb_root_ten_thuran_
 # anoixen and many others), direct quote (direct_quote_hina_su_ge_ephe),
 # aside (aside_proton_men_oun_dei), indirect statement (indirect_statement_
@@ -1584,7 +1840,9 @@ _LINKING_VERB_MESTOS_E_ANSWER = {
 # toutou), adverbial (several), genitive/dative/accusative/vocative
 # (genitive_oicheto_eis_to_hieron, dative_verb_linked_echthra_emoi_kai_
 # ekeino, accusative_of_time_tauta_polyn_chronon, aside_proton_men_oun_dei
-# for vocative), apposition (apposition_demosthenes_ho_rhetor).
+# for vocative), apposition (apposition_demosthenes_ho_rhetor), modal
+# particle (modal_particle_ei_ten_auten_gnomen), exclamation
+# (aside_proton_men_oun_dei's own ὦ -> ἄνδρες).
 #
 # VerbalExpression.syntactic_type coverage is also complete: independent,
 # dependent, direct quote, aside, indirect statement, attributive
@@ -1635,7 +1893,7 @@ GOLD_EXAMPLES = [
     GoldExample(
         slug="aside_proton_men_oun_dei",
         passage="πρῶτον μέν οὖν, ὦ ἄνδρες, (δεῖ γάρ καί ταῦθ' ὑμῖν διηγήσασθαι) οἰκίδιον ἔστι μοι διπλοῦν.",
-        tags=["aside", "vocative", "complementary infinitive",
+        tags=["aside", "vocative", "exclamation", "complementary infinitive",
               "sentence connector", "adverbial", "direct object", "dative",
               "subject", "attributive", "independent", "intransitive",
               "punctuation"],
@@ -1710,6 +1968,15 @@ GOLD_EXAMPLES = [
         canned_answer=_COMPLEMENTARY_INFINITIVE_EXESTI_ANSWER,
     ),
     GoldExample(
+        slug="modal_particle_ei_ten_auten_gnomen",
+        passage="εἰ τήν αὐτήν γνώμην περί τῶν ἄλλων ἔχοιτε, οὐκ ἄν εἴη.",
+        tags=["modal particle", "subordinating conjunction", "unit verb",
+              "article", "attributive", "direct object", "object of preposition",
+              "adverbial", "dependent", "independent", "transitive active",
+              "linking verb"],
+        canned_answer=_MODAL_PARTICLE_EI_TEN_AUTEN_GNOMEN_ANSWER,
+    ),
+    GoldExample(
         slug="subject_direct_object_emoicheuen_eratosthenes",
         passage="ἐμοίχευεν Ἐρατοσθένης τήν γυναῖκα τήν ἐμήν.",
         tags=["subject", "direct object", "article", "attributive",
@@ -1741,7 +2008,7 @@ GOLD_EXAMPLES = [
     GoldExample(
         slug="substantive_pronoun_ekeine_men_apellage",
         passage="ἐκείνη μέν ἀπηλλάγη.",
-        tags=["subject", "connecting word", "transitive passive",
+        tags=["subject", "sentence connector", "transitive passive",
               "independent"],
         canned_answer=_SUBSTANTIVE_PRONOUN_EKEINE_MEN_ANSWER,
     ),
@@ -1846,5 +2113,22 @@ GOLD_EXAMPLES = [
         passage="μεστός ἦ ὑποψίας.",
         tags=["predicate", "linking verb", "genitive", "independent"],
         canned_answer=_LINKING_VERB_MESTOS_E_ANSWER,
+    ),
+    GoldExample(
+        slug="paired_connecting_words_ephylatton_te_kai_proseichon",
+        passage="ἐφύλαττόν τε καί προσεῖχον τόν νοῦν.",
+        tags=["connecting word", "direct object", "article", "independent",
+              "intransitive", "transitive active"],
+        canned_answer=_PAIRED_CONNECTING_WORDS_EPHYLATTON_TE_KAI_ANSWER,
+    ),
+    GoldExample(
+        slug="series_connecting_words_oute_oute_oute",
+        passage="οὔτε γάρ συκοφαντῶν γραφάς με ἐγράψατο, οὔτε ἐκβάλλειν ἐκ τῆς πόλεως ἐπεχείρησεν, οὔτε ἰδίας δίκας ἐδικάζετο.",
+        tags=["connecting word", "sentence connector", "genitive",
+              "accusative", "direct object", "complementary infinitive",
+              "adverbial", "article", "object of preposition",
+              "attributive", "independent", "transitive active",
+              "intransitive"],
+        canned_answer=_SERIES_CONNECTING_WORDS_OUTE_OUTE_OUTE_ANSWER,
     ),
 ]

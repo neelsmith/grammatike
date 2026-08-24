@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 class CitedText(BaseModel):
     """One citable unit of source text -- e.g. one line of poetry, one
     section of prose -- paired with its citation label. A sequence of
-    these is segmentation_dspy.py's input: sentence boundaries do NOT need
+    these is segmentation.py's input: sentence boundaries do NOT need
     to respect CitedText boundaries (one sentence may span several units),
     but every resulting token still records which unit it came from via
     Token.citation."""
@@ -38,7 +38,7 @@ class Token(BaseModel):
     `citation` is optional so this model still works for citation-free
     callers -- e.g. a test fixture built directly from a canned tokengraph,
     with no CitedText source at all -- as well as for the citation-aware
-    segmentation stage (segmentation_dspy.py), which is the only thing that
+    segmentation stage (segmentation.py), which is the only thing that
     actually populates it, knowing which CitedText source unit each token
     came from."""
 
@@ -52,7 +52,7 @@ class Token(BaseModel):
 
 class Sentence(BaseModel):
     """One sentence's worth of tokens, in reading order, as produced by the
-    LLM-driven segmentation stage (segmentation_dspy.py). Token ids are
+    deterministic segmentation stage (segmentation.py). Token ids are
     global across the whole passage -- numbering continues across sentence
     boundaries rather than restarting at t0 for each sentence -- so a
     Sentence is a contiguous slice of the passage's id sequence, not an
@@ -171,10 +171,20 @@ class VerbalExpression(BaseModel):
 #     noun/pronoun it agrees with)
 #   - sentence-level connecting word (coordinating conjunction/particle
 #     joining this sentence to the previous one) -> "sentence connector"
-#     (relation1 = the verb of this sentence)
-#   - other connecting words (joining nouns, adjectives, adverbs, or a
-#     series of any of those) -> "connecting word" (relation1 = the id of
-#     the first item in the series/pair)
+#     (relation1 = the verb of this sentence); μέν/δέ get this label too
+#     when the items they list are split across distinct sentences rather
+#     than joined within one
+#   - other connecting words joining a pair or series of nouns, adjectives,
+#     adverbs, or whole clauses WITHIN a sentence -> "connecting word", in
+#     one of three shapes: a single connecting word joining a pair
+#     (relation1 = the first item, relation2 = the second item, both
+#     relation2/relationship2 set on that one token); a paired correlative
+#     like τε...καί or καὶ...καί, or μέν...δέ within one sentence (each
+#     connector's relation1 = its OWN adjacent item, relation2 = the OTHER
+#     connector's id); or a 3+-member series like οὔτε...οὔτε...οὔτε (each
+#     connector's relation1 = its own adjacent item again, but relation2
+#     chains the connectors themselves together -- the first one forward
+#     to the second, every later one backward to the one before it)
 #   - subordinating conjunction -> "subordinating conjunction" (relation1 =
 #     the verb of its governing/superior clause)
 #   - relative pronoun -> "relative pronoun" (relation1 = its antecedent;
@@ -209,6 +219,12 @@ class VerbalExpression(BaseModel):
 #     "vocative" (relation1 = the verb or noun it depends on; "vocative" is
 #     always linked to a verb)
 #   - apposition -> "apposition" (relation1 = the first/head noun)
+#   - modal particle ἄν -> "modal particle" (relation1 = the verb of its
+#     own verbal unit)
+#   - exclamatory words -> "exclamation" (relation1 = the verb of their
+#     verbal unit -- EXCEPT the exclamatory particle ὦ introducing a
+#     vocative, which instead takes the vocative noun/pronoun itself as
+#     relation1, not the verb)
 RelationLabel = Literal[
     "unit verb",
     "direct quote",
@@ -237,6 +253,8 @@ RelationLabel = Literal[
     "accusative",
     "vocative",
     "apposition",
+    "modal particle",
+    "exclamation",
 ]
 
 

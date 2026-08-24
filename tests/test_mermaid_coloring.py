@@ -163,8 +163,11 @@ def test_sentence_connector_gets_its_own_dedicated_class():
 
 
 def test_unrelated_token_gets_no_class():
-    """οὖν and ὦ in aside_proton_men_oun_dei have no relation at all --
-    must not be assigned any vuN/implied class."""
+    """οὖν in aside_proton_men_oun_dei has no relation at all -- must not
+    be assigned any vuN/implied class. (ὦ, in the same fixture, now DOES
+    resolve to a verbal unit -- via its 'exclamation' relation to the
+    vocative ἄνδρες it introduces -- so it's covered separately below,
+    not here; see test_exclamation_o_gets_the_vocatives_own_unit_color.)"""
     example = next(e for e in GOLD_EXAMPLES if e.slug == "aside_proton_men_oun_dei")
     tokens, result = run_gold_example(example)
     diagram, warnings = tokengraph_to_mermaid(result.tokengraph)
@@ -175,4 +178,24 @@ def test_unrelated_token_gets_no_class():
         if line.strip().startswith("class "):
             ids = line.split()[1].split(",")
             assert "t2" not in ids  # οὖν
-            assert "t4" not in ids  # ὦ
+
+
+def test_exclamation_o_gets_the_vocatives_own_unit_color():
+    """ὦ (t4) relates to the vocative ἄνδρες (t5) it introduces via the
+    'exclamation' relation, per syntax_model.md's own rule -- so it should
+    resolve to and be colored as the SAME verbal unit ἄνδρες itself
+    belongs to (ἔστι's unit, t16), not left uncolored."""
+    example = next(e for e in GOLD_EXAMPLES if e.slug == "aside_proton_men_oun_dei")
+    tokens, result = run_gold_example(example)
+    diagram, warnings = tokengraph_to_mermaid(result.tokengraph)
+    assert not warnings
+
+    class_of = {}
+    for line in diagram.splitlines():
+        if line.strip().startswith("class "):
+            ids, class_name = line.split()[1], line.split()[2].rstrip(";")
+            for tid in ids.split(","):
+                class_of[tid] = class_name
+
+    assert "t4" in class_of  # ὦ now gets a class, unlike before 'exclamation' existed
+    assert class_of["t4"] == class_of["t5"]  # same class as ἄνδρες, the vocative it introduces

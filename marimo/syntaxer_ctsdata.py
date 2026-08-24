@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.23.16"
+__generated_with = "0.24.0"
 app = marimo.App(width="medium")
 
 
@@ -23,7 +23,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    > Read citable text from a delimited-text (CEX) file, then choose one or more passages -- selecting them automatically segments them into sentences -- then choose which sentence(s) to analyze.
+    > Read citable text from a delimited-text (CEX) file, then choose one or more passages and click OK to segment them into sentences, then choose which sentence(s) to analyze.
     """)
     return
 
@@ -35,7 +35,7 @@ def _(ctsdata_file_browser):
 
 
 @app.cell(hide_code=True)
-def _(ctsdata_error, ctsdata_rows, mo, passage_multiselect):
+def _(ctsdata_error, ctsdata_rows, mo, passage_multiselect, segment_button):
     if ctsdata_error is not None:
         ctsdata_status = mo.callout(
             mo.md(f"Could not read this file as a `#!ctsdata` source: {ctsdata_error}"),
@@ -44,10 +44,10 @@ def _(ctsdata_error, ctsdata_rows, mo, passage_multiselect):
     elif not ctsdata_rows:
         ctsdata_status = mo.md("*Choose a source data file above to list its passages.*")
     else:
-        ctsdata_status = mo.md(f"## Passage selection\n\n*{len(ctsdata_rows)} passage(s) loaded from this file. Selecting one or more below automatically segments them into sentences.*")
+        ctsdata_status = mo.md(f"## Passage selection\n\n*{len(ctsdata_rows)} passage(s) loaded from this file. Select one or more below, then click OK to segment them into sentences.*")
 
     mo.vstack(
-        [ctsdata_status, mo.hstack([passage_multiselect], justify="start")]
+        [ctsdata_status, mo.hstack([passage_multiselect, segment_button], justify="start")]
     )
     return
 
@@ -61,7 +61,7 @@ def _(rawpreview):
 @app.cell(hide_code=True)
 def _(all_sentences, analyze_button, mo, sentence_multiselect):
     if not all_sentences:
-        sentence_status = mo.md("*Select passage(s) above to automatically list their sentences.*")
+        sentence_status = mo.md("*Select passage(s) above and click OK to list their sentences.*")
     else:
         sentence_status = mo.md(f"## Sentence selection\n\n*{len(all_sentences)} sentence(s) found.*")
 
@@ -262,6 +262,21 @@ def _(ctsdata_rows, passage_multiselect):
     return (selected_rows,)
 
 
+@app.cell
+def _(mo, passage_multiselect):
+    # A new instance is created (and segment_button.value resets to False)
+    # every time passage_multiselect's own selection changes, since this
+    # cell depends on passage_multiselect.value -- so changing which
+    # passages are selected always requires a fresh, deliberate OK click
+    # before segmentation runs again. Mirrors analyze_button's own reset
+    # behavior below, keyed off sentence_multiselect instead.
+    segment_button = mo.ui.run_button(
+        label="OK: segment selected passages",
+        disabled=not passage_multiselect.value,
+    )
+    return (segment_button,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
@@ -271,24 +286,35 @@ def _(mo):
 
 
 @app.cell
-def _(CitedText, segment_sources, selected_rows):
-    # Segment every selected passage, together, automatically as soon as
-    # the passage selection is non-empty -- no separate button, since
-    # segmentation here is cheap enough (and useful enough as an immediate
-    # preview of what a passage selection contains) not to gate behind an
-    # extra click, unlike full SyntaxAnalysis below. Each selected row
-    # becomes its own CitedText source (same urnbase+citation concatenation
-    # the single-passage cell used to build) -- segment_sources() segments
-    # across all of them at once (a sentence may span two consecutive
-    # sources), in the file order selected_rows already established.
+def _(CitedText, segment_button, segment_sources, selected_rows):
+    # Segment every selected passage, together, only once the user clicks
+    # OK -- segment_button.value is True for exactly the one reactive cycle
+    # triggered by that click, same pattern as analyze_button below gating
+    # full SyntaxAnalysis. Each selected row becomes its own CitedText
+    # source (same urnbase+citation concatenation the single-passage cell
+    # used to build) -- segment_sources() segments across all of them at
+    # once (a sentence may span two consecutive sources), in the file order
+    # selected_rows already established.
     all_sentences = []
-    if selected_rows:
+    if segment_button.value and selected_rows:
         sources = [
             CitedText(citation=row.urnbase + row.citation, text=row.text)
             for row in selected_rows
         ]
         all_sentences = segment_sources(sources)
-    return (all_sentences,)
+    return all_sentences, sources
+
+
+@app.cell
+def _(all_sentences):
+    all_sentences
+    return
+
+
+@app.cell
+def _(sources):
+    sources
+    return
 
 
 @app.function
@@ -415,7 +441,13 @@ def _(mo):
 
 
 @app.cell
-def _(all_sentences, analyze_button, analyze_with_retry, sentence_multiselect, validate):
+def _(
+    all_sentences,
+    analyze_button,
+    analyze_with_retry,
+    sentence_multiselect,
+    validate,
+):
     # Run full syntax analysis only on the selected sentences, in original
     # sentence order -- not everything segmentation found -- so you only
     # spend an LM call on the sentence(s) you actually chose from the menu
