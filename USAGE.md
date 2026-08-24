@@ -2,6 +2,9 @@
 
 A DSPy program that analyzes an Ancient Greek passage into two structures: a table of verbal expressions, and a token-by-token dependency graph. The analytic scheme itself is documented in `syntax_model.md`.
 
+## Dependencies
+
+- `dspy`
 
 ## Running an analysis from the command line
 
