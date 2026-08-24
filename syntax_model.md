@@ -15,6 +15,7 @@ As input, the library works with citable passages of ancient Greek. The analysis
 - a list of verbal expressions, generally corresponding to clauses in an English translation
 - a token-level table capturing principal relations in a dependency graph
 
+In addition, the library can segment a series of tokens into sentences.
 
 ### Table of verbal expressions
 
@@ -114,7 +115,7 @@ In the first phase of implementing our syntax model, we will record the followin
 
 - complementary infinitive: with verbs like βούλομαι, δεῖ, ἐθέλω (among others), infinitives essentially complete the idea of the principal verb. In this use, the infinitive token will use the id of the main verb as `relation1` with a value of `complementary infinitive` for `relationship1`. Example: in ἔξεστι ἑλέσθαι, the verb ἔξεστι ("it is possible") has a complementary infinitive ἑλέσθαι, so ἑλέσθαι will have the id of ἔξεστι for `relation1` with `complementary infinitive` for `relationship1`.
 
-
+- modal ἄν : the particle ἄν relates to the verb of its verbal unit as `modal particle`. Example: the sentence εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, οὐκ ἂν εἴη, ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη has two dependent verbal expressions, and one independent verbal expression anchored to εἴη. The particle ἂν will have the ID of εἴη for `relation1` with `modal particle` for `relationship1`.
 
 #### Articles, adjectives, adverbs, prepositional phrases
 
@@ -161,3 +162,61 @@ ACC OF TIME:
 
 
 - apposition: when one noun stands in apposition to another, the appositve takes the id of the first noun as the value for `relation1`, and has `apposition` as the value for `relationship1`. 
+
+### Other relations
+
+- exclamatory words: exclamatory words have the value `exclamation` for `relationship1`. They may be related to the verb of their verbal unit, but note tha the frequent exclamatory particle ὦ introducing a vocative will have the vocative noun or pronoun as `relation1`. Example: in ἐγὼ μὲν οὖν, ὦ ἄνδρες, οὐκ ἰδίαν ὑπὲρ ἐμαυτοῦ νομίζω ταύτην γενέσθαι τὴν τιμωρίαν, ἀλλ' ὑπὲρ τῆς πόλεως ἁπάσης the particle ὦ will have the ID of the vocative ἄνδρες as `relation1` with `exclamation` for `relationship1`.
+
+
+## Segementation into sentences
+
+There are two major challenges to segmenting a sequence of tokens into sentences.
+
+First, Greek's avoidance of asyndeton makes the distinction between successive coordinated main clauses and successive sentences difficult or even arbitrary at times.
+
+Second, the Unicode definition for Greek question mark has the worst decomposition in all of Unicode. The code point (U+037E) can be legally decomposed to x003B, the Latin alphabet semicolon, which has completely different semantics! The Greek high stop x0387 can also cause some difficulty. It can be decomposed to the infrequently used middle dot x00B7 (`·`), and may in practice be replaced with ASCII colon `:` in some editions. All of which means that punctuation is a less reliable guide to sentence segmentation than it might be.
+
+As a general rule, periods and question marks end a sentence, and prefer interpreting syntactically coherent high point/mid dot/colon divisions as end sentences too.
+
+
+Example: Lysias 1, 1.2, in this edition:
+
+> καὶ ταῦτα οὐκ ἂν εἴη μόνον παρ' ὑμῖν οὕτως ἐγνωσμένα, ἀλλ' ἐν ἁπάσῃ τῇ ̔Ελλάδι: περὶ τούτου γὰρ μόνου τοῦ ἀδικήματος καὶ ἐν δημοκρατίᾳ καὶ ὀλιγαρχίᾳ ἡ αὐτὴ τιμωρία τοῖς ἀσθενεστάτοις πρὸς τοὺς τὰ μέγιστα δυναμένους ἀποδέδοται, ὥστε τὸν χείριστον τῶν αὐτῶν τυγχάνειν τῷ βελτίστῳ: οὕτως, ὦ ἄνδρες, ταύτην τὴν ὕβριν ἅπαντες ἄνθρωποι δεινοτάτην ἡγοῦνται.
+
+should segment as 
+
+1. καὶ ταῦτα οὐκ ἂν εἴη μόνον παρ' ὑμῖν οὕτως ἐγνωσμένα, ἀλλ' ἐν ἁπάσῃ τῇ ̔Ελλάδι:
+2. περὶ τούτου γὰρ μόνου τοῦ ἀδικήματος καὶ ἐν δημοκρατίᾳ καὶ ὀλιγαρχίᾳ ἡ αὐτὴ τιμωρία τοῖς ἀσθενεστάτοις πρὸς τοὺς τὰ μέγιστα δυναμένους ἀποδέδοται, ὥστε τὸν χείριστον τῶν αὐτῶν τυγχάνειν τῷ βελτίστῳ:
+3. οὕτως, ὦ ἄνδρες, ταύτην τὴν ὕβριν ἅπαντες ἄνθρωποι δεινοτάτην ἡγοῦνται.
+
+Rationale: segmenting on period and semicolons leaves syntactially coherent units in each of the 3 divisions.
+
+Example: Lysias 1, 1.1, in this edition:
+
+>  περὶ πολλοῦ ἂν ποιησαίμην, ὦ ἄνδρες, τὸ τοιούτους ὑμᾶς ἐμοὶ δικαστὰς περὶ τούτου τοῦ πράγματος γενέσθαι, οἷοίπερ ἂν ὑμῖν αὐτοῖς εἴητε τοιαῦτα πεπονθότες: εὖ γὰρ οἶδ' ὅτι, εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, ἥνπερ περὶ ὑμῶν αὐτῶν, οὐκ ἂν εἴη: ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη, ἀλλὰ πάντες ἂν περὶ τῶν τὰ τοιαῦτα ἐπιτηδευόντων τὰς ζημίας μικρὰς ἡγοῖσθε.
+
+should segment as 
+
+1. περὶ πολλοῦ ἂν ποιησαίμην, ὦ ἄνδρες, τὸ τοιούτους ὑμᾶς ἐμοὶ δικαστὰς περὶ τούτου τοῦ πράγματος γενέσθαι, οἷοίπερ ἂν ὑμῖν αὐτοῖς εἴητε τοιαῦτα πεπονθότες:
+
+2. εὖ γὰρ οἶδ' ὅτι, εἰ τὴν αὐτὴν γνώμην περὶ τῶν ἄλλων ἔχοιτε, ἥνπερ περὶ ὑμῶν αὐτῶν, οὐκ ἂν εἴη: ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη, ἀλλὰ πάντες ἂν περὶ τῶν τὰ τοιαῦτα ἐπιτηδευόντων τὰς ζημίας μικρὰς ἡγοῖσθε.
+
+Rationale breaking after the semicolon following πεπονθότες leaves syntactically coherent pieces but in sentence 2, breaking after the semicolon following εἴη would leave the subordinate phrase ὅστις οὐκ ἐπὶ τοῖς γεγενημένοις ἀγανακτοίη, which goes with what precedes not with what follows, standing alone, so we continue the sentence.
+
+A further note: segmentation can includes sentences spanning citation boundaries. Example: the successive passages 1.3 and 1.4 in this edition:
+
+Lysias 1, 1.3:
+
+> περὶ μὲν οὖν τοῦ μεγέθους τῆς ζημίας ἅπαντας ὑμᾶς νομίζω τὴν αὐτὴν διάνοιαν ἔχειν, καὶ οὐδένα οὕτως ὀλιγώρως διακεῖσθαι, ὅστις οἴεται δεῖν συγγνώμης τυγχάνειν ἢ μικρᾶς ζημίας ἀξίους ἡγεῖται τοὺς τῶν τοιούτων ἔργων αἰτίους: ἡγοῦμαι δέ,
+
+Lysias 1, 1.4
+
+> ὦ ἄνδρες, τοῦτό με δεῖν ἐπιδεῖξαι, ὡς ἐμοίχευεν ̓Ερατοσθένης τὴν γυναῖκα τὴν ἐμὴν καὶ ἐκείνην τε διέφθειρε καὶ τοὺς παῖδας τοὺς ἐμοὺς ᾔσχυνε καὶ ἐμὲ αὐτὸν ὕβρισεν εἰς τὴν οἰκίαν τὴν ἐμὴν εἰσιών, καὶ οὔτε ἔχθρα ἐμοὶ καὶ ἐκείνῳ οὐδεμία ἦν πλὴν ταύτης, οὔτε χρημάτων ἕνεκα ἔπραξα ταῦτα, ἵνα πλούσιος ἐκ πένητος γένωμαι, οὔτε ἄλλου κέρδους οὐδενὸς πλὴν τῆς κατὰ τοὺς νόμους τιμωρίας.
+
+This should be segmented as 
+
+1. περὶ μὲν οὖν τοῦ μεγέθους τῆς ζημίας ἅπαντας ὑμᾶς νομίζω τὴν αὐτὴν διάνοιαν ἔχειν, καὶ οὐδένα οὕτως ὀλιγώρως διακεῖσθαι, ὅστις οἴεται δεῖν συγγνώμης τυγχάνειν ἢ μικρᾶς ζημίας ἀξίους ἡγεῖται τοὺς τῶν τοιούτων ἔργων αἰτίους:
+
+2. ἡγοῦμαι δέ, ὦ ἄνδρες, τοῦτό με δεῖν ἐπιδεῖξαι, ὡς ἐμοίχευεν ̓Ερατοσθένης τὴν γυναῖκα τὴν ἐμὴν καὶ ἐκείνην τε διέφθειρε καὶ τοὺς παῖδας τοὺς ἐμοὺς ᾔσχυνε καὶ ἐμὲ αὐτὸν ὕβρισεν εἰς τὴν οἰκίαν τὴν ἐμὴν εἰσιών, καὶ οὔτε ἔχθρα ἐμοὶ καὶ ἐκείνῳ οὐδεμία ἦν πλὴν ταύτης, οὔτε χρημάτων ἕνεκα ἔπραξα ταῦτα, ἵνα πλούσιος ἐκ πένητος γένωμαι, οὔτε ἄλλου κέρδους οὐδενὸς πλὴν τῆς κατὰ τοὺς νόμους τιμωρίας.
+
+Note that sentence 2 begins in passage 1.3 and ends in 1.4. This is not a problem when these two sections are analyzed together since tokens will always have unique ids within the context of their analysis and citation.
