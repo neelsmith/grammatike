@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>grammatike / γραμματικὴ τέχνη – grammatike</title>
+<title>optimizing – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,26 +23,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -75,14 +110,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">grammatike</span>
     </a>
   </div>
@@ -93,23 +128,23 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./concepts/index.html"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./tutorials/index.html"> 
+    <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./guides/index.html"> 
+    <a class="nav-link active" href="../guides/index.html" aria-current="page"> 
 <span class="menu-text">Guides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./reference/index.html"> 
+    <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
 </ul>
@@ -125,72 +160,94 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../guides/optimizing.html">Optimizing with GEPA</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">guides/usage.md</span>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/optimizing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Optimizing with GEPA</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/bakeoff.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparing task models with <code>model_bakeoff.py</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Developing <code>grammatike</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Testing without network access</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#related-work" id="toc-related-work" class="nav-link active" data-scroll-target="#related-work">Related work</a></li>
+  <li><a href="#optimizing-with-gepa" id="toc-optimizing-with-gepa" class="nav-link active" data-scroll-target="#optimizing-with-gepa">Optimizing with GEPA</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">grammatike / γραμματικὴ τέχνη</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p><code>grammatike</code> is a Python package leveraging LLMs with <a href="https://dspy.ai">dspy</a> to analyze the syntax of passages of ancient Greek.</p>
-<p><code>grammatike</code> offers an alternative analytic scheme to <a href="https://universaldependencies.org">Universal Dependencies</a>, designed to describe Greek syntax in familiar terms that are convenient for research and teaching. Released under the <a href="LICENSE">GNU General Public License v3 or later</a>.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th>Learning the package</th>
-<th>Using the package</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Hands-on</strong></td>
-<td>Try a <a href="./tutorials/">tutorial</a> to start using the package</td>
-<td>Find <a href="./guides/">recipes</a> for specific tasks</td>
-</tr>
-<tr class="even">
-<td><strong>Understanding</strong></td>
-<td><a href="./concepts/">Modelling the syntax of ancient Greek</a></td>
-<td>See <a href="./reference/">reference information</a> (including API documentation for all exported functions)</td>
-</tr>
-</tbody>
-</table>
-<section id="related-work" class="level2">
-<h2 class="anchored" data-anchor-id="related-work">Related work</h2>
-<ul>
-<li><a href="https://github.com/neelsmith/arsgrammatica">arsgrammatica</a>: a parallel Python package for analyzing passages of Latin with LMs</li>
-<li><a href="https://github.com/neelsmith/diqduq">diqduq</a>: a parallel Python package for analyzing passages of Biblical Hebrew with LMs</li>
-<li><a href="https://github.com/neelsmith/aat">aat</a> : Agent-Action-Target model, a reductive model of natural-language syntax</li>
-</ul>
+<section id="optimizing-with-gepa" class="level1">
+<h1>Optimizing with GEPA</h1>
+<p><code>optimize_gepa.py</code> uses <a href="https://dspy.ai">dspy.GEPA</a> — a reflective prompt optimizer — to improve <code>SyntaxAnalysis</code>’s instructions against the gold examples in <code>tests/fixtures/gold_examples.py</code>. Unlike <code>pytest</code> (entirely <code>DummyLM</code>-backed), this is a <strong>live-LM script</strong>: every trial makes a real call to the configured task model, plus a reflection model GEPA uses to read scoring feedback and propose better instructions. Expect it to use real API usage against the configured proxy.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> optimize_gepa.py                    <span class="co"># --auto light (cheapest; default)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> optimize_gepa.py <span class="at">--auto</span> medium       <span class="co"># more thorough, more expensive</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> optimize_gepa.py <span class="at">--auto</span> heavy        <span class="co"># most thorough, most expensive</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> optimize_gepa.py <span class="at">--max-metric-calls</span> 40   <span class="co"># exact call budget instead of a preset</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> optimize_gepa.py <span class="at">--skip-baseline</span>     <span class="co"># skip the pre-GEPA scoring pass (saves N calls)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Needs the same <code>.env</code> as <code>syntaxer_main.py</code> (<code>API_BASE</code>/<code>MODEL</code>/<code>API_KEY</code>). Optionally set <code>REFLECTION_MODEL</code> (and <code>REFLECTION_API_BASE</code>/<code>REFLECTION_API_KEY</code>, if they differ) to use a different model specifically for GEPA’s reflective step — GEPA’s own docs recommend a strong reasoning model for this. Without <code>REFLECTION_MODEL</code> set, the task model doubles as the reflection model, a reasonable default for a first run.</p>
+<p><strong>Scope and data</strong>: this optimizes only <code>SyntaxAnalysis</code> (the <code>analyze</code> module in <code>greek_syntax_dspy.py</code>), not the segmentation stage. It trains on all gold examples in <code>GOLD_EXAMPLES</code> (33 as of this writing) with no separate held-out valset — per <code>dspy.GEPA</code>’s own behavior when no valset is given, it uses the trainset for both reflective updates and Pareto-score tracking. That’s a reasonable starting point while the gold set is still small, but expect the optimized prompt to fit these exact sentences well without a guarantee it generalizes to new ones — worth revisiting (holding out a few examples as a valset) once there are more gold examples to spare.</p>
+<p><strong>Scoring</strong>: <code>grammatike/gepa_metric.py</code>’s <code>syntax_metric</code> compares a prediction’s <code>verbalunits</code>/<code>tokengraph</code> against the gold answer and returns a score in [0, 1] (a weighted blend: relations 50%, verbal-expression classification 30%, basic per-token fields 20% — a judgment call, easy to retune in that file) plus specific, human-readable feedback naming every mismatched token/relation/classification, for GEPA’s reflection model to read. Relations are compared as an unordered set, not by <code>relatedtoken1</code>/<code>relatedtoken2</code> position, since that pairing is documented as an interchangeable overflow slot (see <code>models.py</code>’s <code>RelationLabel</code> comment) — see <code>tests/test_gepa_metric.py</code> for fully offline tests of the metric itself (including that a relation-slot swap scores as a perfect match, not an error).</p>
+<p><strong>Using the result</strong>: <code>optimize_gepa.py</code> saves the optimized program’s instructions to <code>optimized_syntax_analysis.json</code> (configurable via <code>--out</code>).</p>
+<p>To use it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike.greek_syntax_dspy <span class="im">import</span> analyze</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>analyze.load(<span class="st">"optimized_syntax_analysis.json"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>right after import and before calling <code>analyze_passage()</code>/<code>analyze_sources()</code> — <code>analyze</code> is the same module-level <code>ChainOfThought</code> instance the whole pipeline uses, so loading into it in place is enough; nothing else needs to change. <code>gepa_logs/</code> (GEPA’s own run logs) is gitignored; <code>optimized_syntax_analysis.json</code> is not — commit it once you’re satisfied with a run, or gitignore it yourself if you’d rather treat it as a local, disposable artifact.</p>
+<p>This is scaffolding for a GEPA optimization pipeline, not yet a shipped, pre-optimized prompt: as of this release no <code>optimized_syntax_analysis.json</code> has been committed, and <code>optimize_gepa.py</code> has not yet been run against a live model as part of building this package. Run it yourself once you have LM credentials configured, following the “Running it” commands above.</p>
 
 
 </section>

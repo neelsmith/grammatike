@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>development – grammatike</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">grammatike</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../guides/index.html" aria-current="page"> 
+<span class="menu-text">Guides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/neelsmith/arsgrammatica"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../guides/development.html">Developing <code>grammatike</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">guides/usage.md</span>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/optimizing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Optimizing with GEPA</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/bakeoff.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparing task models with <code>model_bakeoff.py</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/development.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Developing <code>grammatike</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Testing without network access</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#developing-grammatike" id="toc-developing-grammatike" class="nav-link active" data-scroll-target="#developing-grammatike">Developing <code>grammatike</code></a>
+  <ul class="collapse">
+  <li><a href="#why-real-world-testing-not-just-the-gold-example-suite" id="toc-why-real-world-testing-not-just-the-gold-example-suite" class="nav-link" data-scroll-target="#why-real-world-testing-not-just-the-gold-example-suite">Why real-world testing, not just the gold-example suite</a></li>
+  <li><a href="#the-core-loop-analyze-check-automatically-review-by-hand-triage-act" id="toc-the-core-loop-analyze-check-automatically-review-by-hand-triage-act" class="nav-link" data-scroll-target="#the-core-loop-analyze-check-automatically-review-by-hand-triage-act">The core loop: analyze, check automatically, review by hand, triage, act</a></li>
+  <li><a href="#the-three-outcomes-and-what-to-do-with-each" id="toc-the-three-outcomes-and-what-to-do-with-each" class="nav-link" data-scroll-target="#the-three-outcomes-and-what-to-do-with-each">The three outcomes, and what to do with each</a>
+  <ul class="collapse">
+  <li><a href="#outcome-a-a-failure" id="toc-outcome-a-a-failure" class="nav-link" data-scroll-target="#outcome-a-a-failure">Outcome A: a failure</a></li>
+  <li><a href="#outcome-b-a-success-against-a-rare-or-tricky-construction" id="toc-outcome-b-a-success-against-a-rare-or-tricky-construction" class="nav-link" data-scroll-target="#outcome-b-a-success-against-a-rare-or-tricky-construction">Outcome B: a success against a rare or tricky construction</a></li>
+  <li><a href="#outcome-c-a-success-against-a-common-ordinary-construction" id="toc-outcome-c-a-success-against-a-common-ordinary-construction" class="nav-link" data-scroll-target="#outcome-c-a-success-against-a-common-ordinary-construction">Outcome C: a success against a common, ordinary construction</a></li>
+  </ul></li>
+  <li><a href="#how-this-feeds-optimizing.md-and-bakeoff.md" id="toc-how-this-feeds-optimizing.md-and-bakeoff.md" class="nav-link" data-scroll-target="#how-this-feeds-optimizing.md-and-bakeoff.md">How this feeds <code>OPTIMIZING.md</code> and <code>BAKEOFF.md</code></a></li>
+  <li><a href="#a-worked-precedent-inherited-from-arsgrammatica-the-impliedelided-token-feature" id="toc-a-worked-precedent-inherited-from-arsgrammatica-the-impliedelided-token-feature" class="nav-link" data-scroll-target="#a-worked-precedent-inherited-from-arsgrammatica-the-impliedelided-token-feature">A worked precedent, inherited from <code>arsgrammatica</code>: the implied/elided-token feature</a></li>
+  <li><a href="#suggested-cadence" id="toc-suggested-cadence" class="nav-link" data-scroll-target="#suggested-cadence">Suggested cadence</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="developing-grammatike" class="level1">
+<h1>Developing <code>grammatike</code></h1>
+<p><code>USAGE.md</code> describes how to call the pipeline, <code>TESTING.md</code> how to run the offline test suite, <code>OPTIMIZING.md</code> how to tune <code>SyntaxAnalysis</code>’s prompt with GEPA, and <code>BAKEOFF.md</code> how to compare candidate models. Each of those describes one tool. This document describes how they fit together into a repeatable development loop, centered on testing the analyzer against real Ancient Greek text rather than just the hand-picked <code>GOLD_EXAMPLES</code> corpus.</p>
+<section id="why-real-world-testing-not-just-the-gold-example-suite" class="level2">
+<h2 class="anchored" data-anchor-id="why-real-world-testing-not-just-the-gold-example-suite">Why real-world testing, not just the gold-example suite</h2>
+<p><code>tests/fixtures/gold_examples.py</code>’s <code>GOLD_EXAMPLES</code> is a deliberately curated corpus: <code>test_coverage.py</code> enforces that every documented relation label, verbal-expression classification, and token type in <code>syntax_model.md</code> has at least one example exercising it, and the whole <code>pytest</code> suite runs against <code>DummyLM</code>, not a real model. That combination is exactly right for what it’s for – proving the code (<code>models.py</code>’s pydantic models, <code>validate()</code>, <code>verbal_units.py</code>, <code>rendering.py</code>, <code>mermaid.py</code>, <code>serialization.py</code>) correctly <em>represents</em> a correct answer – but it can’t tell you whether a live model actually <em>produces</em> one, and it can’t surface a construction nobody has thought to write a fixture for yet.</p>
+<p>Running the analyzer against real Greek passages – actual prose, not fixtures written to order – is where you find the things the gold-example suite structurally can’t show you:</p>
+<ul>
+<li>a construction <code>syntax_model.md</code> doesn’t document at all yet (<code>arsgrammatica</code>’s own history has a worked precedent for exactly this: the implied/elided-token feature – <code>implied eimi</code> and <code>implied repetition</code> in <code>TokenAnalysis.tokentype</code> – came about this way for Latin’s <code>implied sum</code>/<code>continued discourse</code>, and this port carried the same two-case distinction over for Greek’s <code>εἰμί</code>; see “A worked precedent” below);</li>
+<li>a construction the scheme already documents, but the current prompt still gets wrong;</li>
+<li>a genuinely ambiguous case that exposes a modeling choice worth deciding and flagging explicitly – <code>greek_syntax_dspy.py</code>’s own module docstring already lists several places this port had to extrapolate beyond what <code>syntax_model.md</code> states explicitly (the scope of “implied εἰμί,” the “attributive participle” vs.&nbsp;“attributive” relation split, an infinitive functioning as an ordinary noun, καί’s adverbial reading, a substituted example for a still-untranslated Latin one, indirect questions, and the supplementary participle’s own relation); flag any <em>new</em> judgment call the same way, in a comment near the fixture, rather than quietly picking one and moving on;</li>
+<li>an ordinary, everyday construction the model already handles correctly – not new information about the scheme, but real evidence worth locking in as a regression guardrail so a future prompt or model change can’t silently break it without anyone noticing.</li>
+</ul>
+</section>
+<section id="the-core-loop-analyze-check-automatically-review-by-hand-triage-act" class="level2">
+<h2 class="anchored" data-anchor-id="the-core-loop-analyze-check-automatically-review-by-hand-triage-act">The core loop: analyze, check automatically, review by hand, triage, act</h2>
+<ol type="1">
+<li><p><strong>Analyze a real passage.</strong> <code>analyze_passage(passage)</code> for a single string, or <code>analyze_sources(sources)</code> for a list of citation-labeled <code>CitedText</code> (see USAGE.md’s “Analyzing citable sources”) – either returns <code>(sentences, results)</code>, one <code>SyntaxAnalysis</code> result per sentence found.</p></li>
+<li><p><strong>Run the automated checks first, before reading anything by hand.</strong> <code>analyze_sources()</code> already calls <code>validate()</code> for you and prints any referential problems it finds (a token id that doesn’t exist, a malformed implied token); <code>find_unanchored_coordinated_verbs(result.tokengraph)</code> (<code>verbal_units.py</code>) catches one more specific, observed live-LM mistake (a coordinating-conjunction pair where only one side anchors its own verbal unit) that’s self-consistent enough to slip past <code>validate()</code>. Both are cheap and mechanical – let them rule out the “obviously broken” cases before you spend a human read on anything.</p></li>
+<li><p><strong>Read the surviving result against <code>syntax_model.md</code> by hand.</strong> This is the one step nothing in the codebase can do for you: <code>validate()</code> only checks referential integrity, never correctness, and neither <code>find_unanchored_coordinated_verbs()</code> nor any metric can substitute for actually knowing the Greek. <code>tokengraph_to_html()</code>/<code>tokengraph_to_depth_html()</code> (<code>rendering.py</code>) or <code>tokengraph_to_mermaid()</code> (<code>mermaid.py</code>) are worth rendering here – seeing the verbal-unit coloring and subordination depth laid out is usually faster to check by eye than reading the raw <code>tokengraph</code> rows.</p></li>
+<li><p><strong>Triage what you found into one of three outcomes, and act accordingly</strong> (see the next section). <code>arsgrammatica</code>’s own <code>tests/fixtures/harvest.py</code> (<code>gold_example_from_analysis()</code>, turning a real analysis into a paste-ready <code>GoldExample</code>) has not yet been ported to <code>grammatike</code> – until it is, building a fixture from a real analysis means transcribing <code>result.verbalunits</code>/<code>result.tokengraph</code> into <code>gold_examples.py</code>’s existing dict shape by hand, following the pattern of whichever existing fixture is closest to the new construction.</p></li>
+</ol>
+</section>
+<section id="the-three-outcomes-and-what-to-do-with-each" class="level2">
+<h2 class="anchored" data-anchor-id="the-three-outcomes-and-what-to-do-with-each">The three outcomes, and what to do with each</h2>
+<section id="outcome-a-a-failure" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-a-a-failure">Outcome A: a failure</h3>
+<p>Something is referentially broken (<code>validate()</code>/<code>find_unanchored_coordinated_verbs()</code> caught it) or substantively wrong (you caught it by hand). Don’t just note it and move on – a failure is the most valuable signal this loop produces, because it’s the main way the scheme and the prompt actually improve. Triage it further, in this order:</p>
+<ol type="1">
+<li><strong>Is <code>syntax_model.md</code> actually silent or ambiguous about this construction?</strong> If so, this is a scheme gap, not a model mistake. Extend <code>syntax_model.md</code> first, then follow USAGE.md’s “Extending the scheme” steps: add the new relation label / <code>tokentype</code> / <code>syntactic_type</code> value to the relevant <code>Literal</code> in <code>grammatike/models.py</code>, describe when to use it in <code>SyntaxAnalysis</code>’s docstring in <code>grammatike/greek_syntax_dspy.py</code>, and hand-write a <code>GoldExample</code> with a <em>correct</em> <code>canned_answer</code> exercising it (since the live model, by definition, didn’t produce one) in <code>tests/fixtures/gold_examples.py</code>.</li>
+<li><strong>Is the scheme already clear, but the prompt/model got it wrong anyway?</strong> Hand-write a corrected <code>GoldExample</code> for the passage the same way, so the failure becomes a concrete, checkable trainset entry rather than an anecdote. If you’re unsure between two defensible readings, say so explicitly in a comment above the fixture (matching the existing convention in <code>gold_examples.py</code>, e.g.&nbsp;<code>relative_pronoun_ho_aner_hon_eidon</code>’s own comment about a graph-resolution judgment call) rather than silently committing to one.</li>
+<li>Re-run <code>pytest</code> (fast, <code>DummyLM</code>-backed – see TESTING.md) to confirm the new/corrected fixture actually validates and that <code>test_coverage.py</code> is satisfied, <em>before</em> spending any real API budget re-testing it against the live model.</li>
+</ol>
+<p>Either way, the corrected fixture lands in <code>GOLD_EXAMPLES</code> – see “How this feeds <code>OPTIMIZING.md</code> and <code>BAKEOFF.md</code>” below for what that means downstream.</p>
+</section>
+<section id="outcome-b-a-success-against-a-rare-or-tricky-construction" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-b-a-success-against-a-rare-or-tricky-construction">Outcome B: a success against a rare or tricky construction</h3>
+<p>The model got something genuinely uncommon or structurally hard right – a deep subordination chain, a construction with few other examples in <code>GOLD_EXAMPLES</code>, anything you’d be nervous betting the model gets right consistently. This is worth <em>reinforcing</em>, not just recording: hand-build the <code>GoldExample</code> from the real <code>sentences</code>/<code>result.verbalunits</code>/<code>result.tokengraph</code> (recording <code>result.reasoning</code> too, since <code>dspy.ChainOfThought</code> gives you a real one for free here, not a placeholder) and add it straight to <code>GOLD_EXAMPLES</code> as ordinary trainset material – a correct demonstration of a rare case is precisely the kind of thing <code>optimize_gepa.py</code>’s trainset benefits from having more of, and precisely what <code>model_bakeoff.py</code>’s <code>bootstrap</code> stage is designed to lock in as a few-shot demo for a candidate model that doesn’t reliably get it right zero-shot.</p>
+</section>
+<section id="outcome-c-a-success-against-a-common-ordinary-construction" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-c-a-success-against-a-common-ordinary-construction">Outcome C: a success against a common, ordinary construction</h3>
+<p>The model got something right that it was already expected to get right – a plain independent clause, an ordinary direct object, nothing structurally novel. This is real evidence, but low-value as <em>training</em> signal: <code>optimize_gepa.py</code> has no held-out split at all today (see below), so anything added to <code>GOLD_EXAMPLES</code> is immediately part of what GEPA both trains against and scores itself against, and an easy case the model already nails teaches the optimizer nothing new – it just dilutes the trainset with redundant coverage. The better default is to harvest it the same way, add it to <code>GOLD_EXAMPLES</code>, <em>and</em> add its slug to <code>model_bakeoff.py</code>’s <code>HELD_OUT_SLUGS</code> (see BAKEOFF.md’s “The held-out evaluation set”). That turns it into a regression check: something that already works today, now protected against silently breaking as the prompt, the scheme, or the underlying model changes later – exactly the role <code>model_bakeoff.py</code>’s held-out set exists to play, and one that only gets more useful as it grows more diverse.</p>
+<p>The dividing line, in short: rare-and-tricky successes are worth teaching the optimizer with; common-and-already-reliable successes are worth protecting with a regression check. “Which bucket does this belong in” is a judgment call about how common the construction already is in <code>GOLD_EXAMPLES</code>, not about whether the analysis happened to be correct – both outcomes started from a correct analysis.</p>
+</section>
+</section>
+<section id="how-this-feeds-optimizing.md-and-bakeoff.md" class="level2">
+<h2 class="anchored" data-anchor-id="how-this-feeds-optimizing.md-and-bakeoff.md">How this feeds <code>OPTIMIZING.md</code> and <code>BAKEOFF.md</code></h2>
+<p><code>optimize_gepa.py</code> (OPTIMIZING.md) trains <code>SyntaxAnalysis</code>’s prompt against <em>all</em> of <code>GOLD_EXAMPLES</code>, with no separate held-out valset at all – per <code>dspy.GEPA</code>’s own behavior when none is given, the trainset doubles as the Pareto-tracking set GEPA scores itself against. That means every fixture this loop adds to <code>GOLD_EXAMPLES</code> – a corrected failure (Outcome A) or a harvested rare-construction success (Outcome B) – becomes real trainset material the next time <code>optimize_gepa.py</code> runs, which is the main way the shipped prompt actually improves over time: not synthetic examples, but real passages that either broke something or demonstrated something worth reinforcing.</p>
+<p><strong>A known gap worth being aware of</strong>: <code>optimize_gepa.py</code> has no mechanism today to <em>exclude</em> anything from its trainset – unlike <code>model_bakeoff.py</code>, it doesn’t consult <code>HELD_OUT_SLUGS</code> (or anything else) to keep held-out examples out of what it trains against. So an Outcome-C fixture you add specifically to protect as a held-out regression check for <code>model_bakeoff.py</code> purposes still gets folded into <code>optimize_gepa.py</code>’s trainset the next time it runs – the two scripts don’t currently share one consistent notion of “held out.” Until that’s addressed (e.g.&nbsp;by teaching <code>optimize_gepa.py</code> to skip <code>HELD_OUT_SLUGS</code> too), treat the held-out/trainset distinction described above as meaningful specifically <em>for <code>model_bakeoff.py</code>’s cross-model comparisons</em>, not as an airtight guarantee that held-out examples never influence the production prompt.</p>
+<p><code>model_bakeoff.py</code> (BAKEOFF.md) is the one place in this repo with an actual train/eval firewall: its <code>gepa</code>/<code>bootstrap</code> stages never train against <code>HELD_OUT_SLUGS</code>, so every candidate model is compared on the same untouched slice. That slice was deliberately stratified by hand when it was first built (a plain independent clause, a subordinating-conjunction dependent clause, a relative pronoun, an indirect statement, a circumstantial genitive absolute, an attributive participle, a depth-2 nesting case, and three further relations); every Outcome-C fixture this loop produces is a natural way to keep growing that stratification with real passages rather than more hand-constructed ones, making <code>model_bakeoff.py</code>’s cross-model comparisons more representative as the held-out set grows.</p>
+<p>Put together: this loop is the thing that keeps both downstream tools honest over time. Without it, <code>optimize_gepa.py</code> only ever optimizes against a fixed, hand-written snapshot of the scheme, and <code>model_bakeoff.py</code> only ever compares candidates against that same fixed snapshot – neither one improves just by running the scripts again. Real-world testing is what actually grows and diversifies the corpus both scripts depend on.</p>
+</section>
+<section id="a-worked-precedent-inherited-from-arsgrammatica-the-impliedelided-token-feature" class="level2">
+<h2 class="anchored" data-anchor-id="a-worked-precedent-inherited-from-arsgrammatica-the-impliedelided-token-feature">A worked precedent, inherited from <code>arsgrammatica</code>: the implied/elided-token feature</h2>
+<p><code>grammatike</code>’s <code>IMPLIED_TOKENTYPES</code> (<code>implied eimi</code>, <code>implied repetition</code>) is <code>arsgrammatica</code>’s Latin <code>implied sum</code>/<code>continued discourse</code> feature carried over to Greek, following the same loop this document describes:</p>
+<ol type="1">
+<li>A real Latin passage needed a construction <code>syntax_model.md</code> didn’t document: an elided form of the copula, and a shared governing verb of indirect discourse left unrepeated across coordinate clauses.</li>
+<li><code>syntax_model.md</code> was extended with an “understood or implied verbal expressions” section describing both cases and the id-naming convention for a token with no surface realization – ported into the Greek scheme with Greek’s own copula, εἰμί, in place of Latin’s <em>sum</em>.</li>
+<li><code>models.py</code>’s <code>TokenAnalysis.tokentype</code> gained the two matching <code>Literal</code> values (plus the shared <code>IMPLIED_TOKENTYPES</code> constant so every consumer – <code>validate()</code>, <code>rendering.py</code>, <code>serialization.py</code>, <code>conftest.py</code> – checks membership in one place rather than hardcoding either string), and <code>SyntaxAnalysis</code>’s docstring in <code>greek_syntax_dspy.py</code> documents exactly when to use each one and how to name the new token’s id – extrapolating beyond <code>syntax_model.md</code>’s own single worked example, as that module’s own docstring says explicitly.</li>
+<li>Hand-written <code>GoldExample</code> entries (<code>implied_eimi_tauten_ten_hybrin</code>, <code>implied_repetition_ego_men_ano_dietomen</code>) were added to <code>gold_examples.py</code>, and <code>test_coverage.py</code> confirms both <code>tokentype</code> values are exercised.</li>
+</ol>
+<p>A rare-construction success (Outcome B) or a common-construction success (Outcome C) follows the same shape starting from step 4 instead, using a real <code>analyze_passage()</code> result rather than a hand-invented one.</p>
+</section>
+<section id="suggested-cadence" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-cadence">Suggested cadence</h2>
+<ul>
+<li>After any batch of real-world testing, run <code>pytest</code> (TESTING.md) first – it’s fast and <code>DummyLM</code>-backed, and will immediately tell you if a new or corrected fixture doesn’t actually validate or if <code>test_coverage.py</code> regressed.</li>
+<li>Run <code>optimize_gepa.py</code> (OPTIMIZING.md) periodically to refresh the shipped, production prompt against whatever <code>GOLD_EXAMPLES</code> has grown into since the last run – this is a live-LM script with real API cost, so batch it rather than running it after every single new fixture.</li>
+<li>Run <code>model_bakeoff.py</code> (BAKEOFF.md) periodically – before adopting a new candidate model, or whenever the held-out set has grown enough to be worth re-checking – to confirm existing candidates still stand where you last measured them, now against a larger, more representative held-out slice.</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Documentation for release version <strong>prerelease</strong></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

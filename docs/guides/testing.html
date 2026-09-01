@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>grammatike / γραμματικὴ τέχνη – grammatike</title>
+<title>testing – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,26 +23,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -75,14 +110,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">grammatike</span>
     </a>
   </div>
@@ -93,23 +128,23 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./concepts/index.html"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./tutorials/index.html"> 
+    <a class="nav-link" href="../tutorials/index.html"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./guides/index.html"> 
+    <a class="nav-link active" href="../guides/index.html" aria-current="page"> 
 <span class="menu-text">Guides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./reference/index.html"> 
+    <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
 </ul>
@@ -125,74 +160,119 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../guides/testing.html">Testing without network access</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">guides/usage.md</span>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/optimizing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Optimizing with GEPA</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/bakeoff.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparing task models with <code>model_bakeoff.py</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Developing <code>grammatike</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/testing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Testing without network access</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#related-work" id="toc-related-work" class="nav-link active" data-scroll-target="#related-work">Related work</a></li>
+  <li><a href="#testing-without-network-access" id="toc-testing-without-network-access" class="nav-link active" data-scroll-target="#testing-without-network-access">Testing without network access</a>
+  <ul class="collapse">
+  <li><a href="#layout" id="toc-layout" class="nav-link" data-scroll-target="#layout">Layout</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">grammatike / γραμματικὴ τέχνη</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p><code>grammatike</code> is a Python package leveraging LLMs with <a href="https://dspy.ai">dspy</a> to analyze the syntax of passages of ancient Greek.</p>
-<p><code>grammatike</code> offers an alternative analytic scheme to <a href="https://universaldependencies.org">Universal Dependencies</a>, designed to describe Greek syntax in familiar terms that are convenient for research and teaching. Released under the <a href="LICENSE">GNU General Public License v3 or later</a>.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th>Learning the package</th>
-<th>Using the package</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Hands-on</strong></td>
-<td>Try a <a href="./tutorials/">tutorial</a> to start using the package</td>
-<td>Find <a href="./guides/">recipes</a> for specific tasks</td>
-</tr>
-<tr class="even">
-<td><strong>Understanding</strong></td>
-<td><a href="./concepts/">Modelling the syntax of ancient Greek</a></td>
-<td>See <a href="./reference/">reference information</a> (including API documentation for all exported functions)</td>
-</tr>
-</tbody>
-</table>
-<section id="related-work" class="level2">
-<h2 class="anchored" data-anchor-id="related-work">Related work</h2>
+<section id="testing-without-network-access" class="level1">
+<h1>Testing without network access</h1>
+<p>First time in a fresh checkout or virtual environment: <code>pytest</code> itself is a test-only dependency, not something a plain <code>pip install -e .</code> pulls in (see <code>pyproject.toml</code>’s <code>dependencies</code> vs.&nbsp;<code>[project.optional-dependencies]</code>), so install it explicitly before your first run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> <span class="st">".[test]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>(<code>.[dev]</code> instead of <code>.[test]</code> also pulls in <code>pdoc</code> and <code>marimo</code>, for <code>docs/build_api_docs.py</code> and the notebooks in <code>marimo/</code>.) Then:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Runs the whole suite (536 tests, <code>tests/</code>) — the <code>SyntaxAnalysis</code> stage’s tests use DSPy’s <code>DummyLM</code> in place of a real LM call, while the segmentation stage’s tests call its deterministic <code>segment_sources()</code> directly with no LM involved at all (see <code>segmentation.py</code>) — useful for confirming the models/signatures/pipeline still fit together after you change something, without spending API calls. Tests that call the actual configured LM are marked <code>live</code> and skipped by default (<code>pytest.ini</code>’s <code>addopts = -m "not live"</code>) — they’re the only way to check the LM itself gets a scenario right, not just that the code can represent a correct answer; run them explicitly with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> <span class="at">-m</span> live</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>(<code>live</code> tests need a working <code>.env</code>, same as <code>syntaxer_main.py</code>; the <code>real_lm</code> fixture in <code>tests/conftest.py</code> skips gracefully if <code>API_KEY</code> isn’t set.)</p>
+<p>Some standard <code>pytest</code> shorthands:</p>
 <ul>
-<li><a href="https://github.com/neelsmith/arsgrammatica">arsgrammatica</a>: a parallel Python package for analyzing passages of Latin with LMs</li>
-<li><a href="https://github.com/neelsmith/diqduq">diqduq</a>: a parallel Python package for analyzing passages of Biblical Hebrew with LMs</li>
-<li><a href="https://github.com/neelsmith/aat">aat</a> : Agent-Action-Target model, a reductive model of natural-language syntax</li>
+<li><code>pytest</code> to run all.</li>
+<li><code>pytest -v</code> for per-test names instead of dots.</li>
+<li><code>pytest tests/test_gold_examples.py</code> to run just one file.</li>
+<li><code>pytest -k agent</code> to run only tests matching a substring.</li>
+<li><code>pytest --collect-only</code> if you just want to see what it discovered without running anything.</li>
+</ul>
+<section id="layout" class="level2">
+<h2 class="anchored" data-anchor-id="layout">Layout</h2>
+<ul>
+<li><code>tests/conftest.py</code> — shared helpers: <code>tokens_from_canned_answer()</code> builds a <code>Token</code> list straight from a <code>GoldExample</code>’s own <code>canned_answer</code> tokengraph; <code>run_gold_example()</code> runs a <code>GoldExample</code>’s passage through <code>analyze()</code> with <code>DummyLM</code> standing in for the real LM; <code>run_segmentation_example()</code> does the same for <code>segment_sources()</code>, though that one needs no <code>DummyLM</code> at all – segmentation is deterministic (see <code>segmentation.py</code>); the <code>real_lm</code> fixture configures <code>dspy</code> against the real <code>.env</code>-configured model for <code>live</code>-marked tests (only <code>SyntaxAnalysis</code> itself uses this now).</li>
+<li><code>tests/fixtures/gold_examples.py</code> — <code>GOLD_EXAMPLES</code>, a list of <code>GoldExample(slug, passage, tags, canned_answer)</code> entries: a real Greek sentence, the relation(s)/construction it’s meant to exercise, and a hand-written, <code>syntax_model.md</code>-correct <code>canned_answer</code> in the exact dict shape <code>DummyLM</code> expects. Wherever possible each fixture transcribes one of <code>syntax_model.md</code>’s own worked examples verbatim; a few are necessarily constructed, and say so in a comment.</li>
+<li><code>tests/fixtures/segmentation_examples.py</code> — <code>SegmentationExample</code> entries exercising <code>segment_sources()</code>’s citation-aware sentence/token segmentation: enclitic vs.&nbsp;false-positive splits, numeral tokenization, a period or interrogative always ending a sentence, indefinite vs.&nbsp;interrogative enclitics, and (per <code>syntax_model.md</code>’s current “Segmentation into sentences” section) a raised-dot/colon-type mark NEVER ending a sentence, no matter what surrounds it – three fixtures use real text from Lysias 1.1-1.4 (the same passages <code>syntax_model.md</code> itself draws its worked examples from) to confirm this, including one sentence that spans a citation-unit boundary through an internal colon that isn’t a boundary.</li>
+<li><code>tests/test_analyze_passage.py</code>, <code>tests/test_gold_examples.py</code> — run every <code>GoldExample</code> through <code>analyze()</code>/<code>analyze_passage()</code> under <code>DummyLM</code> and check the result round-trips correctly.</li>
+<li><code>tests/test_segmentation.py</code>, <code>tests/test_segmentation_examples.py</code> — the segmentation stage; both run <code>segment_sources()</code> directly with no LM in the loop at all, so there’s no <code>live</code> counterpart left for this stage (there used to be one, <code>test_segmentation_live.py</code>, back when segmentation was itself LM-driven).</li>
+<li><code>tests/test_validate.py</code> — <code>validate()</code>’s referential-integrity checks (unknown ids, malformed implied tokens, the reserved <code>'root'</code> sentinel).</li>
+<li><code>tests/test_coverage.py</code> — enforces that every documented <code>RelationLabel</code>, <code>tokentype</code>, and <code>syntactic_type</code>/<code>semantic_type</code> value in <code>models.py</code> has at least one <code>GOLD_EXAMPLES</code> entry tagged for it, so the fixture corpus can’t silently drift out of sync with the scheme.</li>
+<li><code>tests/test_verbal_units.py</code> — <code>assign_verbal_units()</code>, <code>assign_verbal_unit_colors()</code>, <code>compute_subordination_depths()</code>, <code>max_subordination_depth()</code>, and the <code>find_unanchored_coordinated_verbs()</code> heuristic.</li>
+<li><code>tests/test_rendering.py</code> — <code>tokengraph_to_text()</code>, <code>tokengraph_to_html()</code>, <code>tokengraph_to_depth_html()</code>.</li>
+<li><code>tests/test_mermaid_coloring.py</code> — <code>tokengraph_to_mermaid()</code> and its verbal-unit coloring.</li>
+<li><code>tests/test_serialization.py</code> — <code>serialize_analyses()</code>/<code>write_analyses()</code>/<code>read_analyses()</code>/<code>read_llm_notes()</code>/<code>split_analysis_by_sentence()</code>, including the optional <code>results</code> parameter’s <code>#!llm</code> blocks (model/reasoning round trip, internal-blank-line preservation vs.&nbsp;the writer’s own trailing separator, and the malformed-block errors both readers share).</li>
+<li><code>tests/test_ctsdata.py</code> — <code>read_ctsdata()</code>.</li>
+<li><code>tests/test_token_budget.py</code> — <code>estimate_max_tokens()</code>, <code>get_calibration()</code>, and <code>analyze_with_retry()</code>’s truncation-detection/retry logic, including its separate retry-once-with-cache-bypassed path for a non-truncation parse failure (<code>analyze()</code> itself is monkeypatched for that path — DummyLM can’t cleanly simulate a malformed-but-well-terminated response) and its caller-facing <code>disable_cache</code> parameter (bypasses the cache on every attempt, not just one retry).</li>
+<li><code>tests/test_gepa_metric.py</code> — <code>grammatike.gepa_metric.syntax_metric()</code> in isolation, including that swapping the <code>relatedtoken1</code>/<code>relatedtoken2</code> overflow slots scores as a perfect match, not an error.</li>
+<li><code>tests/test_harvest.py</code> — a thin, <code>live</code>-marked stub. <code>arsgrammatica</code>’s <code>tests/fixtures/harvest.py</code> (<code>gold_example_from_analysis()</code>/<code>format_gold_example_source()</code>, for turning a real analysis into a paste-ready <code>GoldExample</code>) has not been ported to <code>grammatike</code> yet; see that test file’s own docstring.</li>
 </ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

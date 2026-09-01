@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>bakeoff – grammatike</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">grammatike</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../guides/index.html" aria-current="page"> 
+<span class="menu-text">Guides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/neelsmith/arsgrammatica"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../guides/bakeoff.html">Comparing task models with <code>model_bakeoff.py</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">guides/usage.md</span>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/optimizing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Optimizing with GEPA</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/bakeoff.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Comparing task models with <code>model_bakeoff.py</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Developing <code>grammatike</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Testing without network access</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#comparing-task-models-with-model_bakeoff.py" id="toc-comparing-task-models-with-model_bakeoff.py" class="nav-link active" data-scroll-target="#comparing-task-models-with-model_bakeoff.py">Comparing task models with <code>model_bakeoff.py</code></a>
+  <ul class="collapse">
+  <li><a href="#the-three-questions-as-three-stages" id="toc-the-three-questions-as-three-stages" class="nav-link" data-scroll-target="#the-three-questions-as-three-stages">The three questions, as three stages</a></li>
+  <li><a href="#two-providers-two-different-rhythms" id="toc-two-providers-two-different-rhythms" class="nav-link" data-scroll-target="#two-providers-two-different-rhythms">Two providers, two different rhythms</a></li>
+  <li><a href="#the-held-out-evaluation-set" id="toc-the-held-out-evaluation-set" class="nav-link" data-scroll-target="#the-held-out-evaluation-set">The held-out evaluation set</a></li>
+  <li><a href="#reading-the-scores" id="toc-reading-the-scores" class="nav-link" data-scroll-target="#reading-the-scores">Reading the scores</a></li>
+  <li><a href="#setting-up-.env" id="toc-setting-up-.env" class="nav-link" data-scroll-target="#setting-up-.env">Setting up <code>.env</code></a></li>
+  <li><a href="#running-it" id="toc-running-it" class="nav-link" data-scroll-target="#running-it">Running it</a></li>
+  <li><a href="#the-results-file" id="toc-the-results-file" class="nav-link" data-scroll-target="#the-results-file">The results file</a></li>
+  <li><a href="#the-candidate-roster" id="toc-the-candidate-roster" class="nav-link" data-scroll-target="#the-candidate-roster">The candidate roster</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="comparing-task-models-with-model_bakeoff.py" class="level1">
+<h1>Comparing task models with <code>model_bakeoff.py</code></h1>
+<p><code>model_bakeoff.py</code> answers a practical question: <strong>which models, if any, could realistically replace the model this program was developed against?</strong> <code>grammatike</code> was developed with Claude Opus 5. This script lets you check open-weight models hosted on Hugging Face, or running locally under Ollama, against the same held-out slice of gold examples, and see not just whether each one is “good enough” but <em>where</em> it falls short and <em>whether that performance can be improved with prompting or demos</em>.</p>
+<p>It’s a separate, standalone script from <code>optimize_gepa.py</code> — it doesn’t touch <code>optimized_syntax_analysis.json</code> or anything <code>syntaxer_main.py</code> uses at runtime. Run it whenever you want to evaluate a candidate; it never changes the production pipeline.</p>
+<section id="the-three-questions-as-three-stages" class="level2">
+<h2 class="anchored" data-anchor-id="the-three-questions-as-three-stages">The three questions, as three stages</h2>
+<p>“Can model X run this program” is really three separate questions. <code>model_bakeoff.py</code> answers each one as its own stage, selectable with <code>--stages</code>:</p>
+<ol type="1">
+<li><strong><code>baseline</code></strong> (zero-shot) — does the candidate do anything useful with the exact instructions already written and tuned against Opus 5, no optimization at all? This is the cheapest stage by far (one call per held-out example) and worth running alone first.</li>
+<li><strong><code>gepa</code></strong> — if <code>dspy.GEPA</code> is allowed to rewrite the instructions specifically for this candidate — reading feedback on the candidate’s <em>own</em> attempts and proposing better wording — how much of the gap closes? The candidate still solves every example itself, both during optimization and at final scoring; only the wording changes.</li>
+<li><strong><code>bootstrap</code></strong> — if Opus itself is allowed to solve some of the training passages (acting as a <em>teacher</em>), and the verified-correct traces are attached to the candidate’s own prompt as worked few-shot examples, how much closes? Here the candidate never has to solve a training example itself — only the held-out scoring examples afterward.</li>
+</ol>
+<p>Comparing <code>baseline</code> against <code>gepa</code>/<code>bootstrap</code> separates “does this model already get it” from “can it be brought up to speed”; comparing <code>gepa</code> against <code>bootstrap</code> separates two different ways of doing that bringing-up. A candidate that’s mediocre at <code>baseline</code> but closes most of the gap at <code>gepa</code> or <code>bootstrap</code> is a much better prospect than one that’s mediocre at all three — the latter suggests a real capability ceiling, not just a prompting mismatch.</p>
+<p><code>gepa</code>/<code>bootstrap</code> make many more LM calls than <code>baseline</code> (both the candidate’s own calls and the teacher’s), so start with <code>--stages baseline</code> across every candidate you’re curious about, then spend the heavier stages only on the ones worth the API usage.</p>
+</section>
+<section id="two-providers-two-different-rhythms" class="level2">
+<h2 class="anchored" data-anchor-id="two-providers-two-different-rhythms">Two providers, two different rhythms</h2>
+<p><strong><code>--provider huggingface</code></strong> (the default) routes each candidate through Hugging Face’s Inference Providers layer. You can run several candidates in one invocation, one after another, since each is just an API call.</p>
+<p><strong><code>--provider ollama</code></strong> is for models you pull and run locally with <code>ollama</code>. Realistically you can only have one model loaded in Ollama at a time, so this script’s shape is built around that constraint: <code>--provider ollama</code> refuses to run unless exactly one candidate is selected. The intended workflow is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> pull llama3.1:8b            <span class="co"># or whichever candidate; make sure ollama serve is running</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--provider</span> ollama <span class="at">--candidates</span> llama-3.1-8b <span class="at">--stages</span> baseline</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ...stop that model, pull/load the next one...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--provider</span> ollama <span class="at">--candidates</span> gpt-oss-20b <span class="at">--stages</span> baseline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Every invocation is a normal one-shot run, not a long-lived process — the results CSV (see below) is what accumulates scores across separate invocations, so you can score one currently-loaded model, save, swap models, and repeat, and nothing you scored earlier gets overwritten.</p>
+</section>
+<section id="the-held-out-evaluation-set" class="level2">
+<h2 class="anchored" data-anchor-id="the-held-out-evaluation-set">The held-out evaluation set</h2>
+<p><code>optimize_gepa.py</code> trains against every example in <code>tests/fixtures/gold_examples.py</code>, with no separate held-out set — a reasonable choice for tuning one model, but it would make cross-model comparison unreliable here: a candidate’s post-optimization score would partly reflect how well its own optimized prompt/demos fit the exact examples it’s judged on.</p>
+<p><code>model_bakeoff.py</code> instead carves out a fixed slice of ten gold examples (<code>HELD_OUT_SLUGS</code>, near the top of the file) that no candidate’s <code>gepa</code>/<code>bootstrap</code> stage ever trains against. Every candidate optimizes against the same remaining 22 examples and is scored against the same untouched held-out set, so scores are actually comparable across models and across stages. The slice is deliberately stratified across <code>syntax_model.md</code>’s own Greek constructions — a plain independent clause, a subordinating-conjunction dependent clause, a relative pronoun (exercising the <code>relatedtoken2</code> overflow slot), an indirect statement, a circumstantial genitive absolute, an attributive participle (one of Greek’s three predicate-participle categories, with no single-value Latin analogue), a depth-2 nesting case, and three further relations (apposition, indirect question, complementary infinitive) — so a low score can be traced to a specific construction rather than just “worse overall.”</p>
+</section>
+<section id="reading-the-scores" class="level2">
+<h2 class="anchored" data-anchor-id="reading-the-scores">Reading the scores</h2>
+<p>Every stage reports a blended <code>mean</code> score in [0, 1] over the held-out set, plus three unblended sub-scores from <code>grammatike.gepa_metric.syntax_metric()</code>:</p>
+<ul>
+<li><strong><code>field_mean</code></strong> — basic per-token fields (tokentype, lemma, which verbal unit a token belongs to).</li>
+<li><strong><code>relation_mean</code></strong> — the actual dependency relations, weighted highest (0.5 of the blend) since they’re the heart of the scheme.</li>
+<li><strong><code>vu_mean</code></strong> — verbal-expression classification (<code>syntactic_type</code>/<code>semantic_type</code>).</li>
+</ul>
+<p>A candidate that nails <code>field_mean</code> but collapses on <code>relation_mean</code> is failing at multi-hop structural reasoning specifically — a different (and probably less prompt-fixable) problem than one that’s just generally worse across the board. The console output also prints, per held-out example, any that raised an outright error (a request that failed, or output that didn’t parse into the expected shape) rather than silently folding those into the average — worth reading before trusting a low score.</p>
+<p>This script doesn’t compute a malformed-output rate as its own number (<code>validate()</code>/<code>find_unanchored_coordinated_verbs()</code> in the main package can do that over raw predictions if you want it), and it doesn’t do real weight-level fine-tuning — the <code>bootstrap</code> stage attaches Opus-solved examples to the candidate’s <em>prompt</em>, never touching its weights. <code>dspy.BootstrapFinetune</code> is real fine-tuning, but needs different infrastructure than either provider here and isn’t wired in.</p>
+</section>
+<section id="setting-up-.env" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-.env">Setting up <code>.env</code></h2>
+<p><code>--provider huggingface</code> needs a Hugging Face access token:</p>
+<pre><code>HUGGINGFACE_API_KEY=hf_...</code></pre>
+<p>(a token with Inference Providers access — see huggingface.co/settings/tokens). Some candidates specify their own <code>api_key_env</code>/<code>api_base_env</code> in <code>CANDIDATES</code> if they need a different credential or a dedicated endpoint.</p>
+<p><code>--provider ollama</code> needs nothing by default — it talks to <code>http://localhost:11434</code>. Set <code>OLLAMA_API_BASE</code> in <code>.env</code>, or pass <code>--ollama-api-base</code>, if Ollama is running somewhere else on your network.</p>
+<p>The <strong>teacher model</strong> — used as GEPA’s <code>reflection_lm</code> in the <code>gepa</code> stage, and as the program that actually solves training passages in the <code>bootstrap</code> stage — is fixed across every candidate and provider, and defaults to this repo’s already-configured main model (<code>API_BASE</code>/<code>MODEL</code>/<code>API_KEY</code>, the same <code>.env</code> <code>syntaxer_main.py</code> and <code>optimize_gepa.py</code> use). Override it with <code>REFLECTION_MODEL</code> (and <code>REFLECTION_API_BASE</code>/<code>REFLECTION_API_KEY</code> if they differ) — exactly like <code>optimize_gepa.py</code>. If you only run <code>--stages baseline</code>, no teacher credentials are needed at all.</p>
+</section>
+<section id="running-it" class="level2">
+<h2 class="anchored" data-anchor-id="running-it">Running it</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cheap first pass across every Hugging Face candidate</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--stages</span> baseline</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything, every candidate (expensive -- gepa + bootstrap make many calls)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--stages</span> baseline gepa bootstrap</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Just a couple of candidates</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--candidates</span> llama-3.1-8b gpt-oss-20b</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip gepa/bootstrap for anything that didn't clear a baseline threshold</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--min-baseline-to-optimize</span> 0.3</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ollama, one candidate at a time (see workflow above)</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--provider</span> ollama <span class="at">--candidates</span> llama-3.1-8b <span class="at">--stages</span> baseline</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--provider</span> ollama <span class="at">--candidates</span> llama-3.1-8b <span class="at">--stages</span> gepa bootstrap</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># A model not in CANDIDATES at all -- either provider</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--provider</span> ollama <span class="at">--model</span> ollama_chat/llama3.1:8b-instruct-q8_0 <span class="at">--label</span> llama-3.1-8b-q8</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimizer knobs</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--auto</span> medium                    <span class="co"># gepa's (and miprov2's) budget preset</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--max-metric-calls</span> 40             <span class="co"># exact gepa budget instead of --auto</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--bootstrap-optimizer</span> miprov2     <span class="co"># heavier alternative to bootstrap-fewshot</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--max-bootstrapped-demos</span> 4 <span class="at">--max-labeled-demos</span> 4</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> model_bakeoff.py <span class="at">--out</span> results.csv                 <span class="co"># merge into a specific file</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The full flag reference is always available with <code>python model_bakeoff.py --help</code>; the ones most worth knowing up front:</p>
+<ul>
+<li><code>--provider {huggingface,ollama}</code> — where candidates run (default <code>huggingface</code>).</li>
+<li><code>--candidates LABEL [LABEL ...]</code> — restrict to specific labels from <code>CANDIDATES</code> (default: all of them; <code>--provider ollama</code> requires exactly one).</li>
+<li><code>--model</code> / <code>--label</code> — an ad hoc pair for a model not in <code>CANDIDATES</code> at all; both or neither.</li>
+<li><code>--stages {baseline,gepa,bootstrap}</code> — which stage(s) to run this invocation (default: all three).</li>
+<li><code>--bootstrap-optimizer {bootstrap-fewshot,miprov2}</code> — which optimizer implements the <code>bootstrap</code> stage (default <code>bootstrap-fewshot</code>, cheaper).</li>
+<li><code>--min-baseline-to-optimize</code> — skip <code>gepa</code>/<code>bootstrap</code> for a candidate whose zero-shot mean is below this threshold, whether that baseline came from this invocation or a previously recorded row.</li>
+<li><code>--out</code> — the results file to merge into (default <code>model_bakeoff_results.csv</code>).</li>
+</ul>
+<p>Expect real calls against whichever provider serves each candidate, plus the teacher model’s calls for <code>gepa</code>/<code>bootstrap</code>. Start with <code>--stages baseline</code> and one candidate before running more stages or more candidates.</p>
+</section>
+<section id="the-results-file" class="level2">
+<h2 class="anchored" data-anchor-id="the-results-file">The results file</h2>
+<p>Results accumulate in a CSV (<code>model_bakeoff_results.csv</code> by default), keyed by <code>(label, provider, stage)</code>. Each invocation reads whatever’s already there, merges in its own new rows, and writes the whole thing back out sorted by <code>CANDIDATES</code>’ own order and then by stage — so:</p>
+<ul>
+<li>Running a Hugging Face pass today and an Ollama pass tomorrow, or scoring one Ollama model per day as you cycle through them, all lands in the same file.</li>
+<li>Re-running the same <code>(label, provider, stage)</code> combination overwrites just that row; every other row survives untouched.</li>
+<li>Columns: <code>label</code>, <code>provider</code>, <code>model</code> (the resolved model string actually called), <code>family</code>, <code>tier</code>, <code>stage</code>, <code>n</code> (held-out example count), <code>mean</code>/<code>min</code>/<code>max</code> (blended score), <code>field_mean</code>/<code>relation_mean</code>/<code>vu_mean</code>, <code>elapsed_s</code>, <code>n_calls</code>, <code>total_cost</code> (blank when the provider doesn’t report per-call cost — Ollama never will, since it’s local), and <code>error</code> (set instead of scores if the candidate was skipped entirely, e.g.&nbsp;a missing API key).</li>
+</ul>
+<p>Each optimized <code>gepa</code>/<code>bootstrap</code> run is also saved to disk as <code>optimized_&lt;label&gt;_&lt;provider&gt;_&lt;stage&gt;.json</code>, alongside the CSV row — load one of these into a <code>dspy.ChainOfThought(SyntaxAnalysis)</code> instance with <code>.load(...)</code> if you want to inspect or reuse the actual optimized program, not just its score.</p>
+<p>No results have been recorded yet as of this release — <code>model_bakeoff_results.csv</code> does not exist in this repo until you run the script yourself.</p>
+</section>
+<section id="the-candidate-roster" class="level2">
+<h2 class="anchored" data-anchor-id="the-candidate-roster">The candidate roster</h2>
+<p><code>CANDIDATES</code>, near the top of the file, is carried over unchanged from <code>arsgrammatica</code>’s own roster — general-purpose open-weight instruct models, spanning roughly 3B to 120B+ parameters across several major open-weight families, plus one reasoning-distilled model (DeepSeek-R1-Distill-Llama-8B) at the same size as its plain counterpart (Llama-3.1-8B), to see whether chain-of-thought distillation specifically helps a multi-hop structural task like this one. None of these models are Latin- or Greek-specific, so the same spread is the right starting point for asking the analogous question about grammatike’s task.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>label</th>
+<th>family</th>
+<th>tier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phi-4-mini</code></td>
+<td>Microsoft Phi</td>
+<td>~4B</td>
+</tr>
+<tr class="even">
+<td><code>llama-3.2-3b</code></td>
+<td>Meta Llama</td>
+<td>~3B</td>
+</tr>
+<tr class="odd">
+<td><code>llama-3.1-8b</code></td>
+<td>Meta Llama</td>
+<td>~8B</td>
+</tr>
+<tr class="even">
+<td><code>deepseek-r1-distill-llama-8b</code></td>
+<td>DeepSeek (R1 distill)</td>
+<td>~8B</td>
+</tr>
+<tr class="odd">
+<td><code>qwen-8b</code></td>
+<td>Alibaba Qwen</td>
+<td>~7B</td>
+</tr>
+<tr class="even">
+<td><code>gpt-oss-20b</code></td>
+<td>OpenAI (open weights)</td>
+<td>~20B</td>
+</tr>
+<tr class="odd">
+<td><code>mistral-small-24b</code></td>
+<td>Mistral AI</td>
+<td>~24B</td>
+</tr>
+<tr class="even">
+<td><code>llama-3.3-70b</code></td>
+<td>Meta Llama</td>
+<td>~70B</td>
+</tr>
+<tr class="odd">
+<td><code>deepseek-r1-distill-llama-70b</code></td>
+<td>DeepSeek (R1 distill)</td>
+<td>~70B</td>
+</tr>
+<tr class="even">
+<td><code>gpt-oss-120b</code></td>
+<td>OpenAI (open weights)</td>
+<td>~120B</td>
+</tr>
+</tbody>
+</table>
+<p>Two caveats worth knowing before running these on Ollama specifically: the <em>bare</em> tag <code>deepseek-r1:8b</code> has been repointed to a Qwen3-based checkpoint rather than the Llama-based distill this entry is actually about — the explicit <code>-llama-distill</code> suffix in <code>ollama_model</code> is required to get the right model, so double-check against <code>ollama list</code>/the library page before a real run. And Ollama’s library currently only carries “Mistral Small 3” (2501), while the Hugging Face entry points at the newer 3.2 (2506) — the two providers aren’t quite testing the same checkpoint for <code>mistral-small-24b</code>, so treat any HF-vs-Ollama comparison for that label with that in mind.</p>
+<p>Model availability and naming move fast on both sides; treat this roster as a snapshot worth re-checking against Hugging Face’s Inference Providers docs, each model’s Hub page, and <code>ollama list</code>/the Ollama library before a real run, not a guarantee. The largest candidates (70B/120B-class) are realistic mainly through <code>--provider huggingface</code> — running them locally via Ollama needs serious hardware.</p>
+<p>To add a new candidate permanently, add a <code>dict(...)</code> entry to <code>CANDIDATES</code> with at least <code>label</code>, <code>model</code> (the <code>huggingface/org/repo</code> string), and <code>ollama_model</code> (the exact Ollama pull tag); for a one-off you don’t want to add to the roster at all, use <code>--model</code>/<code>--label</code> instead (see the Running it examples above).</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Documentation for release version <strong>prerelease</strong></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

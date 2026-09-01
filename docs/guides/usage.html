@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>usage – grammatike</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-6d4e4c6c342646cac9792aff734a6985.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">grammatike</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../tutorials/index.html"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../guides/index.html"> 
+<span class="menu-text">Guides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/neelsmith/arsgrammatica"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ancient-greek-syntax-analyzer-usage-guide" id="toc-ancient-greek-syntax-analyzer-usage-guide" class="nav-link active" data-scroll-target="#ancient-greek-syntax-analyzer-usage-guide">Ancient Greek Syntax Analyzer — Usage Guide</a>
+  <ul class="collapse">
+  <li><a href="#running-an-analysis-from-the-command-line" id="toc-running-an-analysis-from-the-command-line" class="nav-link" data-scroll-target="#running-an-analysis-from-the-command-line">Running an analysis from the command line</a></li>
+  <li><a href="#using-grammatike-in-a-script" id="toc-using-grammatike-in-a-script" class="nav-link" data-scroll-target="#using-grammatike-in-a-script">Using <code>grammatike</code> in a script</a></li>
+  <li><a href="#analyzing-citable-sources" id="toc-analyzing-citable-sources" class="nav-link" data-scroll-target="#analyzing-citable-sources">Analyzing citable sources</a></li>
+  <li><a href="#saving-and-loading-analyses" id="toc-saving-and-loading-analyses" class="nav-link" data-scroll-target="#saving-and-loading-analyses">Saving and loading analyses</a></li>
+  <li><a href="#reading-passages-from-a-delimited-text-source-file" id="toc-reading-passages-from-a-delimited-text-source-file" class="nav-link" data-scroll-target="#reading-passages-from-a-delimited-text-source-file">Reading passages from a delimited-text source file</a></li>
+  <li><a href="#estimating-and-enforcing-a-max_tokens-budget" id="toc-estimating-and-enforcing-a-max_tokens-budget" class="nav-link" data-scroll-target="#estimating-and-enforcing-a-max_tokens-budget">Estimating and enforcing a <code>max_tokens</code> budget</a></li>
+  <li><a href="#files" id="toc-files" class="nav-link" data-scroll-target="#files">Files</a></li>
+  <li><a href="#marimo-notebooks" id="toc-marimo-notebooks" class="nav-link" data-scroll-target="#marimo-notebooks"><code>marimo</code> notebooks</a></li>
+  <li><a href="#extending-the-scheme" id="toc-extending-the-scheme" class="nav-link" data-scroll-target="#extending-the-scheme">Extending the scheme</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="ancient-greek-syntax-analyzer-usage-guide" class="level1">
+<h1>Ancient Greek Syntax Analyzer — Usage Guide</h1>
+<p>A DSPy program that analyzes an Ancient Greek passage into two structures: a table of verbal expressions, and a token-by-token dependency graph. The analytic scheme itself is documented in <code>syntax_model.md</code>.</p>
+<section id="running-an-analysis-from-the-command-line" class="level2">
+<h2 class="anchored" data-anchor-id="running-an-analysis-from-the-command-line">Running an analysis from the command line</h2>
+<p>You can run an analysis from the command line with the wrapper script <code>syntaxer_main.py</code>. It needs an <code>.env</code> file in this folder with your LM credentials, like this:</p>
+<pre><code>API_BASE=https://localmodel/api
+MODEL=litellm/modelname
+API_KEY=your-key-here</code></pre>
+<p>Then:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> syntaxer_main.py <span class="at">--passage</span> <span class="st">"τὴν θύραν ἀνέῳξεν."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>--citation</code> is an optional second argument giving a citation label for the passage (e.g.&nbsp;a CTS URN), recorded on every resulting token via <code>Token.citation</code>; it defaults to no citation if omitted:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> syntaxer_main.py <span class="at">--passage</span> <span class="st">"τὴν θύραν ἀνέῳξεν."</span> <span class="at">--citation</span> <span class="st">"urn:cts:greekLit:tlg0059.tlg030.perseus-grc2:1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>syntaxer_main.py</code> reads <code>API_BASE</code> / <code>MODEL</code> / <code>API_KEY</code> from <code>.env</code>, configures the LM, and prints the analysis.</p>
+<p>For a local, unauthenticated model (e.g.&nbsp;Ollama), leave <code>API_KEY</code> present but empty:</p>
+<pre><code>API_BASE=http://localhost:11434
+MODEL=ollama_chat/llama3
+API_KEY=</code></pre>
+<p><code>syntaxer_main.py</code> only raises “Missing API key” when <code>API_KEY</code> isn’t in <code>.env</code> at all; an empty value is treated as “this model doesn’t need one” and is left out of the LM call entirely, rather than sent through as an empty credential.</p>
+</section>
+<section id="using-grammatike-in-a-script" class="level2">
+<h2 class="anchored" data-anchor-id="using-grammatike-in-a-script">Using <code>grammatike</code> in a script</h2>
+<p>To call the pipeline from your own script or a REPL instead of the CLI, configure a <code>dspy.LM</code> yourself and use <code>grammatike</code> directly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dspy</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> analyze_passage, print_analysis</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>dspy.configure(lm<span class="op">=</span>dspy.LM(model<span class="op">=</span><span class="st">"litellm_proxy/anthropic/Claude Opus 5"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                           api_base<span class="op">=</span><span class="st">"https://api_url/litellm"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                           api_key<span class="op">=</span><span class="st">"your-key-here"</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>sentences, results <span class="op">=</span> analyze_passage(<span class="st">"τὴν θύραν ἀνέῳξεν."</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sentence, result <span class="kw">in</span> <span class="bu">zip</span>(sentences, results):</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    print_analysis(sentence.tokens, result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Explanation:</p>
+<ul>
+<li><code>analyze_passage()</code> returns <code>(sentences, results)</code>: that is, one <code>Sentence</code> and one <code>SyntaxAnalysis</code> result per sentence it finds in <code>passage</code>.</li>
+<li><code>result.verbalunits</code> is a list of <code>VerbalExpression</code> objects.</li>
+<li><code>result.tokengraph</code> is a list of <code>TokenAnalysis</code> objects, one per token in that sentence, in order.</li>
+</ul>
+<p><code>analyze_sources()</code>/<code>analyze_passage()</code> already call <code>validate()</code> for you and print a warning if the LM refers to a token id that doesn’t exist in its sentence’s input tokens. (That’s a sign that the output needs a re-run or a prompt tweak, and does not necessarily mean that your code is broken.)</p>
+<p><code>validate()</code> only catches referential problems like that one — ids that don’t exist. It can’t tell you an otherwise well-formed analysis is probably still wrong. For one specific, observed failure mode — a coordinating conjunction correctly pairing two verbal expressions, but the second one silently missing its own <code>verbalunitid</code> — call <code>find_unanchored_coordinated_verbs()</code> on the result:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> find_unanchored_coordinated_verbs</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sentence, result <span class="kw">in</span> <span class="bu">zip</span>(sentences, results):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> warning <span class="kw">in</span> find_unanchored_coordinated_verbs(result.tokengraph):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Possible mistake: </span><span class="sc">{</span>warning<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It’s a heuristic, not a guarantee — see its own docstring — but a clean result costs nothing to check, and a flagged one is worth a manual read before you trust the analysis.</p>
+</section>
+<section id="analyzing-citable-sources" class="level2">
+<h2 class="anchored" data-anchor-id="analyzing-citable-sources">Analyzing citable sources</h2>
+<p><code>grammatike</code> supports analyzing texts identified by some canonical citation. Under the hood, <code>analyze_passage()</code> wraps <code>passage</code> as a <code>CitedText</code> and hands this to <code>analyze_sources()</code>, which is what actually does the work. You can call <code>analyze_sources()</code> directly like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> analyze_sources, combined_tokengraph</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike.models <span class="im">import</span> CitedText</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>apology <span class="op">=</span> <span class="st">"urn:cts:greekLit:tlg0059.tlg002.perseus-grc2:"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> [</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    CitedText(citation<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>apology<span class="sc">}</span><span class="ss">17a"</span>, text<span class="op">=</span><span class="st">"ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Ἀθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα·"</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    CitedText(citation<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>apology<span class="sc">}</span><span class="ss">17b"</span>, text<span class="op">=</span><span class="st">"ἐγὼ δ᾽ οὖν καὶ αὐτὸς ὑπ᾽ αὐτῶν ὀλίγου ἐμαυτοῦ ἐπελαθόμην."</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>sentences, results <span class="op">=</span> analyze_sources(sources)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>tokengraph <span class="op">=</span> combined_tokengraph(results)  <span class="co"># one flat list, spanning every sentence</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>analyze_sources()</code> handles any number of sentences and citation units; sentence boundaries don’t need to respect citation-unit boundaries (one sentence may span two source lines), and every token still records which source unit it came from via <code>Token.citation</code>.</p>
+</section>
+<section id="saving-and-loading-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="saving-and-loading-analyses">Saving and loading analyses</h2>
+<p><code>write_analyses()</code>/<code>read_analyses()</code> (in <code>grammatike/serialization.py</code>) save and reload a full analysis — <code>sentences</code>, <code>verbalunits</code> (concatenated across every sentence’s result), and <code>tokengraph</code> (via <code>combined_tokengraph()</code>) — as one deterministic, pipe-delimited plain-text file, so you can persist an analysis, diff it, hand-edit it, or reload it later without re-running the LM:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> write_analyses, read_analyses, combined_tokengraph</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>verbalunits <span class="op">=</span> [vu <span class="cf">for</span> result <span class="kw">in</span> results <span class="cf">for</span> vu <span class="kw">in</span> result.verbalunits]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>tokengraph <span class="op">=</span> combined_tokengraph(results)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>warnings <span class="op">=</span> write_analyses(sentences, verbalunits, tokengraph, <span class="st">"analysis.txt"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w <span class="kw">in</span> warnings:</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Warning: </span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>tokengraph, verbalunits, sentences <span class="op">=</span> read_analyses(<span class="st">"analysis.txt"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>serialize_analyses(sentences, verbalunits, tokengraph)</code> builds the exact same text and returns it as a string (plus the same warnings) instead of writing it to a file — <code>write_analyses()</code> is just a thin wrapper around it.</p>
+<p>The file has three labelled, pipe-delimited blocks (<code>#!sentences</code>, <code>#!verbal_units</code>, <code>#!tokens</code>), each with its own fixed header row — see <code>serialization.py</code>’s module docstring for the exact format, why <code>sentences</code> is needed at all (it’s the only place a citation is actually attached to a token id), and what <code>write_analyses()</code>’s warnings vs.&nbsp;<code>read_analyses()</code>’s errors each catch. Each of the three labels may appear more than once in the file; <code>read_analyses()</code> merges every instance of a label into that label’s combined row list, in file order, so simply concatenating several <code>write_analyses()</code>/<code>serialize_analyses()</code> outputs together and reading the result back gives you one combined analysis. <code>read_analyses()</code> is otherwise deliberately strict: a malformed or internally inconsistent file raises <code>ValueError</code> naming the exact line and problem, rather than silently reconstructing something partial.</p>
+<p>Pass <code>results</code> (the same list <code>analyze_sources()</code>/<code>analyze_passage()</code> return alongside <code>sentences</code>) to keep each sentence’s own LM reasoning trace with the saved analysis, for later review or for curating a GEPA trainset (see <code>OPTIMIZING.md</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>warnings <span class="op">=</span> write_analyses(sentences, verbalunits, tokengraph, <span class="st">"analysis.txt"</span>, results<span class="op">=</span>results)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This adds one <code>#!llm</code> block per sentence — <code>MODEL=&lt;value of the</code>MODEL<code>environment variable&gt;</code> followed by that sentence’s <code>result.reasoning</code> text, verbatim. It’s purely additive: omit <code>results</code> (the default) and no <code>#!llm</code> blocks are written at all; <code>read_analyses()</code> skips over any it finds (still checking they’re well-formed) without changing its own return shape. Read the reasoning traces back out with the dedicated <code>read_llm_notes()</code>, which returns <code>[(model, reasoning), ...]</code> in file order:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> read_llm_notes</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>notes <span class="op">=</span> read_llm_notes(<span class="st">"analysis.txt"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> model, reasoning <span class="kw">in</span> notes:</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>model<span class="sc">}</span><span class="ss">] </span><span class="sc">{</span>reasoning<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>read_analyses()</code> hands back flat, whole-file lists — every sentence’s <code>tokengraph</code>/<code>verbalunits</code> concatenated together, the same shape <code>combined_tokengraph()</code> produces. <code>split_analysis_by_sentence(tokengraph, verbalunits, sentences)</code> splits that back into one <code>(sentence_tokengraph, sentence_verbalunits)</code> slice per sentence, aligned with <code>sentences</code> itself:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> read_analyses, split_analysis_by_sentence</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>tokengraph, verbalunits, sentences <span class="op">=</span> read_analyses(<span class="st">"analysis.txt"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>slices <span class="op">=</span> split_analysis_by_sentence(tokengraph, verbalunits, sentences)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sentence, (sentence_tokengraph, sentence_verbalunits) <span class="kw">in</span> <span class="bu">zip</span>(sentences, slices):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    ...  <span class="co"># render or inspect this one sentence's own analysis</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="reading-passages-from-a-delimited-text-source-file" class="level2">
+<h2 class="anchored" data-anchor-id="reading-passages-from-a-delimited-text-source-file">Reading passages from a delimited-text source file</h2>
+<p><code>read_ctsdata()</code> (in <code>grammatike/ctsdata.py</code>) reads a list of citable passages — each one a CTS URN paired with its own text — out of a pipe-delimited file, the input-side counterpart to <code>write_analyses()</code>/<code>read_analyses()</code> above (which handle an analysis’s <em>results</em>, not the passages you’re about to analyze):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> read_ctsdata</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> read_ctsdata(<span class="st">"passages.txt"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> rows:</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    citation <span class="op">=</span> row.urnbase <span class="op">+</span> row.citation  <span class="co"># reconstructs the full URN</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(citation, <span class="st">"--"</span>, row.text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The file has one or more <code>#!ctsdata</code> blocks, each with its own <code>urn|text</code> header row:</p>
+<pre><code>#!ctsdata
+urn|text
+urn:cts:greekLit:tlg0059.tlg002.perseus-grc2:17a|ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Ἀθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα·</code></pre>
+<p>Each row’s <code>urn</code> column must be a 5-part, colon-separated CTS URN; <code>read_ctsdata()</code> splits it into <code>urnbase</code> (the first 4 parts, rejoined with <code>:</code>, plus a trailing <code>:</code>) and <code>citation</code> (the 5th part). Pass <code>delimiter=...</code> if the file itself uses something other than <code>|</code>. Like <code>read_analyses()</code>, this is deliberately strict (a malformed row or a urn that doesn’t split into exactly 5 parts raises <code>ValueError</code>, naming the line) and merges multiple <code>#!ctsdata</code> blocks in file order.</p>
+</section>
+<section id="estimating-and-enforcing-a-max_tokens-budget" class="level2">
+<h2 class="anchored" data-anchor-id="estimating-and-enforcing-a-max_tokens-budget">Estimating and enforcing a <code>max_tokens</code> budget</h2>
+<p><code>SyntaxAnalysis</code>’s output (a <code>reasoning</code> field plus JSON-serialized <code>verbalunits</code>/<code>tokengraph</code>) grows with how long and how syntactically complex a sentence is, not by a fixed amount, so a single hard-coded <code>max_tokens</code> value is eventually wrong: too small for a long or deeply subordinated sentence (truncation), too large for a short one (wasted budget). <code>grammatike/token_budget.py</code> addresses this with a calibrate-then-retry approach, and <code>pipeline.py</code>’s <code>analyze_sources()</code> already uses it — both <code>analyze_sources()</code> and <code>analyze_passage()</code> get this for free, with nothing to change in your own calling code. This mirrors <code>arsgrammatica</code>’s own “managing prompt size” facility (see its <code>guides/managing_prompt_size</code> docs page), ported here for <code>SyntaxAnalysis</code>/Greek in place of <code>SentenceAnalysis</code>/Latin.</p>
+<p>Until <code>calibrate_max_tokens.py</code> (below) has been run against your own configured model, <code>estimate_max_tokens()</code> falls back to an untuned, deliberately generous placeholder fit inherited from <code>arsgrammatica</code>’s own Latin fallback — safe, but not a real measurement of your model.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> estimate_max_tokens</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>budget <span class="op">=</span> estimate_max_tokens(num_tokens<span class="op">=</span><span class="dv">25</span>)  <span class="co"># -&gt; an int max_tokens value</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>estimate_max_tokens()</code> takes the calibrated (or fallback) fit, multiplies it by a <code>safety_margin</code> (default <code>1.4</code>, covering reasoning-length variance the fit alone doesn’t), and clamps the result to <code>[floor, ceiling]</code>. <code>DEFAULT_CEILING</code> is <code>32000</code> (raised from an earlier, never-confirmed <code>8192</code> guess — see <code>token_budget.py</code>’s own comment) — still only a placeholder stand-in, since a model’s real max-output-tokens limit varies by provider and there’s no single correct default; set <code>ceiling</code> explicitly to whatever your configured model actually allows if you know it.</p>
+<p>For the retry half, <code>analyze_with_retry()</code> wraps <code>analyze()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> analyze_with_retry</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> analyze_with_retry(passage, tokens)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It starts from <code>estimate_max_tokens(len(tokens))</code> (or <code>initial_max_tokens</code>, if you pass one), and checks the result two ways: whether the returned <code>tokengraph</code> is missing any of <code>tokens</code>’ own ids (the primary, provider-independent signal — a real truncation, LM-JSON getting cut off mid-list, always shows up here), and, as a corroborating check, whether the LM’s own <code>finish_reason</code> was <code>"length"</code>. If either signals truncation and a retry is still available (<code>max_retries</code>, default <code>1</code>) with budget left before <code>ceiling</code>, it multiplies the budget by <code>growth_factor</code> (default <code>2.0</code>) and calls again — <code>max_tokens</code> is part of DSPy’s own LM cache key, so the retry always reaches the LM again rather than replaying the same truncated cached response.</p>
+<p>Separately, a parse failure that ISN’T a truncation (the response finished normally but came back malformed somewhere, e.g.&nbsp;one <code>tokengraph</code> entry as a bare list instead of a full object) is also retried once, at the <em>same</em> budget, with DSPy’s own LM response cache explicitly bypassed for that one attempt (<code>config={"cache": False}</code>) — a bigger budget wouldn’t fix a malformed entry, but the malformation itself is usually a one-off sampling glitch a fresh call clears up.</p>
+<p>If retries run out: a call that raised re-raises (nothing to fall back to); a call that returned an incomplete result is returned anyway, with a <code>UserWarning</code> naming the missing ids, rather than treated as fatal — consistent with <code>validate()</code>’s own warn-don’t-raise convention for imperfect LM output.</p>
+<p>Pass <code>disable_cache=True</code> to bypass DSPy’s own LM response cache on <em>every</em> attempt of the call, not just the one-shot bypass above — this is for a human deliberately resubmitting the exact same passage/tokens (typically while iterating on the configured model, the <code>SyntaxAnalysis</code> prompt, or the schema) who wants a genuinely fresh LM call each time rather than a replay of whatever this passage returned last time. <code>greek_syntaxer_ctsdata.py</code>’s <em>Disable LM cache</em> checkbox (next to the <em>Analyze selected sentences</em> button) is wired straight to this parameter; leave it unchecked for ordinary browsing, where the cache is a real cost/latency win.</p>
+<p><code>get_calibration()</code> reports which fit is currently active (a real calibrated one, or the untuned fallback) if you want to check before relying on an estimate. The calibration file, once one exists, is <code>grammatike/grammatike_token_budget_calibration.json</code> — named distinctly from <code>arsgrammatica</code>‘s own <code>token_budget_calibration.json</code> so the two packages’ calibration files never collide if both are ever installed/checked out side by side. Run</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> calibrate_max_tokens.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>against your own <code>.env</code>-configured model to produce one: it runs every <code>GOLD_EXAMPLES</code> passage through the real LM with a generous ceiling, records actual completion-token usage, fits <code>completion_tokens ~ intercept + slope * num_tokens</code> by ordinary least squares, and writes the result to that file, where <code>estimate_max_tokens()</code> picks it up automatically on the next call. It’s a live-LM script with real API cost (one call per <code>GOLD_EXAMPLES</code> entry) — use <code>--limit N</code> for a quick smoke run, or <code>--calibration-ceiling</code> if examples are still getting skipped as truncated even at its default. Re-run it whenever the configured <code>MODEL</code>, the <code>SyntaxAnalysis</code> prompt, or the <code>TokenAnalysis</code>/<code>VerbalExpression</code> schema changes substantially.</p>
+<p><code>arsgrammatica</code>’s <code>diagnose_max_tokens.py</code> — a one-off diagnostic written to track down a specific proxy error it once hit when passing an explicit <code>max_tokens</code> — hasn’t been ported, since it isn’t a general facility, just a historical debugging aid for that one incident; write an analogous throwaway script if grammatike ever needs to debug something similar.</p>
+<p><code>syntaxer_main.py</code>’s <code>_configure_lm()</code> also carries two related pieces of this facility: it now passes <code>max_tokens=DEFAULT_CEILING</code> explicitly to <code>dspy.LM(...)</code> (a numeric baseline rather than DSPy’s own <code>None</code> default, so <code>dspy.LM</code>’s own truncation warning reports the real ceiling rather than <code>max_tokens=None</code> for any call that doesn’t go through <code>analyze_with_retry()</code>), and it sets litellm’s <code>cache_control_injection_points</code> on <code>SyntaxAnalysis</code>’s system message whenever the configured model is Anthropic-routed — that message is long and byte-identical on every call, so Anthropic’s prompt caching lets a repeat call within its cache TTL reuse it at a fraction of the normal input-token price. <code>load_dotenv()</code> there also now passes <code>override=True</code>, so a stale <code>MODEL</code>/<code>API_BASE</code>/<code>API_KEY</code> left over in the shell environment from an earlier session can’t silently shadow <code>.env</code>’s own values.</p>
+</section>
+<section id="files" class="level2">
+<h2 class="anchored" data-anchor-id="files">Files</h2>
+<ul>
+<li><code>syntaxer_main.py</code> — command-line entry point: loads <code>.env</code>, configures the LM, and runs an analysis for a passage given on the command line.</li>
+<li><code>calibrate_max_tokens.py</code> — one-off (well, re-run-when-things-change) live-LM script that fits <code>token_budget.py</code>’s calibration file against your own configured model (see “Estimating and enforcing a <code>max_tokens</code> budget” above).</li>
+<li><code>grammatike/</code> — the package with the actual analysis logic:
+<ul>
+<li><code>models.py</code> — pydantic models for <code>CitedText</code>, <code>Token</code>, <code>Sentence</code>, <code>VerbalExpression</code>, and <code>TokenAnalysis</code>, matching the fields and relation labels from <code>syntax_model.md</code>.</li>
+<li><code>segmentation.py</code> — <code>segment_sources()</code>, a deterministic (no LM call) function that segments citation-labeled source text into sentences and tokens, assigning stable ids and tracking which citation each token came from. Sentence boundaries are settled purely by punctuation, per <code>syntax_model.md</code>’s “Segmentation into sentences” section: a period or an interrogative (the Greek question mark U+037E or its valid decomposition, the ASCII semicolon) always ends a sentence; nothing else (comma, raised dot, colon) does.</li>
+<li><code>greek_syntax_dspy.py</code> — the DSPy signature (<code>SyntaxAnalysis</code>) that takes a sentence’s tokens and produces <code>verbalunits</code> + <code>tokengraph</code>, plus <code>validate()</code> and <code>print_analysis()</code>.</li>
+<li><code>pipeline.py</code> — ties the two stages together: <code>analyze_sources()</code> runs the full pipeline over citation-labeled input and analyzes every sentence it finds (via <code>token_budget.analyze_with_retry()</code>, not <code>analyze()</code> directly); <code>analyze_passage()</code> is the convenience wrapper for a single bare passage string; <code>combined_tokengraph()</code> concatenates results for diagramming.</li>
+<li><code>token_budget.py</code> — <code>estimate_max_tokens()</code>/<code>analyze_with_retry()</code> (see “Estimating and enforcing a <code>max_tokens</code> budget” above).</li>
+<li><code>serialization.py</code> — <code>serialize_analyses()</code>/<code>write_analyses()</code>/<code>read_analyses()</code>/<code>read_llm_notes()</code>/<code>split_analysis_by_sentence()</code> (see “Saving and loading analyses” above).</li>
+<li><code>ctsdata.py</code> — <code>read_ctsdata()</code> (see “Reading passages from a delimited-text source file” above).</li>
+<li><code>mermaid.py</code> — turns a <code>tokengraph</code> into a Mermaid flowchart: one node per non-punctuation token, one labelled edge per <code>relatedtoken1</code>/<code>relationship1</code> and <code>relatedtoken2</code>/<code>relationship2</code> pair, colored by verbal unit.</li>
+<li><code>verbal_units.py</code> — <code>assign_verbal_units()</code> partitions a <code>tokengraph</code> into the verbal units its own relations imply, purely from the existing graph structure (no extra LM call); <code>assign_verbal_unit_colors()</code> builds on that to assign each verbal unit a stable palette color, the single shared source both <code>mermaid.py</code> and <code>rendering.py</code> draw on so their colorings always agree. <code>compute_subordination_depths()</code>/<code>max_subordination_depth()</code> compute each verbal expression’s depth of subordination. <code>find_unanchored_coordinated_verbs()</code> is a heuristic sanity check, separate from <code>validate()</code> (see “Using <code>grammatike</code> in a script” above).</li>
+<li><code>rendering.py</code> — <code>tokengraph_to_text()</code> reconstructs a continuous, readable plain-text string from a <code>tokengraph</code>, with correct spacing around punctuation, enclitics, and proclitics. <code>tokengraph_to_html()</code> does the same join as an HTML string, with lexical/numeral tokens (and coordinating conjunctions) wrapped in verbal-unit-colored <code>&lt;span&gt;</code>s. <code>tokengraph_to_depth_html()</code> renders the same colored tokens grouped into per-verbal-unit blocks, each CSS-indented by its depth of subordination.</li>
+<li><code>gepa_metric.py</code> — <code>syntax_metric()</code>, the scoring/feedback function used by <code>optimize_gepa.py</code> and <code>model_bakeoff.py</code> (see OPTIMIZING.md/BAKEOFF.md).</li>
+<li><code>__init__.py</code> — re-exports the public names above, so callers do <code>from grammatike import ...</code> rather than reaching into submodules.</li>
+</ul></li>
+<li><code>tests/</code> — a pytest suite covering models, segmentation, analysis, validation, and coverage of the scheme’s relation/type vocabulary (see TESTING.md).</li>
+<li><code>docs/build_api_docs.py</code> — regenerates <code>docs/grammatike-api-docs.html</code>, a single self-contained HTML page documenting every name in <code>grammatike.__all__</code>, built with <code>pdoc</code> straight from the package’s own docstrings and type hints. Run <code>python docs/build_api_docs.py</code> after changing a public docstring or signature to refresh it; requires <code>pdoc</code> (<code>pip install pdoc --break-system-packages</code>).</li>
+</ul>
+<p>Not yet ported from <code>arsgrammatica</code>: <code>tests/fixtures/harvest.py</code> (turning a real analysis into a paste-ready gold example) and <code>diagnose_max_tokens.py</code> (a one-off diagnostic for a specific historical proxy error, not a general facility — see “Estimating and enforcing a <code>max_tokens</code> budget” above). Neither affects the core pipeline described above; both are development/tooling conveniences worth adding as follow-up work.</p>
+</section>
+<section id="marimo-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="marimo-notebooks"><code>marimo</code> notebooks</h2>
+<p><code>greek_syntaxer_workflow.py</code> and <code>greek_syntaxer_ctsdata.py</code> take different approaches to segmentation, matching how each notebook’s input arrives:</p>
+<ul>
+<li><code>greek_syntaxer_workflow.py</code>: enter a base URN, passage reference, and text to analyze as one form (nothing happens until you click <em>Analyze</em>, rather than on every keystroke). Submitting it calls <code>analyze_passage()</code> directly, which segments the text into sentences internally and runs full <code>SyntaxAnalysis</code> (via <code>analyze_with_retry()</code>) on each one in turn, then shows the discussion, Mermaid diagram, and highlighted/indented HTML for the whole passage. There’s no separate sentence-selection step here – the text you type is manually entered, so it’s up to you to submit it one sentence at a time if you want to control segmentation boundaries yourself. There’s a <code>cex</code>/<code>txt</code> extension choice (default <code>cex</code>) plus a <em>Download analysis</em> button that hands the current analysis (built with <code>serialize_analyses()</code>, see “Saving and loading analyses” above) to the browser’s own download mechanism – no folder path to type, at the cost of the browser (not the notebook) deciding where the file actually lands. The filename defaults to the submitted citation (base URN + passage) with the chosen extension.</li>
+<li><code>greek_syntaxer_ctsdata.py</code>: the input comes from a <code>#!ctsdata</code> source file (see “Reading passages from a delimited-text source file” above) instead of being typed in by hand, so segmentation and analysis stay two distinct steps – segmentation is free (no LM call at all, see <code>segmentation.py</code>), so you can see every sentence it finds, and choose which ones are actually worth the cost of a full analysis, before spending anything on <code>SyntaxAnalysis</code>. Browse for the file and pick one or more passages from the <em>Passage(s)</em> multiselect menu (labelled <code>&lt;citation&gt;: &lt;first few words&gt;…</code>), then click <em>OK</em> to segment the selection – every selected passage becomes its own <code>CitedText</code> source and is segmented together via <code>segment_sources()</code>, always in the file’s own order regardless of the order they were selected in, since consecutive sources can share a sentence across their boundary. A <em>Sentence(s) to analyze</em> menu then lists every sentence segmentation found across all the selected passages (labelled <code>&lt;n&gt;. &lt;citation&gt;: &lt;first eight words&gt;…</code>, since sentences here can come from different citations); pick some and click <em>Analyze selected sentences</em> to run <code>SyntaxAnalysis</code> on just those. A <em>Disable LM cache</em> checkbox next to that button forces the click to bypass DSPy’s own LM response cache (<code>analyze_with_retry()</code>’s <code>disable_cache</code> parameter — see “Estimating and enforcing a <code>max_tokens</code> budget” above), so re-clicking <em>Analyze</em> on the exact same sentence(s) after changing the configured model, the prompt, or the schema always reaches the LM again instead of silently replaying the previous response; leave it unchecked for ordinary browsing, where the cache saves real cost and latency. Everything downstream (Mermaid diagram, highlighted/indented HTML, save-to-file) covers only the analyzed subset. Both this notebook and <code>greek_syntaxer_workflow.py</code> also have <em>See list of tokens</em>/<em>See cost</em>/<em>See prompts</em> checkboxes, each toggling a hidden display of the raw token list, the last LM call’s own reported cost, or <code>dspy.inspect_history()</code>’s prompt/response transcript.</li>
+<li><code>greek_syntaxer_review.py</code>: no LM access at all – browse for a file previously written by <code>write_analyses()</code> (see “Saving and loading analyses” above), pick a sentence from the menu that appears (labelled <code>&lt;n&gt;. &lt;citation&gt;: &lt;first six words&gt;…</code>, via <code>split_analysis_by_sentence()</code>), and it displays that one sentence’s own Mermaid diagram, plain (uncolored) text, verbal-unit-colored HTML, and colored-and-indented-by-subordination-depth HTML – reconstructed entirely from the saved file, which is already complete, so there’s no separate segment-then-analyze step here the way there is in the other two notebooks. A slider above the indented view caps it to that sentence’s own <code>max_subordination_depth()</code> or shallower, the same depth-cap control the other two notebooks offer, except here it only appears once a sentence with at least one token has actually been picked. A <em>Download Mermaid diagram (.mmd)</em> button next to the diagram hands that sentence’s raw Mermaid source (the same text <code>mo.mermaid()</code> renders) to the browser’s own download mechanism. Useful for reviewing or presenting an already-completed analysis (e.g.&nbsp;one harvested into <code>GOLD_EXAMPLES</code>) without spending an LM call, or working at all when the LM is unreachable.</li>
+</ul>
+<p>All three notebooks default their sample text/URN to <code>syntax_model.md</code>’s own worked examples – most of which are drawn from Lysias 1, <em>On the Murder of Eratosthenes</em> (<code>urn:cts:greekLit:tlg0540.tlg001.perseus-grc2:</code>) – as a placeholder; point <code>urnbase</code> at your own corpus. Run any of them with <code>marimo edit marimo/greek_syntaxer_workflow.py</code> (requires <code>pip install marimo --break-system-packages</code>, or <code>pip install -e ".[dev]"</code>, see TESTING.md) from the repo root, and a <code>.env</code> with <code>API_BASE</code>/<code>MODEL</code>/<code>API_KEY</code> set (see DEVELOPMENT.md), except <code>greek_syntaxer_review.py</code>, which needs no LM access at all.</p>
+</section>
+<section id="extending-the-scheme" class="level2">
+<h2 class="anchored" data-anchor-id="extending-the-scheme">Extending the scheme</h2>
+<p><code>syntax_model.md</code> says the current relation set is partial. To add a new relation:</p>
+<ol type="1">
+<li>Add the new label to <code>RelationLabel</code> in <code>grammatike/models.py</code>.</li>
+<li>Describe when to use it in <code>SyntaxAnalysis</code>’s docstring in <code>grammatike/greek_syntax_dspy.py</code>, following the pattern of the existing relations (which token gets <code>relatedtoken1</code>/<code>relationship1</code>, which gets the corresponding value on the other end).</li>
+<li>Add a gold example exercising it to <code>tests/fixtures/gold_examples.py</code> and re-run <code>pytest</code> to confirm the models still validate before trying it against the real LM.</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Documentation for release version <strong>prerelease</strong></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -42,7 +42,7 @@ website:
     - title: "Guides"
       contents: 
         - guides/index.qmd     
-        - guides/usage.md
+        - guides/usage.qmd
         - "---" 
         - guides/optimizing.qmd
         - guides/bakeoff.qmd
