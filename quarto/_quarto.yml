@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: quarto-build
 
-version: "0.1.0"  
+version: "prerelease"  
   
 
 website:
