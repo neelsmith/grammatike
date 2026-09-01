@@ -10,7 +10,7 @@ It offers an alternative analytic scheme to [Universal Dependencies](https://uni
 Released under the [GNU General Public License v3 or later](LICENSE).
 
 
-Documentation on [github pages](https://neelsmith.github.io/grammatike/)
+Documentation on [github pages](https://neelsmith.github.io/grammatike/).
 
 
 See the [project issue tracker](https://github.com/neelsmith/grammatike/issues) for known gaps and work in progress.
