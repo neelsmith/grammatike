@@ -1,0 +1,25 @@
+---
+title: Analyzing passages from a CEX source file
+---
+
+`read_ctsdata()` (in `grammatike/ctsdata.py`) reads a list of citable passages — each one a CTS URN paired with its own text — out of a pipe-delimited file, the input-side counterpart to `write_analyses()`/`read_analyses()` above (which handle an analysis's *results*, not the passages you're about to analyze):
+
+```python
+from grammatike import read_ctsdata
+
+rows = read_ctsdata("passages.txt")
+for row in rows:
+    citation = row.urnbase + row.citation  # reconstructs the full URN
+    print(citation, "--", row.text)
+```
+
+The file has one or more `#!ctsdata` blocks, each with its own `urn|text` header row:
+
+```
+#!ctsdata
+urn|text
+urn:cts:greekLit:tlg0059.tlg002.perseus-grc2:17a|ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Ἀθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα·
+```
+
+Each row's `urn` column must be a 5-part, colon-separated CTS URN; `read_ctsdata()` splits it into `urnbase` (the first 4 parts, rejoined with `:`, plus a trailing `:`) and `citation` (the 5th part). Pass `delimiter=...` if the file itself uses something other than `|`. Like `read_analyses()`, this is deliberately strict (a malformed row or a urn that doesn't split into exactly 5 parts raises `ValueError`, naming the line) and merges multiple `#!ctsdata` blocks in file order.
+

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Concepts – grammatike</title>
+<title>Command-line scripts to analyze Greek syntax – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -97,11 +132,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../concepts/index.html" aria-current="page"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
+    <a class="nav-link active" href="../tutorials/index.html" aria-current="page"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
@@ -130,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../concepts/index.html">Concepts</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/cli.html">Command-line scripts to analyze Greek syntax</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -144,8 +179,34 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../concepts/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Concepts</span></a>
+  <a href="../tutorials/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorials</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/marimo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Marimo notebooks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cli.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Command-line scripts to analyze Greek syntax</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/quick.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quick analysis from a script</span></a>
   </div>
 </li>
     </ul>
@@ -158,8 +219,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-features-of-grammatikes-model-of-greek-syntax" id="toc-key-features-of-grammatikes-model-of-greek-syntax" class="nav-link active" data-scroll-target="#key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</a></li>
-  <li><a href="#relation-to-other-models" id="toc-relation-to-other-models" class="nav-link" data-scroll-target="#relation-to-other-models">Relation to other models</a></li>
+  <li><a href="#running-an-analysis-from-the-command-line" id="toc-running-an-analysis-from-the-command-line" class="nav-link active" data-scroll-target="#running-an-analysis-from-the-command-line">Running an analysis from the command line</a></li>
   </ul>
 </nav>
     </div>
@@ -168,7 +228,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Concepts</h1>
+<h1 class="title">Command-line scripts to analyze Greek syntax</h1>
 </div>
 
 
@@ -185,23 +245,22 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="key-features-of-grammatikes-model-of-greek-syntax" class="level2">
-<h2 class="anchored" data-anchor-id="key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</h2>
-<ul>
-<li>designed for study of texts in Greek (for research or teaching) using familiar terminology</li>
-<li>tokenizes and classifies tokens from strings of text</li>
-<li>organizes syntactic analysis in coordinated and subordinated <em>verbal expressions</em>, subject-verb-object expressions generally corresponding to clauses in an English translation</li>
-<li>relates all lexical tokens to other tokens in a dependency graph following a defined scheme</li>
-<li>tokens are uniquely citable within uniquely citable passages of text</li>
-</ul>
-</section>
-<section id="relation-to-other-models" class="level2">
-<h2 class="anchored" data-anchor-id="relation-to-other-models">Relation to other models</h2>
-<p>Different models of syntax serve different purposes.</p>
-<ul>
-<li>Relation to Universal Dependencies (UD) TBA</li>
-<li>Relation to Agent-Action-Target (AAT) TBA</li>
-</ul>
+<section id="running-an-analysis-from-the-command-line" class="level2">
+<h2 class="anchored" data-anchor-id="running-an-analysis-from-the-command-line">Running an analysis from the command line</h2>
+<p>You can run an analysis from the command line with the wrapper script <code>syntaxer_main.py</code>. It needs an <code>.env</code> file in this folder with your LM credentials, like this:</p>
+<pre><code>API_BASE=https://localmodel/api
+MODEL=litellm/modelname
+API_KEY=your-key-here</code></pre>
+<p>Then:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> syntaxer_main.py <span class="at">--passage</span> <span class="st">"τὴν θύραν ἀνέῳξεν."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>--citation</code> is an optional second argument giving a citation label for the passage (e.g.&nbsp;a CTS URN), recorded on every resulting token via <code>Token.citation</code>; it defaults to no citation if omitted:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> syntaxer_main.py <span class="at">--passage</span> <span class="st">"τὴν θύραν ἀνέῳξεν."</span> <span class="at">--citation</span> <span class="st">"urn:cts:greekLit:tlg0059.tlg030.perseus-grc2:1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>syntaxer_main.py</code> reads <code>API_BASE</code> / <code>MODEL</code> / <code>API_KEY</code> from <code>.env</code>, configures the LM, and prints the analysis.</p>
+<p>For a local, unauthenticated model (e.g.&nbsp;Ollama), leave <code>API_KEY</code> present but empty:</p>
+<pre><code>API_BASE=http://localhost:11434
+MODEL=ollama_chat/llama3
+API_KEY=</code></pre>
+<p><code>syntaxer_main.py</code> only raises “Missing API key” when <code>API_KEY</code> isn’t in <code>.env</code> at all; an empty value is treated as “this model doesn’t need one” and is left out of the LM call entirely, rather than sent through as an empty credential.</p>
 
 
 </section>

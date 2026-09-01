@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Concepts – grammatike</title>
+<title>Quick analysis from a script – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -97,11 +97,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../concepts/index.html" aria-current="page"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
+    <a class="nav-link active" href="../tutorials/index.html" aria-current="page"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
@@ -130,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../concepts/index.html">Concepts</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/quick.html">Quick analysis from a script</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -144,8 +144,34 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../concepts/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Concepts</span></a>
+  <a href="../tutorials/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorials</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/marimo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Marimo notebooks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cli.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command-line scripts to analyze Greek syntax</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/quick.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Quick analysis from a script</span></a>
   </div>
 </li>
     </ul>
@@ -153,22 +179,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#key-features-of-grammatikes-model-of-greek-syntax" id="toc-key-features-of-grammatikes-model-of-greek-syntax" class="nav-link active" data-scroll-target="#key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</a></li>
-  <li><a href="#relation-to-other-models" id="toc-relation-to-other-models" class="nav-link" data-scroll-target="#relation-to-other-models">Relation to other models</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Concepts</h1>
+<h1 class="title">Quick analysis from a script</h1>
 </div>
 
 
@@ -185,26 +204,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="key-features-of-grammatikes-model-of-greek-syntax" class="level2">
-<h2 class="anchored" data-anchor-id="key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</h2>
-<ul>
-<li>designed for study of texts in Greek (for research or teaching) using familiar terminology</li>
-<li>tokenizes and classifies tokens from strings of text</li>
-<li>organizes syntactic analysis in coordinated and subordinated <em>verbal expressions</em>, subject-verb-object expressions generally corresponding to clauses in an English translation</li>
-<li>relates all lexical tokens to other tokens in a dependency graph following a defined scheme</li>
-<li>tokens are uniquely citable within uniquely citable passages of text</li>
-</ul>
-</section>
-<section id="relation-to-other-models" class="level2">
-<h2 class="anchored" data-anchor-id="relation-to-other-models">Relation to other models</h2>
-<p>Different models of syntax serve different purposes.</p>
-<ul>
-<li>Relation to Universal Dependencies (UD) TBA</li>
-<li>Relation to Agent-Action-Target (AAT) TBA</li>
-</ul>
+<p>TBA</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

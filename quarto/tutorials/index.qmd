@@ -2,4 +2,13 @@
 title: Tutorials
 ---
 
-Quick start
+## Resources using `grammatike`
+
+- [marimo notebooks](./marimo.qmd)
+- [command-line scripts](./cli.qmd) to analyze Greek syntax
+
+
+## Using `grammatike` in Python
+
+- [installing](./installation.qmd)
+- quick start: [analysis from a script](./quick.qmd) 

@@ -1,0 +1,64 @@
+---
+title: Analyzing a Greek text
+---
+
+
+
+
+## Using `grammatike` in a script
+
+To call the pipeline from your own script or a REPL instead of the CLI, configure a `dspy.LM` yourself and use `grammatike` directly:
+
+```python
+import dspy
+from grammatike import analyze_passage, print_analysis
+
+dspy.configure(lm=dspy.LM(model="litellm_proxy/anthropic/Claude Opus 5",
+                           api_base="https://api_url/litellm",
+                           api_key="your-key-here"))
+
+sentences, results = analyze_passage("τὴν θύραν ἀνέῳξεν.")
+for sentence, result in zip(sentences, results):
+    print_analysis(sentence.tokens, result)
+```
+
+Explanation:
+
+- `analyze_passage()` returns `(sentences, results)`: that is, one `Sentence` and one `SyntaxAnalysis` result per sentence it finds in `passage`.
+- `result.verbalunits` is a list of `VerbalExpression` objects.
+- `result.tokengraph` is a list of `TokenAnalysis` objects, one per token in that sentence, in order.
+
+`analyze_sources()`/`analyze_passage()` already call `validate()` for you and print a warning if the LM refers to a token id that doesn't exist in its sentence's input tokens. (That's a sign that the output needs a re-run or a prompt tweak, and does not necessarily mean that your code is broken.)
+
+`validate()` only catches referential problems like that one — ids that don't exist. It can't tell you an otherwise well-formed analysis is probably still wrong. For one specific, observed failure mode — a coordinating conjunction correctly pairing two verbal expressions, but the second one silently missing its own `verbalunitid` — call `find_unanchored_coordinated_verbs()` on the result:
+
+```python
+from grammatike import find_unanchored_coordinated_verbs
+
+for sentence, result in zip(sentences, results):
+    for warning in find_unanchored_coordinated_verbs(result.tokengraph):
+        print(f"Possible mistake: {warning}")
+```
+
+It's a heuristic, not a guarantee — see its own docstring — but a clean result costs nothing to check, and a flagged one is worth a manual read before you trust the analysis.
+
+
+## Analyzing citable sources
+
+`grammatike` supports analyzing texts identified by some canonical citation. Under the hood, `analyze_passage()` wraps `passage` as a `CitedText` and hands this to `analyze_sources()`, which is what actually does the work. You can call `analyze_sources()` directly like this:
+
+```python
+from grammatike import analyze_sources, combined_tokengraph
+from grammatike.models import CitedText
+
+apology = "urn:cts:greekLit:tlg0059.tlg002.perseus-grc2:"
+sources = [
+    CitedText(citation=f"{apology}17a", text="ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Ἀθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα·"),
+    CitedText(citation=f"{apology}17b", text="ἐγὼ δ᾽ οὖν καὶ αὐτὸς ὑπ᾽ αὐτῶν ὀλίγου ἐμαυτοῦ ἐπελαθόμην."),
+]
+sentences, results = analyze_sources(sources)
+tokengraph = combined_tokengraph(results)  # one flat list, spanning every sentence
+```
+
+`analyze_sources()` handles any number of sentences and citation units; sentence boundaries don't need to respect citation-unit boundaries (one sentence may span two source lines), and every token still records which source unit it came from via `Token.citation`.
+

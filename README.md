@@ -15,4 +15,7 @@ See the [project issue tracker](https://github.com/neelsmith/grammatike/issues) 
 
 ## Related work
 
-`grammatike` shares similar goals and design principles with [arsgrammatica](https://github.com/neelsmith/arsgrammatica/tree/main), a parallel package for analyzing Latin syntax.
+
+- [arsgrammatica](https://github.com/neelsmith/arsgrammatica): a parallel Python package for analyzing passages of Latin with LMs
+- [diqduq](https://github.com/neelsmith/diqduq): a parallel Python package for analyzing passages of Biblical Hebrew with LMs
+- [aat](https://github.com/neelsmith/aat) : Agent-Action-Target model, a reductive model of natural-language syntax

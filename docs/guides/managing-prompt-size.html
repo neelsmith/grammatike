@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Concepts – grammatike</title>
+<title>Managing prompt size – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -75,7 +110,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar floating nav-fixed quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -97,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../concepts/index.html" aria-current="page"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
@@ -125,41 +160,17 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../concepts/index.html">Concepts</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../concepts/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Concepts</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-features-of-grammatikes-model-of-greek-syntax" id="toc-key-features-of-grammatikes-model-of-greek-syntax" class="nav-link active" data-scroll-target="#key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</a></li>
-  <li><a href="#relation-to-other-models" id="toc-relation-to-other-models" class="nav-link" data-scroll-target="#relation-to-other-models">Relation to other models</a></li>
+  <li><a href="#estimating-and-enforcing-a-max_tokens-budget" id="toc-estimating-and-enforcing-a-max_tokens-budget" class="nav-link active" data-scroll-target="#estimating-and-enforcing-a-max_tokens-budget">Estimating and enforcing a <code>max_tokens</code> budget</a></li>
   </ul>
 </nav>
     </div>
@@ -168,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Concepts</h1>
+<h1 class="title">Managing prompt size</h1>
 </div>
 
 
@@ -185,23 +196,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="key-features-of-grammatikes-model-of-greek-syntax" class="level2">
-<h2 class="anchored" data-anchor-id="key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</h2>
-<ul>
-<li>designed for study of texts in Greek (for research or teaching) using familiar terminology</li>
-<li>tokenizes and classifies tokens from strings of text</li>
-<li>organizes syntactic analysis in coordinated and subordinated <em>verbal expressions</em>, subject-verb-object expressions generally corresponding to clauses in an English translation</li>
-<li>relates all lexical tokens to other tokens in a dependency graph following a defined scheme</li>
-<li>tokens are uniquely citable within uniquely citable passages of text</li>
-</ul>
-</section>
-<section id="relation-to-other-models" class="level2">
-<h2 class="anchored" data-anchor-id="relation-to-other-models">Relation to other models</h2>
-<p>Different models of syntax serve different purposes.</p>
-<ul>
-<li>Relation to Universal Dependencies (UD) TBA</li>
-<li>Relation to Agent-Action-Target (AAT) TBA</li>
-</ul>
+<section id="estimating-and-enforcing-a-max_tokens-budget" class="level2">
+<h2 class="anchored" data-anchor-id="estimating-and-enforcing-a-max_tokens-budget">Estimating and enforcing a <code>max_tokens</code> budget</h2>
+<p><code>SyntaxAnalysis</code>’s output (a <code>reasoning</code> field plus JSON-serialized <code>verbalunits</code>/<code>tokengraph</code>) grows with how long and how syntactically complex a sentence is, not by a fixed amount, so a single hard-coded <code>max_tokens</code> value is eventually wrong: too small for a long or deeply subordinated sentence (truncation), too large for a short one (wasted budget). <code>grammatike/token_budget.py</code> addresses this with a calibrate-then-retry approach, and <code>pipeline.py</code>’s <code>analyze_sources()</code> already uses it — both <code>analyze_sources()</code> and <code>analyze_passage()</code> get this for free, with nothing to change in your own calling code. This mirrors <code>arsgrammatica</code>’s own “managing prompt size” facility (see its <code>guides/managing_prompt_size</code> docs page), ported here for <code>SyntaxAnalysis</code>/Greek in place of <code>SentenceAnalysis</code>/Latin.</p>
+<p>Until <code>calibrate_max_tokens.py</code> (below) has been run against your own configured model, <code>estimate_max_tokens()</code> falls back to an untuned, deliberately generous placeholder fit inherited from <code>arsgrammatica</code>’s own Latin fallback — safe, but not a real measurement of your model.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> estimate_max_tokens</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>budget <span class="op">=</span> estimate_max_tokens(num_tokens<span class="op">=</span><span class="dv">25</span>)  <span class="co"># -&gt; an int max_tokens value</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>estimate_max_tokens()</code> takes the calibrated (or fallback) fit, multiplies it by a <code>safety_margin</code> (default <code>1.4</code>, covering reasoning-length variance the fit alone doesn’t), and clamps the result to <code>[floor, ceiling]</code>. <code>DEFAULT_CEILING</code> is <code>32000</code> (raised from an earlier, never-confirmed <code>8192</code> guess — see <code>token_budget.py</code>’s own comment) — still only a placeholder stand-in, since a model’s real max-output-tokens limit varies by provider and there’s no single correct default; set <code>ceiling</code> explicitly to whatever your configured model actually allows if you know it.</p>
+<p>For the retry half, <code>analyze_with_retry()</code> wraps <code>analyze()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> analyze_with_retry</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> analyze_with_retry(passage, tokens)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It starts from <code>estimate_max_tokens(len(tokens))</code> (or <code>initial_max_tokens</code>, if you pass one), and checks the result two ways: whether the returned <code>tokengraph</code> is missing any of <code>tokens</code>’ own ids (the primary, provider-independent signal — a real truncation, LM-JSON getting cut off mid-list, always shows up here), and, as a corroborating check, whether the LM’s own <code>finish_reason</code> was <code>"length"</code>. If either signals truncation and a retry is still available (<code>max_retries</code>, default <code>1</code>) with budget left before <code>ceiling</code>, it multiplies the budget by <code>growth_factor</code> (default <code>2.0</code>) and calls again — <code>max_tokens</code> is part of DSPy’s own LM cache key, so the retry always reaches the LM again rather than replaying the same truncated cached response.</p>
+<p>Separately, a parse failure that ISN’T a truncation (the response finished normally but came back malformed somewhere, e.g.&nbsp;one <code>tokengraph</code> entry as a bare list instead of a full object) is also retried once, at the <em>same</em> budget, with DSPy’s own LM response cache explicitly bypassed for that one attempt (<code>config={"cache": False}</code>) — a bigger budget wouldn’t fix a malformed entry, but the malformation itself is usually a one-off sampling glitch a fresh call clears up.</p>
+<p>If retries run out: a call that raised re-raises (nothing to fall back to); a call that returned an incomplete result is returned anyway, with a <code>UserWarning</code> naming the missing ids, rather than treated as fatal — consistent with <code>validate()</code>’s own warn-don’t-raise convention for imperfect LM output.</p>
+<p>Pass <code>disable_cache=True</code> to bypass DSPy’s own LM response cache on <em>every</em> attempt of the call, not just the one-shot bypass above — this is for a human deliberately resubmitting the exact same passage/tokens (typically while iterating on the configured model, the <code>SyntaxAnalysis</code> prompt, or the schema) who wants a genuinely fresh LM call each time rather than a replay of whatever this passage returned last time. <code>greek_syntaxer_ctsdata.py</code>’s <em>Disable LM cache</em> checkbox (next to the <em>Analyze selected sentences</em> button) is wired straight to this parameter; leave it unchecked for ordinary browsing, where the cache is a real cost/latency win.</p>
+<p><code>get_calibration()</code> reports which fit is currently active (a real calibrated one, or the untuned fallback) if you want to check before relying on an estimate. The calibration file, once one exists, is <code>grammatike/grammatike_token_budget_calibration.json</code> — named distinctly from <code>arsgrammatica</code>‘s own <code>token_budget_calibration.json</code> so the two packages’ calibration files never collide if both are ever installed/checked out side by side. Run</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> calibrate_max_tokens.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>against your own <code>.env</code>-configured model to produce one: it runs every <code>GOLD_EXAMPLES</code> passage through the real LM with a generous ceiling, records actual completion-token usage, fits <code>completion_tokens ~ intercept + slope * num_tokens</code> by ordinary least squares, and writes the result to that file, where <code>estimate_max_tokens()</code> picks it up automatically on the next call. It’s a live-LM script with real API cost (one call per <code>GOLD_EXAMPLES</code> entry) — use <code>--limit N</code> for a quick smoke run, or <code>--calibration-ceiling</code> if examples are still getting skipped as truncated even at its default. Re-run it whenever the configured <code>MODEL</code>, the <code>SyntaxAnalysis</code> prompt, or the <code>TokenAnalysis</code>/<code>VerbalExpression</code> schema changes substantially.</p>
+<p><code>arsgrammatica</code>’s <code>diagnose_max_tokens.py</code> — a one-off diagnostic written to track down a specific proxy error it once hit when passing an explicit <code>max_tokens</code> — hasn’t been ported, since it isn’t a general facility, just a historical debugging aid for that one incident; write an analogous throwaway script if grammatike ever needs to debug something similar.</p>
+<p><code>syntaxer_main.py</code>’s <code>_configure_lm()</code> also carries two related pieces of this facility: it now passes <code>max_tokens=DEFAULT_CEILING</code> explicitly to <code>dspy.LM(...)</code> (a numeric baseline rather than DSPy’s own <code>None</code> default, so <code>dspy.LM</code>’s own truncation warning reports the real ceiling rather than <code>max_tokens=None</code> for any call that doesn’t go through <code>analyze_with_retry()</code>), and it sets litellm’s <code>cache_control_injection_points</code> on <code>SyntaxAnalysis</code>’s system message whenever the configured model is Anthropic-routed — that message is long and byte-identical on every call, so Anthropic’s prompt caching lets a repeat call within its cache TTL reuse it at a fraction of the normal input-token price. <code>load_dotenv()</code> there also now passes <code>override=True</code>, so a stale <code>MODEL</code>/<code>API_BASE</code>/<code>API_KEY</code> left over in the shell environment from an earlier session can’t silently shadow <code>.env</code>’s own values.</p>
 
 
 </section>

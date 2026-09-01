@@ -2,4 +2,17 @@
 title: Recipes
 ---
 
-Using `grammatike` for specific tasks
+Using `grammatike` for specific tasks.
+
+## Analyzing Greek text
+
+- [analyzing passages](./analysis.qmd)
+- [analyzing CEX sources](./cexsource.qmd)
+- [saving and loading analyses](./serialization.qmd)
+
+## Training a model
+
+- [optimizing with GEPA](./optimizing.qmd)
+- [comparing performance of different models](./bakeoff.qmd)
+- [development workflow](./development.qmd)
+- [testing](./testing.qmd)

@@ -1,0 +1,46 @@
+---
+title: Managing prompt size
+---
+
+
+## Estimating and enforcing a `max_tokens` budget
+
+`SyntaxAnalysis`'s output (a `reasoning` field plus JSON-serialized `verbalunits`/`tokengraph`) grows with how long and how syntactically complex a sentence is, not by a fixed amount, so a single hard-coded `max_tokens` value is eventually wrong: too small for a long or deeply subordinated sentence (truncation), too large for a short one (wasted budget). `grammatike/token_budget.py` addresses this with a calibrate-then-retry approach, and `pipeline.py`'s `analyze_sources()` already uses it — both `analyze_sources()` and `analyze_passage()` get this for free, with nothing to change in your own calling code. This mirrors `arsgrammatica`'s own "managing prompt size" facility (see its `guides/managing_prompt_size` docs page), ported here for `SyntaxAnalysis`/Greek in place of `SentenceAnalysis`/Latin.
+
+Until `calibrate_max_tokens.py` (below) has been run against your own configured model, `estimate_max_tokens()` falls back to an untuned, deliberately generous placeholder fit inherited from `arsgrammatica`'s own Latin fallback — safe, but not a real measurement of your model.
+
+```python
+from grammatike import estimate_max_tokens
+
+budget = estimate_max_tokens(num_tokens=25)  # -> an int max_tokens value
+```
+
+`estimate_max_tokens()` takes the calibrated (or fallback) fit, multiplies it by a `safety_margin` (default `1.4`, covering reasoning-length variance the fit alone doesn't), and clamps the result to `[floor, ceiling]`. `DEFAULT_CEILING` is `32000` (raised from an earlier, never-confirmed `8192` guess — see `token_budget.py`'s own comment) — still only a placeholder stand-in, since a model's real max-output-tokens limit varies by provider and there's no single correct default; set `ceiling` explicitly to whatever your configured model actually allows if you know it.
+
+For the retry half, `analyze_with_retry()` wraps `analyze()`:
+
+```python
+from grammatike import analyze_with_retry
+
+result = analyze_with_retry(passage, tokens)
+```
+
+It starts from `estimate_max_tokens(len(tokens))` (or `initial_max_tokens`, if you pass one), and checks the result two ways: whether the returned `tokengraph` is missing any of `tokens`' own ids (the primary, provider-independent signal — a real truncation, LM-JSON getting cut off mid-list, always shows up here), and, as a corroborating check, whether the LM's own `finish_reason` was `"length"`. If either signals truncation and a retry is still available (`max_retries`, default `1`) with budget left before `ceiling`, it multiplies the budget by `growth_factor` (default `2.0`) and calls again — `max_tokens` is part of DSPy's own LM cache key, so the retry always reaches the LM again rather than replaying the same truncated cached response.
+
+Separately, a parse failure that ISN'T a truncation (the response finished normally but came back malformed somewhere, e.g. one `tokengraph` entry as a bare list instead of a full object) is also retried once, at the *same* budget, with DSPy's own LM response cache explicitly bypassed for that one attempt (`config={"cache": False}`) — a bigger budget wouldn't fix a malformed entry, but the malformation itself is usually a one-off sampling glitch a fresh call clears up.
+
+If retries run out: a call that raised re-raises (nothing to fall back to); a call that returned an incomplete result is returned anyway, with a `UserWarning` naming the missing ids, rather than treated as fatal — consistent with `validate()`'s own warn-don't-raise convention for imperfect LM output.
+
+Pass `disable_cache=True` to bypass DSPy's own LM response cache on *every* attempt of the call, not just the one-shot bypass above — this is for a human deliberately resubmitting the exact same passage/tokens (typically while iterating on the configured model, the `SyntaxAnalysis` prompt, or the schema) who wants a genuinely fresh LM call each time rather than a replay of whatever this passage returned last time. `greek_syntaxer_ctsdata.py`'s *Disable LM cache* checkbox (next to the *Analyze selected sentences* button) is wired straight to this parameter; leave it unchecked for ordinary browsing, where the cache is a real cost/latency win.
+
+`get_calibration()` reports which fit is currently active (a real calibrated one, or the untuned fallback) if you want to check before relying on an estimate. The calibration file, once one exists, is `grammatike/grammatike_token_budget_calibration.json` — named distinctly from `arsgrammatica`'s own `token_budget_calibration.json` so the two packages' calibration files never collide if both are ever installed/checked out side by side. Run
+
+```bash
+python3 calibrate_max_tokens.py
+```
+
+against your own `.env`-configured model to produce one: it runs every `GOLD_EXAMPLES` passage through the real LM with a generous ceiling, records actual completion-token usage, fits `completion_tokens ~ intercept + slope * num_tokens` by ordinary least squares, and writes the result to that file, where `estimate_max_tokens()` picks it up automatically on the next call. It's a live-LM script with real API cost (one call per `GOLD_EXAMPLES` entry) — use `--limit N` for a quick smoke run, or `--calibration-ceiling` if examples are still getting skipped as truncated even at its default. Re-run it whenever the configured `MODEL`, the `SyntaxAnalysis` prompt, or the `TokenAnalysis`/`VerbalExpression` schema changes substantially.
+
+`arsgrammatica`'s `diagnose_max_tokens.py` — a one-off diagnostic written to track down a specific proxy error it once hit when passing an explicit `max_tokens` — hasn't been ported, since it isn't a general facility, just a historical debugging aid for that one incident; write an analogous throwaway script if grammatike ever needs to debug something similar.
+
+`syntaxer_main.py`'s `_configure_lm()` also carries two related pieces of this facility: it now passes `max_tokens=DEFAULT_CEILING` explicitly to `dspy.LM(...)` (a numeric baseline rather than DSPy's own `None` default, so `dspy.LM`'s own truncation warning reports the real ceiling rather than `max_tokens=None` for any call that doesn't go through `analyze_with_retry()`), and it sets litellm's `cache_control_injection_points` on `SyntaxAnalysis`'s system message whenever the configured model is Anthropic-routed — that message is long and byte-identical on every call, so Anthropic's prompt caching lets a repeat call within its cache TTL reuse it at a fraction of the normal input-token price. `load_dotenv()` there also now passes `override=True`, so a stale `MODEL`/`API_BASE`/`API_KEY` left over in the shell environment from an earlier session can't silently shadow `.env`'s own values.

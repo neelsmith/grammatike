@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Concepts – grammatike</title>
+<title>Analyzing a Greek text – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -97,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../concepts/index.html" aria-current="page"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
@@ -105,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../guides/index.html"> 
+    <a class="nav-link active" href="../guides/index.html" aria-current="page"> 
 <span class="menu-text">Guides</span></a>
   </li>  
   <li class="nav-item">
@@ -130,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../concepts/index.html">Concepts</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../guides/analysis.html">Analyzing a Greek text</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -144,8 +179,52 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../concepts/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Concepts</span></a>
+  <a href="../guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recipes</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/analysis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Analyzing a Greek text</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/cexsource.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Analyzing passages from a CEX source file</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/serialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Saving and loading analyses</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/optimizing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Optimizing with GEPA</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/bakeoff.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparing task models with <code>model_bakeoff.py</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Developing <code>grammatike</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../guides/testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Testing without network access</span></a>
   </div>
 </li>
     </ul>
@@ -158,8 +237,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-features-of-grammatikes-model-of-greek-syntax" id="toc-key-features-of-grammatikes-model-of-greek-syntax" class="nav-link active" data-scroll-target="#key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</a></li>
-  <li><a href="#relation-to-other-models" id="toc-relation-to-other-models" class="nav-link" data-scroll-target="#relation-to-other-models">Relation to other models</a></li>
+  <li><a href="#using-grammatike-in-a-script" id="toc-using-grammatike-in-a-script" class="nav-link active" data-scroll-target="#using-grammatike-in-a-script">Using <code>grammatike</code> in a script</a></li>
+  <li><a href="#analyzing-citable-sources" id="toc-analyzing-citable-sources" class="nav-link" data-scroll-target="#analyzing-citable-sources">Analyzing citable sources</a></li>
   </ul>
 </nav>
     </div>
@@ -168,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Concepts</h1>
+<h1 class="title">Analyzing a Greek text</h1>
 </div>
 
 
@@ -185,23 +264,48 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="key-features-of-grammatikes-model-of-greek-syntax" class="level2">
-<h2 class="anchored" data-anchor-id="key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</h2>
+<section id="using-grammatike-in-a-script" class="level2">
+<h2 class="anchored" data-anchor-id="using-grammatike-in-a-script">Using <code>grammatike</code> in a script</h2>
+<p>To call the pipeline from your own script or a REPL instead of the CLI, configure a <code>dspy.LM</code> yourself and use <code>grammatike</code> directly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dspy</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> analyze_passage, print_analysis</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dspy.configure(lm<span class="op">=</span>dspy.LM(model<span class="op">=</span><span class="st">"litellm_proxy/anthropic/Claude Opus 5"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                           api_base<span class="op">=</span><span class="st">"https://api_url/litellm"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                           api_key<span class="op">=</span><span class="st">"your-key-here"</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sentences, results <span class="op">=</span> analyze_passage(<span class="st">"τὴν θύραν ἀνέῳξεν."</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sentence, result <span class="kw">in</span> <span class="bu">zip</span>(sentences, results):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    print_analysis(sentence.tokens, result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Explanation:</p>
 <ul>
-<li>designed for study of texts in Greek (for research or teaching) using familiar terminology</li>
-<li>tokenizes and classifies tokens from strings of text</li>
-<li>organizes syntactic analysis in coordinated and subordinated <em>verbal expressions</em>, subject-verb-object expressions generally corresponding to clauses in an English translation</li>
-<li>relates all lexical tokens to other tokens in a dependency graph following a defined scheme</li>
-<li>tokens are uniquely citable within uniquely citable passages of text</li>
+<li><code>analyze_passage()</code> returns <code>(sentences, results)</code>: that is, one <code>Sentence</code> and one <code>SyntaxAnalysis</code> result per sentence it finds in <code>passage</code>.</li>
+<li><code>result.verbalunits</code> is a list of <code>VerbalExpression</code> objects.</li>
+<li><code>result.tokengraph</code> is a list of <code>TokenAnalysis</code> objects, one per token in that sentence, in order.</li>
 </ul>
+<p><code>analyze_sources()</code>/<code>analyze_passage()</code> already call <code>validate()</code> for you and print a warning if the LM refers to a token id that doesn’t exist in its sentence’s input tokens. (That’s a sign that the output needs a re-run or a prompt tweak, and does not necessarily mean that your code is broken.)</p>
+<p><code>validate()</code> only catches referential problems like that one — ids that don’t exist. It can’t tell you an otherwise well-formed analysis is probably still wrong. For one specific, observed failure mode — a coordinating conjunction correctly pairing two verbal expressions, but the second one silently missing its own <code>verbalunitid</code> — call <code>find_unanchored_coordinated_verbs()</code> on the result:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> find_unanchored_coordinated_verbs</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sentence, result <span class="kw">in</span> <span class="bu">zip</span>(sentences, results):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> warning <span class="kw">in</span> find_unanchored_coordinated_verbs(result.tokengraph):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Possible mistake: </span><span class="sc">{</span>warning<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It’s a heuristic, not a guarantee — see its own docstring — but a clean result costs nothing to check, and a flagged one is worth a manual read before you trust the analysis.</p>
 </section>
-<section id="relation-to-other-models" class="level2">
-<h2 class="anchored" data-anchor-id="relation-to-other-models">Relation to other models</h2>
-<p>Different models of syntax serve different purposes.</p>
-<ul>
-<li>Relation to Universal Dependencies (UD) TBA</li>
-<li>Relation to Agent-Action-Target (AAT) TBA</li>
-</ul>
+<section id="analyzing-citable-sources" class="level2">
+<h2 class="anchored" data-anchor-id="analyzing-citable-sources">Analyzing citable sources</h2>
+<p><code>grammatike</code> supports analyzing texts identified by some canonical citation. Under the hood, <code>analyze_passage()</code> wraps <code>passage</code> as a <code>CitedText</code> and hands this to <code>analyze_sources()</code>, which is what actually does the work. You can call <code>analyze_sources()</code> directly like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike <span class="im">import</span> analyze_sources, combined_tokengraph</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> grammatike.models <span class="im">import</span> CitedText</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>apology <span class="op">=</span> <span class="st">"urn:cts:greekLit:tlg0059.tlg002.perseus-grc2:"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> [</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    CitedText(citation<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>apology<span class="sc">}</span><span class="ss">17a"</span>, text<span class="op">=</span><span class="st">"ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Ἀθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα·"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    CitedText(citation<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>apology<span class="sc">}</span><span class="ss">17b"</span>, text<span class="op">=</span><span class="st">"ἐγὼ δ᾽ οὖν καὶ αὐτὸς ὑπ᾽ αὐτῶν ὀλίγου ἐμαυτοῦ ἐπελαθόμην."</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>sentences, results <span class="op">=</span> analyze_sources(sources)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>tokengraph <span class="op">=</span> combined_tokengraph(results)  <span class="co"># one flat list, spanning every sentence</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>analyze_sources()</code> handles any number of sentences and citation units; sentence boundaries don’t need to respect citation-unit boundaries (one sentence may span two source lines), and every token still records which source unit it came from via <code>Token.citation</code>.</p>
 
 
 </section>

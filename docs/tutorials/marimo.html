@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Concepts – grammatike</title>
+<title>Marimo notebooks – grammatike</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -97,11 +97,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../concepts/index.html" aria-current="page"> 
+    <a class="nav-link" href="../concepts/index.html"> 
 <span class="menu-text">Concepts</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
+    <a class="nav-link active" href="../tutorials/index.html" aria-current="page"> 
 <span class="menu-text">Tutorials</span></a>
   </li>  
   <li class="nav-item">
@@ -130,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../concepts/index.html">Concepts</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/marimo.html">Marimo notebooks</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -144,8 +144,34 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../concepts/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Concepts</span></a>
+  <a href="../tutorials/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorials</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/marimo.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Marimo notebooks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cli.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command-line scripts to analyze Greek syntax</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/quick.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quick analysis from a script</span></a>
   </div>
 </li>
     </ul>
@@ -158,8 +184,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-features-of-grammatikes-model-of-greek-syntax" id="toc-key-features-of-grammatikes-model-of-greek-syntax" class="nav-link active" data-scroll-target="#key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</a></li>
-  <li><a href="#relation-to-other-models" id="toc-relation-to-other-models" class="nav-link" data-scroll-target="#relation-to-other-models">Relation to other models</a></li>
+  <li><a href="#marimo-notebooks" id="toc-marimo-notebooks" class="nav-link active" data-scroll-target="#marimo-notebooks"><code>marimo</code> notebooks</a></li>
   </ul>
 </nav>
     </div>
@@ -168,7 +193,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Concepts</h1>
+<h1 class="title">Marimo notebooks</h1>
 </div>
 
 
@@ -185,23 +210,15 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="key-features-of-grammatikes-model-of-greek-syntax" class="level2">
-<h2 class="anchored" data-anchor-id="key-features-of-grammatikes-model-of-greek-syntax">Key features of <code>grammatike</code>’s model of Greek syntax</h2>
+<section id="marimo-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="marimo-notebooks"><code>marimo</code> notebooks</h2>
+<p><code>greek_syntaxer_workflow.py</code> and <code>greek_syntaxer_ctsdata.py</code> take different approaches to segmentation, matching how each notebook’s input arrives:</p>
 <ul>
-<li>designed for study of texts in Greek (for research or teaching) using familiar terminology</li>
-<li>tokenizes and classifies tokens from strings of text</li>
-<li>organizes syntactic analysis in coordinated and subordinated <em>verbal expressions</em>, subject-verb-object expressions generally corresponding to clauses in an English translation</li>
-<li>relates all lexical tokens to other tokens in a dependency graph following a defined scheme</li>
-<li>tokens are uniquely citable within uniquely citable passages of text</li>
+<li><code>greek_syntaxer_workflow.py</code>: enter a base URN, passage reference, and text to analyze as one form (nothing happens until you click <em>Analyze</em>, rather than on every keystroke). Submitting it calls <code>analyze_passage()</code> directly, which segments the text into sentences internally and runs full <code>SyntaxAnalysis</code> (via <code>analyze_with_retry()</code>) on each one in turn, then shows the discussion, Mermaid diagram, and highlighted/indented HTML for the whole passage. There’s no separate sentence-selection step here – the text you type is manually entered, so it’s up to you to submit it one sentence at a time if you want to control segmentation boundaries yourself. There’s a <code>cex</code>/<code>txt</code> extension choice (default <code>cex</code>) plus a <em>Download analysis</em> button that hands the current analysis (built with <code>serialize_analyses()</code>, see “Saving and loading analyses” above) to the browser’s own download mechanism – no folder path to type, at the cost of the browser (not the notebook) deciding where the file actually lands. The filename defaults to the submitted citation (base URN + passage) with the chosen extension.</li>
+<li><code>greek_syntaxer_ctsdata.py</code>: the input comes from a <code>#!ctsdata</code> source file (see “Reading passages from a delimited-text source file” above) instead of being typed in by hand, so segmentation and analysis stay two distinct steps – segmentation is free (no LM call at all, see <code>segmentation.py</code>), so you can see every sentence it finds, and choose which ones are actually worth the cost of a full analysis, before spending anything on <code>SyntaxAnalysis</code>. Browse for the file and pick one or more passages from the <em>Passage(s)</em> multiselect menu (labelled <code>&lt;citation&gt;: &lt;first few words&gt;…</code>), then click <em>OK</em> to segment the selection – every selected passage becomes its own <code>CitedText</code> source and is segmented together via <code>segment_sources()</code>, always in the file’s own order regardless of the order they were selected in, since consecutive sources can share a sentence across their boundary. A <em>Sentence(s) to analyze</em> menu then lists every sentence segmentation found across all the selected passages (labelled <code>&lt;n&gt;. &lt;citation&gt;: &lt;first eight words&gt;…</code>, since sentences here can come from different citations); pick some and click <em>Analyze selected sentences</em> to run <code>SyntaxAnalysis</code> on just those. A <em>Disable LM cache</em> checkbox next to that button forces the click to bypass DSPy’s own LM response cache (<code>analyze_with_retry()</code>’s <code>disable_cache</code> parameter — see “Estimating and enforcing a <code>max_tokens</code> budget” above), so re-clicking <em>Analyze</em> on the exact same sentence(s) after changing the configured model, the prompt, or the schema always reaches the LM again instead of silently replaying the previous response; leave it unchecked for ordinary browsing, where the cache saves real cost and latency. Everything downstream (Mermaid diagram, highlighted/indented HTML, save-to-file) covers only the analyzed subset. Both this notebook and <code>greek_syntaxer_workflow.py</code> also have <em>See list of tokens</em>/<em>See cost</em>/<em>See prompts</em> checkboxes, each toggling a hidden display of the raw token list, the last LM call’s own reported cost, or <code>dspy.inspect_history()</code>’s prompt/response transcript.</li>
+<li><code>greek_syntaxer_review.py</code>: no LM access at all – browse for a file previously written by <code>write_analyses()</code> (see “Saving and loading analyses” above), pick a sentence from the menu that appears (labelled <code>&lt;n&gt;. &lt;citation&gt;: &lt;first six words&gt;…</code>, via <code>split_analysis_by_sentence()</code>), and it displays that one sentence’s own Mermaid diagram, plain (uncolored) text, verbal-unit-colored HTML, and colored-and-indented-by-subordination-depth HTML – reconstructed entirely from the saved file, which is already complete, so there’s no separate segment-then-analyze step here the way there is in the other two notebooks. A slider above the indented view caps it to that sentence’s own <code>max_subordination_depth()</code> or shallower, the same depth-cap control the other two notebooks offer, except here it only appears once a sentence with at least one token has actually been picked. A <em>Download Mermaid diagram (.mmd)</em> button next to the diagram hands that sentence’s raw Mermaid source (the same text <code>mo.mermaid()</code> renders) to the browser’s own download mechanism. Useful for reviewing or presenting an already-completed analysis (e.g.&nbsp;one harvested into <code>GOLD_EXAMPLES</code>) without spending an LM call, or working at all when the LM is unreachable.</li>
 </ul>
-</section>
-<section id="relation-to-other-models" class="level2">
-<h2 class="anchored" data-anchor-id="relation-to-other-models">Relation to other models</h2>
-<p>Different models of syntax serve different purposes.</p>
-<ul>
-<li>Relation to Universal Dependencies (UD) TBA</li>
-<li>Relation to Agent-Action-Target (AAT) TBA</li>
-</ul>
+<p>All three notebooks default their sample text/URN to <code>syntax_model.md</code>’s own worked examples – most of which are drawn from Lysias 1, <em>On the Murder of Eratosthenes</em> (<code>urn:cts:greekLit:tlg0540.tlg001.perseus-grc2:</code>) – as a placeholder; point <code>urnbase</code> at your own corpus. Run any of them with <code>marimo edit marimo/greek_syntaxer_workflow.py</code> (requires <code>pip install marimo --break-system-packages</code>, or <code>pip install -e ".[dev]"</code>, see TESTING.md) from the repo root, and a <code>.env</code> with <code>API_BASE</code>/<code>MODEL</code>/<code>API_KEY</code> set (see DEVELOPMENT.md), except <code>greek_syntaxer_review.py</code>, which needs no LM access at all.</p>
 
 
 </section>

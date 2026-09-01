@@ -1,0 +1,50 @@
+---
+title: Saving and loading analyses
+---
+
+`write_analyses()`/`read_analyses()` (in `grammatike/serialization.py`) save and reload a full analysis — `sentences`, `verbalunits` (concatenated across every sentence's result), and `tokengraph` (via `combined_tokengraph()`) — as one deterministic, pipe-delimited plain-text file, so you can persist an analysis, diff it, hand-edit it, or reload it later without re-running the LM:
+
+```python
+from grammatike import write_analyses, read_analyses, combined_tokengraph
+
+verbalunits = [vu for result in results for vu in result.verbalunits]
+tokengraph = combined_tokengraph(results)
+
+warnings = write_analyses(sentences, verbalunits, tokengraph, "analysis.txt")
+for w in warnings:
+    print(f"Warning: {w}")
+
+tokengraph, verbalunits, sentences = read_analyses("analysis.txt")
+```
+
+`serialize_analyses(sentences, verbalunits, tokengraph)` builds the exact same text and returns it as a string (plus the same warnings) instead of writing it to a file — `write_analyses()` is just a thin wrapper around it.
+
+The file has three labelled, pipe-delimited blocks (`#!sentences`, `#!verbal_units`, `#!tokens`), each with its own fixed header row — see `serialization.py`'s module docstring for the exact format, why `sentences` is needed at all (it's the only place a citation is actually attached to a token id), and what `write_analyses()`'s warnings vs. `read_analyses()`'s errors each catch. Each of the three labels may appear more than once in the file; `read_analyses()` merges every instance of a label into that label's combined row list, in file order, so simply concatenating several `write_analyses()`/`serialize_analyses()` outputs together and reading the result back gives you one combined analysis. `read_analyses()` is otherwise deliberately strict: a malformed or internally inconsistent file raises `ValueError` naming the exact line and problem, rather than silently reconstructing something partial.
+
+Pass `results` (the same list `analyze_sources()`/`analyze_passage()` return alongside `sentences`) to keep each sentence's own LM reasoning trace with the saved analysis, for later review or for curating a GEPA trainset (see `OPTIMIZING.md`):
+
+```python
+warnings = write_analyses(sentences, verbalunits, tokengraph, "analysis.txt", results=results)
+```
+
+This adds one `#!llm` block per sentence — `MODEL=<value of the `MODEL` environment variable>` followed by that sentence's `result.reasoning` text, verbatim. It's purely additive: omit `results` (the default) and no `#!llm` blocks are written at all; `read_analyses()` skips over any it finds (still checking they're well-formed) without changing its own return shape. Read the reasoning traces back out with the dedicated `read_llm_notes()`, which returns `[(model, reasoning), ...]` in file order:
+
+```python
+from grammatike import read_llm_notes
+
+notes = read_llm_notes("analysis.txt")
+for model, reasoning in notes:
+    print(f"[{model}] {reasoning}")
+```
+
+`read_analyses()` hands back flat, whole-file lists — every sentence's `tokengraph`/`verbalunits` concatenated together, the same shape `combined_tokengraph()` produces. `split_analysis_by_sentence(tokengraph, verbalunits, sentences)` splits that back into one `(sentence_tokengraph, sentence_verbalunits)` slice per sentence, aligned with `sentences` itself:
+
+```python
+from grammatike import read_analyses, split_analysis_by_sentence
+
+tokengraph, verbalunits, sentences = read_analyses("analysis.txt")
+slices = split_analysis_by_sentence(tokengraph, verbalunits, sentences)
+
+for sentence, (sentence_tokengraph, sentence_verbalunits) in zip(sentences, slices):
+    ...  # render or inspect this one sentence's own analysis
+```

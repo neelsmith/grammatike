@@ -34,7 +34,13 @@ website:
     - title: "Tutorials"
       contents:
         - tutorials/index.qmd
+        - "---"
+        - tutorials/marimo.qmd
+        - tutorials/cli.qmd        
+        - "---"
         - tutorials/installation.qmd
+
+        - tutorials/quick.qmd
         
     - title: "Concepts"
       contents:
@@ -42,7 +48,12 @@ website:
     - title: "Guides"
       contents: 
         - guides/index.qmd     
-        - guides/usage.qmd
+    
+        - "---"
+        - guides/analysis.qmd
+        - guides/cexsource.qmd        
+        - guides/serialization.qmd
+
         - "---" 
         - guides/optimizing.qmd
         - guides/bakeoff.qmd
