@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.24.0"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium")
 
 
@@ -94,12 +94,6 @@ def _(mo):
     return seecost, seeprompts, seetokens
 
 
-@app.cell
-def _(lm):
-    lm.history[-1]["cost"]
-    return
-
-
 @app.cell(hide_code=True)
 def _(finaltokens, seetokens):
     tokendisplay = None
@@ -189,12 +183,6 @@ def _(results):
 
 
 @app.cell
-def _(lm):
-    lm.history[-1]
-    return
-
-
-@app.cell
 def _(last_call):
     cost = last_call.get('cost')
     return (cost,)
@@ -205,6 +193,7 @@ def _(lm):
     last_call = None
     if lm.history:
         last_call = lm.history[-1]
+
     return (last_call,)
 
 

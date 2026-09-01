@@ -206,7 +206,7 @@ def _(ctsdata_file_browser, read_ctsdata):
 def _(Path, mo):
     # Browse for the delimited-text file listing passages to analyze (see
     # grammatike/ctsdata.py for the '#!ctsdata' block format). Unlike
-    # the "choose a folder to save to" field syntaxer_workflow.py used to
+    # the "choose a folder to save to" field greek_syntaxer_workflow.py used to
     # have (see that notebook's own history: mo.ui.file_browser's
     # "directory" selection mode has no way to select the folder currently
     # being browsed, only a subfolder shown in its listing), selecting a
@@ -321,7 +321,7 @@ def sentence_preview_text(sentence):
 # Format one menu entry as "<n>. <citation>: <first eight words>…" -- the
 # citation comes from the sentence's own first token (sentences drawn from
 # different selected passages carry different citations, unlike
-# syntaxer_workflow.py's single-source case), and the number keeps entries
+# greek_syntaxer_workflow.py's single-source case), and the number keeps entries
 # unique even when two sentences share a citation or opening words.
 def sentence_menu_label(index, sentence):
     preview_text = sentence_preview_text(sentence)
@@ -405,7 +405,7 @@ def _(sentences):
     # A readable default filename base, drawn from every analyzed
     # sentence's own citation (falling back to "analysis" if nothing's
     # been analyzed yet), deduplicated and in analysis order -- unlike
-    # syntaxer_workflow.py's single passage, here `sentences` is already
+    # greek_syntaxer_workflow.py's single passage, here `sentences` is already
     # the *selected, analyzed* subset (see the Analysis cell below), not
     # every sentence segmentation found -- so the filename reflects what's
     # actually in the downloaded file. This can get long with many

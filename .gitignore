@@ -14,3 +14,5 @@ dist/
 # .env points at, so it doesn't belong in version control -- re-run the
 # script after cloning rather than committing its output.
 grammatike/grammatike_token_budget_calibration.json
+
+quarto/quarto-build/

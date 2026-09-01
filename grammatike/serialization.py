@@ -815,7 +815,7 @@ def split_analysis_by_sentence(
     Returns a list the same length and order as `sentences` -- entry i is
     `(sentence_tokengraph, sentence_verbalunits)` for `sentences[i]`. Useful
     for anything that wants to review or render one sentence's analysis at
-    a time (e.g. a sentence-picker UI, like marimo/syntaxer_review.py)
+    a time (e.g. a sentence-picker UI, like marimo/greek_syntaxer_review.py)
     without re-running analysis or re-deriving the same id-position
     bookkeeping read_analyses()/write_analyses() already do internally.
 

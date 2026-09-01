@@ -4781,7 +4781,7 @@ with the other.</p>
 </span><span id="split_analysis_by_sentence-816"><a href="#split_analysis_by_sentence-816"><span class="linenos">816</span></a><span class="sd">    Returns a list the same length and order as `sentences` -- entry i is</span>
 </span><span id="split_analysis_by_sentence-817"><a href="#split_analysis_by_sentence-817"><span class="linenos">817</span></a><span class="sd">    `(sentence_tokengraph, sentence_verbalunits)` for `sentences[i]`. Useful</span>
 </span><span id="split_analysis_by_sentence-818"><a href="#split_analysis_by_sentence-818"><span class="linenos">818</span></a><span class="sd">    for anything that wants to review or render one sentence&#39;s analysis at</span>
-</span><span id="split_analysis_by_sentence-819"><a href="#split_analysis_by_sentence-819"><span class="linenos">819</span></a><span class="sd">    a time (e.g. a sentence-picker UI, like marimo/syntaxer_review.py)</span>
+</span><span id="split_analysis_by_sentence-819"><a href="#split_analysis_by_sentence-819"><span class="linenos">819</span></a><span class="sd">    a time (e.g. a sentence-picker UI, like marimo/greek_syntaxer_review.py)</span>
 </span><span id="split_analysis_by_sentence-820"><a href="#split_analysis_by_sentence-820"><span class="linenos">820</span></a><span class="sd">    without re-running analysis or re-deriving the same id-position</span>
 </span><span id="split_analysis_by_sentence-821"><a href="#split_analysis_by_sentence-821"><span class="linenos">821</span></a><span class="sd">    bookkeeping read_analyses()/write_analyses() already do internally.</span>
 </span><span id="split_analysis_by_sentence-822"><a href="#split_analysis_by_sentence-822"><span class="linenos">822</span></a>
@@ -4851,7 +4851,7 @@ produce before ever being written to a file), split <code>tokengraph</code> and
 <p>Returns a list the same length and order as <code>sentences</code> -- entry i is
 <code>(sentence_tokengraph, sentence_verbalunits)</code> for <code>sentences[i]</code>. Useful
 for anything that wants to review or render one sentence's analysis at
-a time (e.g. a sentence-picker UI, like marimo/syntaxer_review.py)
+a time (e.g. a sentence-picker UI, like marimo/greek_syntaxer_review.py)
 without re-running analysis or re-deriving the same id-position
 bookkeeping read_analyses()/write_analyses() already do internally.</p>
 
@@ -4906,7 +4906,7 @@ it being called with a hand-built triple too.</p>
 </span><span id="CtsDataRow-57"><a href="#CtsDataRow-57"><span class="linenos">57</span></a><span class="sd">    colon-separated parts of the row&#39;s own CTS URN, rejoined with &#39;:&#39;, plus</span>
 </span><span id="CtsDataRow-58"><a href="#CtsDataRow-58"><span class="linenos">58</span></a><span class="sd">    a trailing &#39;:&#39;) and `citation` (the URN&#39;s 5th part) together</span>
 </span><span id="CtsDataRow-59"><a href="#CtsDataRow-59"><span class="linenos">59</span></a><span class="sd">    reconstruct the full URN as `urnbase + citation` -- the same</span>
-</span><span id="CtsDataRow-60"><a href="#CtsDataRow-60"><span class="linenos">60</span></a><span class="sd">    concatenation syntaxer_workflow.py&#39;s manual-entry form uses for its own</span>
+</span><span id="CtsDataRow-60"><a href="#CtsDataRow-60"><span class="linenos">60</span></a><span class="sd">    concatenation greek_syntaxer_workflow.py&#39;s manual-entry form uses for its own</span>
 </span><span id="CtsDataRow-61"><a href="#CtsDataRow-61"><span class="linenos">61</span></a><span class="sd">    `urnbase`/`citation_context` fields. `text` is the passage&#39;s own</span>
 </span><span id="CtsDataRow-62"><a href="#CtsDataRow-62"><span class="linenos">62</span></a><span class="sd">    surface text, verbatim.&quot;&quot;&quot;</span>
 </span><span id="CtsDataRow-63"><a href="#CtsDataRow-63"><span class="linenos">63</span></a>
@@ -4920,7 +4920,7 @@ it being called with a hand-built triple too.</p>
 colon-separated parts of the row's own CTS URN, rejoined with ':', plus
 a trailing ':') and <code><a href="#CtsDataRow.citation">citation</a></code> (the URN's 5th part) together
 reconstruct the full URN as <code>urnbase + citation</code> -- the same
-concatenation syntaxer_workflow.py's manual-entry form uses for its own
+concatenation greek_syntaxer_workflow.py's manual-entry form uses for its own
 <code><a href="#CtsDataRow.urnbase">urnbase</a></code>/<code>citation_context</code> fields. <code><a href="#CtsDataRow.text">text</a></code> is the passage's own
 surface text, verbatim.</p>
 </div>

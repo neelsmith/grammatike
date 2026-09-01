@@ -1,0 +1,7 @@
+---
+title: grammatike / γραμματικὴ τέχνη
+---
+
+
+`grammatike` is a Python package leveraging LLMs with [dspy](https://dspy.ai) to analyze the syntax of passages of ancient Greek.
+

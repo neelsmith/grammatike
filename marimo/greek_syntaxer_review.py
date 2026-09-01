@@ -117,7 +117,7 @@ def _(mo):
 def _(Path, mo):
     # Browse for a previously-written analysis file (write_analyses()'s own
     # format -- see USAGE.md's "Saving and loading analyses"). A
-    # file_browser is used for the same reason syntaxer_ctsdata.py's own
+    # file_browser is used for the same reason greek_syntaxer_ctsdata.py's own
     # ctsdata_file_browser is: selecting a single FILE by clicking it just
     # works, unlike mo.ui.file_browser's "directory" selection mode.
     analysis_file_browser = mo.ui.file_browser(
@@ -230,7 +230,7 @@ def _(selected_tokengraph, tokengraph_to_mermaid):
 
 @app.cell
 def _(selected_citation, sentence_dropdown):
-    # Same alphanumeric-sanitizing convention syntaxer_workflow.py's own
+    # Same alphanumeric-sanitizing convention greek_syntaxer_workflow.py's own
     # filename_base uses -- the sentence's own 1-based menu number goes
     # first (matching sentence_label()'s "<n>. ..." prefix) so every
     # download gets a distinct, stable name even across sentences that
@@ -246,7 +246,7 @@ def _(selected_citation, sentence_dropdown):
 def _(diagram, mermaid_filename_stem, mo, selected_tokengraph):
     # mo.download() hands the raw Mermaid source (the same text
     # mo.mermaid() renders above) to the browser's own download mechanism
-    # -- see syntaxer_workflow.py's "Download analysis" button for the
+    # -- see greek_syntaxer_workflow.py's "Download analysis" button for the
     # same pattern. Reusable directly in any other Mermaid-aware tool
     # (mermaid.live, a README code block, etc.), not just here.
     mermaid_download = mo.download(
@@ -263,7 +263,7 @@ def _(diagram, mermaid_filename_stem, mo, selected_tokengraph):
 def _(mo, selected_tokengraph, tokengraph_to_text):
     # Plain, uncolored text -- tokengraph_to_text() never emits HTML, but
     # the underlying surface text is still escaped before going into
-    # mo.Html(), same as syntaxer_ctsdata.py's own raw-passage-preview cell.
+    # mo.Html(), same as greek_syntaxer_ctsdata.py's own raw-passage-preview cell.
     import html as _html
 
     plaintext_html = mo.Html(
@@ -280,7 +280,7 @@ def _(mo, selected_tokengraph, tokengraph_to_html):
 
 @app.cell
 def _(max_subordination_depth, mo, selected_tokengraph):
-    # Same depth-cap slider as syntaxer_workflow.py/syntaxer_ctsdata.py --
+    # Same depth-cap slider as greek_syntaxer_workflow.py/greek_syntaxer_ctsdata.py --
     # left None until a sentence with at least one token is selected.
     maxdepth = None
     if selected_tokengraph:

@@ -1,0 +1,61 @@
+project:
+  type: website
+  output-dir: quarto-build
+
+version: "0.1.0"  
+  
+
+website:
+  title: "grammatike"
+  page-footer:
+    center: "Documentation for release version **{{< meta version >}}**"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+      - text: "Concepts"
+        file: concepts/index.qmd           
+      - text: "Tutorials"
+        file: tutorials/index.qmd          
+      - text: "Guides"
+        file: guides/index.qmd           
+      - text: "Reference"
+        file: reference/index.qmd          
+
+            
+    right:   
+      - icon: github
+        href: https://github.com/neelsmith/arsgrammatica
+        aria-label: GitHub
+
+  sidebar:
+    - title: "Tutorials"
+      contents:
+        - tutorials/index.qmd
+        
+    - title: "Concepts"
+      contents:
+        - concepts/index.qmd
+    - title: "Guides"
+      contents: 
+        - guides/index.qmd      
+       
+
+        
+    - title: "Reference"
+      contents: 
+        - reference/index.qmd      
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+
+
