@@ -19,11 +19,20 @@ import pytest
 from grammatike.models import Sentence, Token, TokenAnalysis, VerbalExpression
 from grammatike.serialization import (
     read_analyses,
+    read_llm_notes,
     serialize_analyses,
     split_analysis_by_sentence,
     write_analyses,
 )
 from fixtures.gold_examples import GOLD_EXAMPLES
+
+
+class _FakeResult:
+    """Stands in for a dspy prediction: the only thing serialize_analyses()/
+    write_analyses() ever reads off a `results` entry is `.reasoning`."""
+
+    def __init__(self, reasoning):
+        self.reasoning = reasoning
 
 
 def _tokengraph_for(slug):
@@ -158,6 +167,128 @@ def test_file_contents_match_the_documented_format(tmp_path):
     assert "|t5|lexical|ἀνήρ|ἀνήρ||t8|subject||" in text
     # The relatedtoken2/relationship2 overflow slot round-trips too.
     assert "|t6|lexical|ὅν|ὅς||t5|relative pronoun|t7|direct object" in text
+
+
+# ---------------------------------------------------------------------------
+# '#!llm' blocks (the optional `results` parameter)
+# ---------------------------------------------------------------------------
+
+
+def test_llm_blocks_written_with_model_env_and_reasoning(tmp_path, monkeypatch):
+    monkeypatch.setenv("MODEL", "openai/gpt-4o-mini")
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    results = [
+        _FakeResult("ἄειδε is the main verb, with μῆνιν as its direct object."),
+        _FakeResult("ἀπῆλθεν is the main verb; ὅν is the relative pronoun."),
+    ]
+    path = tmp_path / "analysis.txt"
+
+    warnings = write_analyses(sentences, verbalunits, tokengraph, str(path), results=results)
+    assert warnings == []
+
+    text = path.read_text()
+    assert text.count("#!llm") == 2
+    assert "MODEL=openai/gpt-4o-mini" in text
+    assert "ἄειδε is the main verb, with μῆνιν as its direct object." in text
+    assert "ἀπῆλθεν is the main verb; ὅν is the relative pronoun." in text
+
+
+def test_llm_blocks_omitted_when_results_not_given(tmp_path):
+    """The default (`results=None`) writes a file with no '#!llm' blocks at
+    all, exactly as before this parameter existed."""
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    path = tmp_path / "analysis.txt"
+    write_analyses(sentences, verbalunits, tokengraph, str(path))
+    assert "#!llm" not in path.read_text()
+    assert read_llm_notes(str(path)) == []
+
+
+def test_read_llm_notes_round_trips_model_and_reasoning(tmp_path, monkeypatch):
+    monkeypatch.setenv("MODEL", "anthropic/claude-sonnet-5")
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    results = [_FakeResult("First sentence's reasoning."), _FakeResult("Second sentence's reasoning.")]
+    path = tmp_path / "analysis.txt"
+    write_analyses(sentences, verbalunits, tokengraph, str(path), results=results)
+
+    notes = read_llm_notes(str(path))
+    assert notes == [
+        ("anthropic/claude-sonnet-5", "First sentence's reasoning."),
+        ("anthropic/claude-sonnet-5", "Second sentence's reasoning."),
+    ]
+
+
+def test_read_analyses_ignores_llm_blocks_and_still_reconstructs_everything(tmp_path, monkeypatch):
+    """read_analyses() must not choke on '#!llm' blocks, and must still
+    reconstruct the three core objects exactly -- it just doesn't return
+    the reasoning content (see read_llm_notes() for that)."""
+    monkeypatch.setenv("MODEL", "openai/gpt-4o-mini")
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    results = [_FakeResult("reasoning one"), _FakeResult("reasoning two")]
+    path = tmp_path / "analysis.txt"
+    write_analyses(sentences, verbalunits, tokengraph, str(path), results=results)
+
+    got_tokengraph, got_verbalunits, got_sentences = read_analyses(str(path))
+    assert got_tokengraph == tokengraph
+    assert got_verbalunits == verbalunits
+    assert got_sentences == sentences
+
+
+def test_mismatched_results_length_raises(tmp_path):
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    with pytest.raises(ValueError, match="results has 1 entries but sentences has 2"):
+        serialize_analyses(sentences, verbalunits, tokengraph, results=[_FakeResult("only one")])
+
+
+def test_reasoning_with_internal_blank_line_round_trips_but_trailing_blank_is_stripped(tmp_path):
+    """A blank line INSIDE the reasoning (a paragraph break) is
+    significant and must survive; the one blank line the writer itself
+    appends as a block separator must not be mistaken for part of it."""
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    multi_paragraph = "First paragraph.\n\nSecond paragraph, after a blank line."
+    results = [_FakeResult(multi_paragraph), _FakeResult("second sentence, unremarkable")]
+    path = tmp_path / "analysis.txt"
+    write_analyses(sentences, verbalunits, tokengraph, str(path), results=results)
+
+    notes = read_llm_notes(str(path))
+    assert notes[0][1] == multi_paragraph  # internal blank line preserved exactly
+    assert notes[1][1] == "second sentence, unremarkable"
+
+
+def test_model_env_unset_writes_empty_and_reads_back_none(tmp_path, monkeypatch):
+    monkeypatch.delenv("MODEL", raising=False)
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    results = [_FakeResult("r1"), _FakeResult("r2")]
+    path = tmp_path / "analysis.txt"
+    write_analyses(sentences, verbalunits, tokengraph, str(path), results=results)
+
+    assert "\nMODEL=\n" in path.read_text()
+    notes = read_llm_notes(str(path))
+    assert notes[0][0] is None
+    assert notes[1][0] is None
+
+
+def test_malformed_llm_block_missing_model_prefix_raises(tmp_path):
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    path = tmp_path / "analysis.txt"
+    write_analyses(sentences, verbalunits, tokengraph, str(path))
+    with open(path, "a", encoding="utf-8") as f:
+        f.write("\n#!llm\nnot a model line\nsome reasoning\n")
+
+    with pytest.raises(ValueError, match="MODEL="):
+        read_llm_notes(str(path))
+    with pytest.raises(ValueError, match="MODEL="):
+        read_analyses(str(path))
+
+
+def test_reasoning_line_colliding_with_a_block_label_raises(tmp_path):
+    """A reasoning line that's exactly '#!tokens' (or any other block
+    label) would be misread as the start of a new block on read -- caught
+    at write time instead, per this format's usual 'no escaping, so
+    reject what would corrupt the structure' policy."""
+    sentences, verbalunits, tokengraph = _two_sentence_fixture()
+    results = [_FakeResult("#!tokens"), _FakeResult("fine")]
+    with pytest.raises(ValueError, match="misread as the start of a new block"):
+        serialize_analyses(sentences, verbalunits, tokengraph, results=results)
 
 
 # ---------------------------------------------------------------------------

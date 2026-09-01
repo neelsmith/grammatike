@@ -59,14 +59,14 @@ def _(rawpreview):
 
 
 @app.cell(hide_code=True)
-def _(all_sentences, analyze_button, mo, sentence_multiselect):
+def _(all_sentences, analyze_button, disable_cache, mo, sentence_multiselect):
     if not all_sentences:
         sentence_status = mo.md("*Select passage(s) above and click OK to list their sentences.*")
     else:
         sentence_status = mo.md(f"## Sentence selection\n\n*{len(all_sentences)} sentence(s) found.*")
 
     mo.vstack(
-        [sentence_status, mo.hstack([sentence_multiselect, analyze_button], justify="start")]
+        [sentence_status, mo.hstack([sentence_multiselect, analyze_button, disable_cache], justify="start")]
     )
     return
 
@@ -302,19 +302,7 @@ def _(CitedText, segment_button, segment_sources, selected_rows):
             for row in selected_rows
         ]
         all_sentences = segment_sources(sources)
-    return all_sentences, sources
-
-
-@app.cell
-def _(all_sentences):
-    all_sentences
-    return
-
-
-@app.cell
-def _(sources):
-    sources
-    return
+    return (all_sentences,)
 
 
 @app.function
@@ -371,6 +359,21 @@ def _(mo, sentence_multiselect):
         disabled=not sentence_multiselect.value,
     )
     return (analyze_button,)
+
+
+@app.cell
+def _(mo):
+    # Bypasses DSPy's own LM response cache for every attempt of the next
+    # Analyze click -- without this, re-submitting the exact same
+    # sentence(s) (e.g. to see whether an updated program, prompt, or
+    # configured model actually changes the output) would just replay the
+    # identical cached response instead of making a fresh LM call. Off by
+    # default: the cache is a real cost/latency win for the common case of
+    # just browsing already-analyzed sentences. Toggling this checkbox
+    # doesn't re-run Analyze on its own -- set it before clicking, not
+    # after.
+    disable_cache = mo.ui.checkbox(label="*Disable LM cache (force a fresh call)*")
+    return (disable_cache,)
 
 
 @app.cell
@@ -445,6 +448,7 @@ def _(
     all_sentences,
     analyze_button,
     analyze_with_retry,
+    disable_cache,
     sentence_multiselect,
     validate,
 ):
@@ -456,12 +460,21 @@ def _(
     # analyze_sources(), which does the same segment-then-analyze-each-
     # sentence loop over every selected passage; this is the same loop
     # scoped to a subset of the sentences segmentation actually found.
+    # disable_cache.value passes straight through to analyze_with_retry()'s
+    # own disable_cache parameter -- see that checkbox's own cell -- so a
+    # deliberate re-Analyze always reaches the LM again instead of possibly
+    # replaying a cached response from an earlier click on the exact same
+    # sentence(s).
     sentences, results = [], []
     if analyze_button.value and sentence_multiselect.value:
         selected_indices = sorted(sentence_multiselect.value)
         sentences = [all_sentences[i] for i in selected_indices]
         for sentence in sentences:
-            result = analyze_with_retry(passage=sentence_preview_text(sentence), tokens=sentence.tokens)
+            result = analyze_with_retry(
+                passage=sentence_preview_text(sentence),
+                tokens=sentence.tokens,
+                disable_cache=disable_cache.value,
+            )
             problems = validate(sentence.tokens, result)
             if problems:
                 first_id = sentence.tokens[0].id if sentence.tokens else "?"
@@ -470,6 +483,19 @@ def _(
                     print(f"  - {p}")
             results.append(result)
     return results, sentences
+
+
+@app.cell
+def _(dspy):
+    dspy.inspect_history()
+    return
+
+
+@app.cell
+def _(dspy):
+    dspy.inspect_history()
+
+    return
 
 
 @app.cell
@@ -497,13 +523,13 @@ def _(lm):
     last_call = None
     if lm.history:
         last_call = lm.history[-1]
-    return (last_call,)
+    return
 
 
 @app.cell
-def _(last_call):
-    cost = last_call.get('cost')
-    return (cost,)
+def _():
+    #cost = last_call.get('cost')
+    return
 
 
 @app.cell(hide_code=True)
@@ -601,8 +627,14 @@ def _(finaltokens, results, sentences, serialize_analyses):
     # `sentences` here is the selected-and-analyzed subset (see the
     # Analysis cell above), so a saved file only ever covers what was
     # actually analyzed, not every sentence segmentation found.
+    # results=results adds one '#!llm' block per sentence (MODEL env var +
+    # that sentence's own result.reasoning) -- see serialization.py's
+    # module docstring. Purely additive: read_analyses() ignores these
+    # blocks, so older saved files (and this one, read back) still work.
     all_verbalunits = [vu for result in results for vu in result.verbalunits]
-    analysis_text, analysis_warnings = serialize_analyses(sentences, all_verbalunits, finaltokens)
+    analysis_text, analysis_warnings = serialize_analyses(
+        sentences, all_verbalunits, finaltokens, results=results
+    )
     return analysis_text, analysis_warnings
 
 

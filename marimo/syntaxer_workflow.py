@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.23.16"
+__generated_with = "0.24.0"
 app = marimo.App(width="medium")
 
 
@@ -94,6 +94,12 @@ def _(mo):
     return seecost, seeprompts, seetokens
 
 
+@app.cell
+def _(lm):
+    lm.history[-1]["cost"]
+    return
+
+
 @app.cell(hide_code=True)
 def _(finaltokens, seetokens):
     tokendisplay = None
@@ -183,6 +189,12 @@ def _(results):
 
 
 @app.cell
+def _(lm):
+    lm.history[-1]
+    return
+
+
+@app.cell
 def _(last_call):
     cost = last_call.get('cost')
     return (cost,)
@@ -193,7 +205,6 @@ def _(lm):
     last_call = None
     if lm.history:
         last_call = lm.history[-1]
-
     return (last_call,)
 
 
@@ -238,8 +249,14 @@ def _(finaltokens, results, sentences, serialize_analyses):
     # Flatten every sentence's own verbalunits into the one flat list
     # serialize_analyses()/write_analyses() expect, matching how
     # combined_tokengraph() already flattens tokengraph across sentences.
+    # results=results adds one '#!llm' block per sentence (MODEL env var +
+    # that sentence's own result.reasoning) -- see serialization.py's
+    # module docstring. Purely additive: read_analyses() ignores these
+    # blocks, so older saved files (and this one, read back) still work.
     all_verbalunits = [vu for result in results for vu in result.verbalunits]
-    analysis_text, analysis_warnings = serialize_analyses(sentences, all_verbalunits, finaltokens)
+    analysis_text, analysis_warnings = serialize_analyses(
+        sentences, all_verbalunits, finaltokens, results=results
+    )
     return analysis_text, analysis_warnings
 
 

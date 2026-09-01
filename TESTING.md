@@ -16,7 +16,7 @@ pip install -e ".[test]"
 pytest
 ```
 
-Runs the whole suite (529 tests, `tests/`) — the `SyntaxAnalysis` stage's tests use DSPy's `DummyLM` in place of a real LM call, while the segmentation stage's tests call its deterministic `segment_sources()` directly with no LM involved at all (see `segmentation.py`) — useful for confirming the models/signatures/pipeline still fit together after you change something, without spending API calls. Tests that call the actual configured LM are marked `live` and skipped by default (`pytest.ini`'s `addopts = -m "not live"`) — they're the only way to check the LM itself gets a scenario right, not just that the code can represent a correct answer; run them explicitly with:
+Runs the whole suite (536 tests, `tests/`) — the `SyntaxAnalysis` stage's tests use DSPy's `DummyLM` in place of a real LM call, while the segmentation stage's tests call its deterministic `segment_sources()` directly with no LM involved at all (see `segmentation.py`) — useful for confirming the models/signatures/pipeline still fit together after you change something, without spending API calls. Tests that call the actual configured LM are marked `live` and skipped by default (`pytest.ini`'s `addopts = -m "not live"`) — they're the only way to check the LM itself gets a scenario right, not just that the code can represent a correct answer; run them explicitly with:
 
 ```bash
 pytest -m live
@@ -45,8 +45,8 @@ Some standard `pytest` shorthands:
 - `tests/test_verbal_units.py` — `assign_verbal_units()`, `assign_verbal_unit_colors()`, `compute_subordination_depths()`, `max_subordination_depth()`, and the `find_unanchored_coordinated_verbs()` heuristic.
 - `tests/test_rendering.py` — `tokengraph_to_text()`, `tokengraph_to_html()`, `tokengraph_to_depth_html()`.
 - `tests/test_mermaid_coloring.py` — `tokengraph_to_mermaid()` and its verbal-unit coloring.
-- `tests/test_serialization.py` — `serialize_analyses()`/`write_analyses()`/`read_analyses()`/`split_analysis_by_sentence()`.
+- `tests/test_serialization.py` — `serialize_analyses()`/`write_analyses()`/`read_analyses()`/`read_llm_notes()`/`split_analysis_by_sentence()`, including the optional `results` parameter's `#!llm` blocks (model/reasoning round trip, internal-blank-line preservation vs. the writer's own trailing separator, and the malformed-block errors both readers share).
 - `tests/test_ctsdata.py` — `read_ctsdata()`.
-- `tests/test_token_budget.py` — `estimate_max_tokens()`, `get_calibration()`, and `analyze_with_retry()`'s truncation-detection/retry logic.
+- `tests/test_token_budget.py` — `estimate_max_tokens()`, `get_calibration()`, and `analyze_with_retry()`'s truncation-detection/retry logic, including its separate retry-once-with-cache-bypassed path for a non-truncation parse failure (`analyze()` itself is monkeypatched for that path — DummyLM can't cleanly simulate a malformed-but-well-terminated response) and its caller-facing `disable_cache` parameter (bypasses the cache on every attempt, not just one retry).
 - `tests/test_gepa_metric.py` — `grammatike.gepa_metric.syntax_metric()` in isolation, including that swapping the `relatedtoken1`/`relatedtoken2` overflow slots scores as a perfect match, not an error.
 - `tests/test_harvest.py` — a thin, `live`-marked stub. `arsgrammatica`'s `tests/fixtures/harvest.py` (`gold_example_from_analysis()`/`format_gold_example_source()`, for turning a real analysis into a paste-ready `GoldExample`) has not been ported to `grammatike` yet; see that test file's own docstring.

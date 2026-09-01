@@ -31,9 +31,20 @@ from .greek_syntax_dspy import (
 )
 from .segmentation import segment_sources
 from .pipeline import analyze_sources, combined_tokengraph, analyze_passage
-from .serialization import serialize_analyses, write_analyses, read_analyses, split_analysis_by_sentence
+from .serialization import (
+    serialize_analyses,
+    write_analyses,
+    read_analyses,
+    read_llm_notes,
+    split_analysis_by_sentence,
+)
 from .ctsdata import CtsDataRow, read_ctsdata
-from .token_budget import estimate_max_tokens, analyze_with_retry, get_calibration
+from .token_budget import (
+    estimate_max_tokens,
+    analyze_with_retry,
+    get_calibration,
+    DEFAULT_CEILING,
+)
 from .gepa_metric import syntax_metric
 
 __all__ = [
@@ -65,11 +76,13 @@ __all__ = [
     "serialize_analyses",
     "write_analyses",
     "read_analyses",
+    "read_llm_notes",
     "split_analysis_by_sentence",
     "CtsDataRow",
     "read_ctsdata",
     "estimate_max_tokens",
     "analyze_with_retry",
     "get_calibration",
+    "DEFAULT_CEILING",
     "syntax_metric",
 ]
