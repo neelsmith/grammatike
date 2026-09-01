@@ -1,5 +1,5 @@
 ---
-index: Tutorials
+title: Tutorials
 ---
 
 Quick start

@@ -5,3 +5,17 @@ title: grammatike / γραμματικὴ τέχνη
 
 `grammatike` is a Python package leveraging LLMs with [dspy](https://dspy.ai) to analyze the syntax of passages of ancient Greek.
 
+
+`grammatike` offers an alternative analytic scheme to [Universal Dependencies](https://universaldependencies.org), designed to describe Greek syntax in familiar terms that are convenient for research and teaching. Released under the [GNU General Public License v3 or later](LICENSE). 
+
+| | Learning the package | Using the package |
+| --- | --- | --- |
+| **Hands-on** |  Try a [tutorial](./tutorials/) to start using  the package  | Find [recipes](./guides/) for specific tasks |
+| **Understanding** | [Modelling the syntax of ancient Greek](./concepts/)   | See [reference information](./reference/) (including API documentation for all exported functions) |
+
+
+## Related work
+
+- [arsgrammatica](https://github.com/neelsmith/arsgrammatica): a parallel Python package for analyzing passages of Latin with LMs
+- [diqduq](https://github.com/neelsmith/diqduq): a parallel Python package for analyzing passages of Biblical Hebrew with LMs
+- [aat](https://github.com/neelsmith/aat) : Agent-Action-Target model, a reductive model of natural-language syntax

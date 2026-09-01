@@ -34,13 +34,20 @@ website:
     - title: "Tutorials"
       contents:
         - tutorials/index.qmd
+        - tutorials/installation.qmd
         
     - title: "Concepts"
       contents:
         - concepts/index.qmd
     - title: "Guides"
       contents: 
-        - guides/index.qmd      
+        - guides/index.qmd     
+        - guides/usage.md
+        - "---" 
+        - guides/optimizing.qmd
+        - guides/bakeoff.qmd
+        - guides/development.qmd
+        - guides/testing.qmd
        
 
         
