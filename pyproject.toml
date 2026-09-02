@@ -34,13 +34,20 @@ test = [
 ]
 # Everything `test` needs, plus the tools DEVELOPMENT.md/USAGE.md's other
 # workflows call for: `docs/build_api_docs.py` (pdoc), the `marimo/`
-# notebooks, and `optimize_gepa.py`/`model_bakeoff.py`'s GEPA runs.
-# Install with `pip install -e ".[dev]"`.
+# notebooks, `optimize_gepa.py`/`model_bakeoff.py`'s GEPA runs, and
+# rendering Graphviz DOT diagrams (marimo/greek_syntaxer_dot.py,
+# analyses_to_png.py -- see notes/dot_diagrams.md). The `graphviz` package
+# here is only a thin subprocess wrapper -- actually rendering a diagram
+# also needs Graphviz's own `dot` command-line tool installed separately
+# (e.g. `brew install graphviz` on macOS, `apt install graphviz` on Linux);
+# generating DOT *text* (tokengraph_to_dot() itself, or analysis_to_dot.py)
+# needs neither. Install with `pip install -e ".[dev]"`.
 dev = [
     "pytest",
     "python-dotenv",
     "pdoc",
     "marimo",
+    "graphviz",
 ]
 
 [project.urls]

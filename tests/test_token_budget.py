@@ -148,6 +148,31 @@ def test_analyze_with_retry_gives_up_after_max_retries_and_returns_incomplete_re
     assert [tok.id for tok in result.tokengraph] == [e["id"] for e in truncated_twice["tokengraph"]]
 
 
+def test_analyze_with_retry_default_max_retries_is_three():
+    """max_retries defaults to 3 (raised from an earlier 1) -- see
+    analyze_with_retry()'s own docstring for why one retry wasn't enough
+    headroom in practice for a real, longer passage. Confirms the DEFAULT
+    itself, not just behavior when max_retries is passed explicitly (every
+    other test in this file does): four consecutive truncated DummyLM
+    answers (the initial attempt plus all 3 retries) should all get
+    consumed before analyze_with_retry() gives up and returns the last
+    (still incomplete) one with a warning."""
+    example = _example("unit_verb_root_ten_thuran_anoixen")
+    full_tokengraph = example.canned_answer["tokengraph"]
+    tokens = tokens_from_canned_answer(example.canned_answer)
+
+    truncated = copy.deepcopy(example.canned_answer)
+    truncated["tokengraph"] = full_tokengraph[: len(full_tokengraph) // 2]
+
+    dspy.configure(lm=DummyLM([truncated, truncated, truncated, truncated]))
+
+    with pytest.warns(UserWarning) as record:
+        result = analyze_with_retry(example.passage, tokens)  # max_retries omitted -- exercises the default
+
+    assert any("still looks truncated" in str(w.message) for w in record)
+    assert [tok.id for tok in result.tokengraph] == [e["id"] for e in truncated["tokengraph"]]
+
+
 def test_analyze_with_retry_does_not_retry_past_the_ceiling():
     """If the budget is already pinned at `ceiling`, a truncated result is
     returned (with a warning) rather than retried again."""

@@ -224,7 +224,7 @@ def analyze_with_retry(
     passage: str,
     tokens: List[Token],
     *,
-    max_retries: int = 1,
+    max_retries: int = 3,
     growth_factor: float = 2.0,
     safety_margin: float = DEFAULT_SAFETY_MARGIN,
     floor: int = DEFAULT_FLOOR,
@@ -239,6 +239,23 @@ def analyze_with_retry(
     The starting budget is `initial_max_tokens` if given, else
     `estimate_max_tokens(len(tokens), safety_margin=safety_margin,
     floor=floor, ceiling=ceiling)`.
+
+    `max_retries` defaults to 3 (raised from an earlier 1), each retry
+    doubling the budget (`growth_factor`) -- so a truncating call gets up
+    to three chances to grow before giving up: roughly a starting estimate,
+    then 2x, 4x, and 8x that, capped at `ceiling` along the way. One retry
+    wasn't enough headroom in practice for a real (not GOLD_EXAMPLES-sized)
+    passage with a long `reasoning` field and many `tokengraph` entries --
+    calibrate_max_tokens.py's own docstring already flags that its fit is
+    measured only against GOLD_EXAMPLES' short, single-construction
+    sentences, so even a properly calibrated estimate is an extrapolation,
+    not a guarantee, for a longer or more syntactically loaded real
+    passage. Leaning on more retries rather than a bigger first guess keeps
+    the common (short-passage) case cheap while still recovering
+    automatically on a passage that needs much more room -- at the cost of
+    up to 3 extra LM calls, instead of 1, on a passage that keeps
+    truncating. Pass a smaller `max_retries` to trade that resilience back
+    for fewer calls-on-failure if that trade-off matters for your use case.
 
     `disable_cache` is the caller-facing counterpart to the automatic
     cache-bypass described below: pass `True` to force EVERY attempt in

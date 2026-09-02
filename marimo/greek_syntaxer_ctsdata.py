@@ -35,6 +35,12 @@ def _(ctsdata_file_browser):
 
 
 @app.cell(hide_code=True)
+def _(disable_cache):
+    disable_cache
+    return
+
+
+@app.cell(hide_code=True)
 def _(ctsdata_error, ctsdata_rows, mo, passage_multiselect, segment_button):
     if ctsdata_error is not None:
         ctsdata_status = mo.callout(
@@ -59,14 +65,14 @@ def _(rawpreview):
 
 
 @app.cell(hide_code=True)
-def _(all_sentences, analyze_button, disable_cache, mo, sentence_multiselect):
+def _(all_sentences, analyze_button, mo, sentence_multiselect):
     if not all_sentences:
         sentence_status = mo.md("*Select passage(s) above and click OK to list their sentences.*")
     else:
         sentence_status = mo.md(f"## Sentence selection\n\n*{len(all_sentences)} sentence(s) found.*")
 
     mo.vstack(
-        [sentence_status, mo.hstack([sentence_multiselect, analyze_button, disable_cache], justify="start")]
+        [sentence_status, mo.hstack([sentence_multiselect, analyze_button], justify="start")]
     )
     return
 
@@ -74,6 +80,12 @@ def _(all_sentences, analyze_button, disable_cache, mo, sentence_multiselect):
 @app.cell(hide_code=True)
 def _(sentence_rawpreview):
     sentence_rawpreview
+    return
+
+
+@app.cell
+def _():
+    #dspy.inspect_history()
     return
 
 
@@ -494,7 +506,6 @@ def _(dspy):
 @app.cell
 def _(dspy):
     dspy.inspect_history()
-
     return
 
 

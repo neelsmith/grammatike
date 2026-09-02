@@ -22,6 +22,7 @@ from .verbal_units import (
     max_subordination_depth,
     find_unanchored_coordinated_verbs,
 )
+from .dot import tokengraph_to_dot, save_dot, compute_graph_depths, max_graph_depth
 from .rendering import tokengraph_to_text, tokengraph_to_html, tokengraph_to_depth_html
 from .greek_syntax_dspy import (
     SyntaxAnalysis,
@@ -62,6 +63,10 @@ __all__ = [
     "compute_subordination_depths",
     "max_subordination_depth",
     "find_unanchored_coordinated_verbs",
+    "tokengraph_to_dot",
+    "save_dot",
+    "compute_graph_depths",
+    "max_graph_depth",
     "tokengraph_to_text",
     "tokengraph_to_html",
     "tokengraph_to_depth_html",

@@ -88,6 +88,28 @@ _IMPLIED_TOKEN_LABELS = {
 # colors to the same verbal units instead of each maintaining its own copy.
 
 
+def token_label(tok: TokenAnalysis) -> str:
+    """A token's raw (unescaped) display label: its own surface text, or --
+    for an implied/elided token (tok.token is None, models.py's
+    IMPLIED_TOKENTYPES) -- a placeholder from _IMPLIED_TOKEN_LABELS keyed by
+    its own tokentype, falling back to the tokentype string itself when not
+    listed there.
+
+    Shared between tokengraph_to_mermaid() below (which HTML-entity-escapes
+    the result via this module's own _escape_label()) and dot.py's
+    tokengraph_to_dot() (which C-string-escapes it via a separate
+    _escape_label() of its own -- DOT has no HTML-entity-style escaping the
+    way a Mermaid label does), so both renderers agree on what a node's
+    label actually IS, even though each escapes it differently for its own
+    output format.
+    """
+    return (
+        tok.token
+        if tok.token is not None
+        else _IMPLIED_TOKEN_LABELS.get(tok.tokentype, tok.tokentype)
+    )
+
+
 def tokengraph_to_mermaid(
     tokengraph: List[TokenAnalysis],
     orientation: str = "BT",
@@ -135,12 +157,9 @@ def tokengraph_to_mermaid(
         # _IMPLIED_TOKEN_LABELS supplies that ("elided eimi" for "implied
         # eimi", "implied repetition" verbatim); the node's color (below)
         # is what actually marks it as an implied token, not the label
-        # text.
-        label = (
-            tok.token
-            if tok.token is not None
-            else _IMPLIED_TOKEN_LABELS.get(tok.tokentype, tok.tokentype)
-        )
+        # text. token_label() is the shared helper dot.py's
+        # tokengraph_to_dot() also uses, so both renderers agree on this.
+        label = token_label(tok)
         lines.append(f'    {tok.id}["{_escape_label(label)}"]')
 
     warnings = []
