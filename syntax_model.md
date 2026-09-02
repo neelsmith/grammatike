@@ -66,6 +66,11 @@ Analyzing a citable passage of Greek requires keeing track of the citation conte
 -  a *lexical* token. Example: the tokens τὴν, θύραν and ἀνέῳξενin the sentence τὴν θύραν ἀνέῳξεν.
 - a *numeral* when written numerically, e.g., in. Milesian notation. Note that spelled out words for numbers are *lexical* tokens, e.g., in the phrase Ἀτρεΐδα δὲ μάλιστα δύω, the token δύω is a *lexical* token.
 
+#### Two special notes
+
+1. Words written in *crasis* must be tokenized separately. Example: κἀγώ is crasis for καὶ ἐγώ. We would enter two lexical tokens κ and ἀγώ. The token κ will have καὶ for its lemma, and ἀγώ will have ἐγώ.
+2. In the neuter nominative or accusative singular of the pronoun ὅστις, editors regularly write "ὅ τι" to prevent confusion with the conjunction ὅτι. "ὅ τι" must be tokenized as a single lexical token.
+
 
 ### Syntactic relations among tokens
 
