@@ -50,9 +50,9 @@ tokentype field at all -- SyntaxAnalysis assigns tokentype independently,
 per token, as part of its own (still LM-driven) output. So this stage does
 not need to decide, for example, whether a word is being used as an
 enclitic or an accented, non-enclitic homograph -- only where token
-boundaries fall. Two things this stage's tokenization DOES have to decide,
-because they affect how many tokens exist rather than merely how one is
-classified:
+boundaries fall. Four things this stage's tokenization DOES have to
+decide, because they affect how many tokens exist rather than merely how
+one is classified:
 
 - Splitting off punctuation. Any Unicode punctuation character (general
   category starting with "P") attached to a word, leading or trailing, gets
@@ -83,6 +83,43 @@ classified:
   accented ί that is not a real word on its own). Extend the table as new
   compounds turn up in real text; don't switch to a suffix-strip rule
   without also re-deriving a guard against exactly this false positive.
+
+- Splitting a word written in crasis. syntax_model.md's "Two special
+  notes" section: κἀγώ (crasis of καὶ + ἐγώ) must be entered as two
+  lexical tokens, κ and ἀγώ -- lemma assignment (κ -> καί, ἀγώ -> ἐγώ) is
+  SyntaxAnalysis's job later, not this stage's; a Token here has no lemma
+  field at all. Architecturally this is the same shape as the -περ
+  enclitic split above -- an explicit lookup table (_CRASIS_COMPOUNDS),
+  not a general rule, keyed by the whole fused word -- just for a
+  different phenomenon and kept in its own table rather than folded into
+  _PER_COMPOUNDS, since crasis and enclitic-fusion are different things
+  that happen to want the same "split one already-delimited word into a
+  documented tuple of pieces" mechanism. Unlike the -περ table, this one
+  isn't limited to single one-off idioms: it also seeds the common
+  masculine/neuter paradigm of ὁ αὐτός ("the same"), crased, since that
+  recurs constantly in Ionic prose rather than turning up once. Because a
+  lookup here is an exact string match, an OXYTONE crasis form needs both
+  its accent-states registered separately (e.g. "ὡυτός" isolated/before
+  punctuation vs. "ὡυτὸς" mid-clause, where the regular acute-to-grave
+  shift applies) -- a form accented with circumflex on its final syllable
+  never shifts to grave, so it needs only the one spelling. See
+  _CRASIS_COMPOUNDS's own comment for the full paradigm and this same
+  caveat applied to κἀγώ itself.
+
+- Merging ὅ τι into one token. The other of syntax_model.md's "Two special
+  notes": editors regularly write the neuter nom./acc. singular of ὅστις
+  as two words, "ὅ τι", specifically to keep it visually distinct from the
+  one-word conjunction ὅτι ("that") -- but "ὅ τι" must be tokenized as a
+  SINGLE lexical token, not two. This is the mirror image of the other two
+  decisions above: those split one already-delimited word into more than
+  one token; this instead MERGES two already-space-delimited words into
+  one token. It needs its own pre-pass (_merge_multiword_tokens, driven by
+  the explicit _MULTIWORD_TOKENS table) that runs on each fragment's
+  word list before the per-word splitting logic ever sees it -- once "ὅ"
+  and "τι" are merged into the single string "ὅ τι", the existing
+  _split_word() logic handles it with no further changes: a space is
+  Unicode category Zs, never "P", so it's never treated as splittable
+  punctuation and stays part of the merged word's core.
 
 Run this file directly for a quick smoke test (no LM, no .env needed):
     python segmentation.py
@@ -147,6 +184,60 @@ _PER_COMPOUNDS = {
     "ἥνπερ": ("ἥν", "περ"),
 }
 
+# Words written in crasis that must split into two lexical tokens (see this
+# module's own docstring). Seeded with only syntax_model.md's own documented
+# example -- extend as new crasis forms turn up in real text, matching
+# _PER_COMPOUNDS's own "documented example only" convention above.
+_CRASIS_COMPOUNDS = {
+    "κἀγώ": ("κ", "ἀγώ"),
+
+    # ὁ αὐτός ("the same"), crased -- pervasive in Ionic/Herodotean prose,
+    # unlike κἀγώ's one-off idiom, so seeded here as a small paradigm rather
+    # than one entry at a time. Editors spell the crasis "ὡυτός" rather than
+    # "αὑτός" specifically to keep it visually distinct from the reflexive
+    # pronoun αὑτός ("himself") -- the same visual-confusion concern that
+    # motivates "ὅ τι" vs ὅτι in _MULTIWORD_TOKENS below. Masculine/neuter
+    # forms only: feminine crasis of ἡ αὐτή is markedly rarer and less
+    # consistently attested, so it's left out here rather than guessed at --
+    # add it if real text turns it up.
+    #
+    # Because a dict key here is matched literally, both accent-states of
+    # every OXYTONE form need their own entry: an acute on a word's final
+    # syllable regularly shifts to grave when the word isn't followed by
+    # punctuation, so "ὡυτός" (isolated/before punctuation) and "ὡυτὸς"
+    # (mid-clause) are two different strings that must both resolve to the
+    # same split. A form accented with circumflex on its final syllable
+    # (ὡυτοῦ, ὡυτῷ, ὡυτῶν, ὡυτοῖσι) never shifts to grave, so those need
+    # only the one spelling. This acute/grave duplication applies in
+    # principle to every entry in this table (κἀγώ included, if it ever
+    # turns up non-phrase-finally as κἀγὼ) -- it's just spelled out in full
+    # here because this paradigm is large enough to make the pattern clear.
+    "ὡυτός": ("ὡ", "υτός"),      # ὁ αὐτός, nom. sg. masc.
+    "ὡυτὸς": ("ὡ", "υτὸς"),      # -- grave, mid-clause
+    "ὡυτοῦ": ("ὡ", "υτοῦ"),      # τοῦ αὐτοῦ, gen. sg. masc./neut. (circumflex, no grave form)
+    "ὡυτῷ": ("ὡ", "υτῷ"),        # τῷ αὐτῷ, dat. sg. masc./neut. (circumflex, no grave form)
+    "ὡυτόν": ("ὡ", "υτόν"),      # τὸν αὐτόν, acc. sg. masc.
+    "ὡυτὸν": ("ὡ", "υτὸν"),      # -- grave, mid-clause
+    "τὠυτό": ("τὠ", "υτό"),      # τὸ αὐτό, nom./acc. sg. neut.
+    "τὠυτὸ": ("τὠ", "υτὸ"),      # -- grave, mid-clause
+    "ὡυτοί": ("ὡ", "υτοί"),      # οἱ αὐτοί, nom. pl. masc.
+    "ὡυτοὶ": ("ὡ", "υτοὶ"),      # -- grave, mid-clause
+    "ὡυτῶν": ("ὡ", "υτῶν"),      # τῶν αὐτῶν, gen. pl. (circumflex, no grave form)
+    "ὡυτοῖσι": ("ὡ", "υτοῖσι"),  # τοῖσι αὐτοῖσι, dat. pl. (Ionic -οισι; circumflex, no grave form)
+    "ὡυτούς": ("ὡ", "υτούς"),    # τοὺς αὐτούς, acc. pl. masc.
+    "ὡυτοὺς": ("ὡ", "υτοὺς"),    # -- grave, mid-clause
+}
+
+# Pairs of adjacent, already-space-delimited words that must MERGE into one
+# lexical token instead (see this module's own docstring): the neuter
+# nom./acc. singular of ὅστις, conventionally written "ὅ τι" to keep it
+# distinct from the one-word conjunction ὅτι. Compared against each word's
+# own punctuation-stripped core (see _strip_punctuation), so "ὅ" and "τι,"
+# (with trailing punctuation already attached) still match this entry.
+_MULTIWORD_TOKENS = frozenset({
+    ("ὅ", "τι"),
+})
+
 
 def _split_into_sentence_strings(text: str) -> List[str]:
     """Split one source's own raw text into sentence-strings, purely by
@@ -198,13 +289,15 @@ def _is_splittable_punctuation(ch: str) -> bool:
     return ch not in _ELISION_MARKS and unicodedata.category(ch).startswith("P")
 
 
-def _split_word(word: str) -> List[str]:
-    """Split one whitespace-delimited word into the surface-text pieces it
-    becomes as separate tokens: leading punctuation (each character its own
-    piece), the word's own core -- itself split into two pieces if it's a
-    known fused -περ compound (_PER_COMPOUNDS) -- and trailing punctuation
-    (each character its own piece). An elision mark (_ELISION_MARKS) is
-    never treated as punctuation to split off; it stays part of the core."""
+def _strip_punctuation(word: str) -> Tuple[List[str], str, List[str]]:
+    """Split one whitespace-delimited word into (leading, core, trailing):
+    leading/trailing lists of individual splittable-punctuation characters
+    (each its own future token), and the core substring left between them.
+    An elision mark (_ELISION_MARKS) is never treated as splittable
+    punctuation; it stays part of the core. Shared by _split_word() (which
+    goes on to resolve the core into one or more pieces) and
+    _merge_multiword_tokens() (which only needs each word's own core, to
+    compare its punctuation-stripped spelling against _MULTIWORD_TOKENS)."""
     i = 0
     while i < len(word) and _is_splittable_punctuation(word[i]):
         i += 1
@@ -213,15 +306,58 @@ def _split_word(word: str) -> List[str]:
     while j > i and _is_splittable_punctuation(word[j - 1]):
         j -= 1
 
-    leading = list(word[:i])
-    core = word[i:j]
-    trailing = list(word[j:])
+    return list(word[:i]), word[i:j], list(word[j:])
+
+
+def _split_word(word: str) -> List[str]:
+    """Split one whitespace-delimited word into the surface-text pieces it
+    becomes as separate tokens: leading punctuation (each character its own
+    piece), the word's own core -- itself split into two pieces if it's a
+    known fused -περ compound (_PER_COMPOUNDS) or crasis compound
+    (_CRASIS_COMPOUNDS) -- and trailing punctuation (each character its own
+    piece). An elision mark (_ELISION_MARKS) is never treated as
+    punctuation to split off; it stays part of the core.
+
+    Also handles a merged multiword core (see _merge_multiword_tokens):
+    "ὅ τι" arrives here already joined into one string by the caller's
+    pre-pass, and since a space is never splittable punctuation, it simply
+    stays fused as a single core -- neither lookup table matches it, so it
+    falls through to the default (core,) and becomes one token, exactly as
+    intended."""
+    leading, core, trailing = _strip_punctuation(word)
 
     pieces = leading
     if core:
-        pieces = pieces + list(_PER_COMPOUNDS.get(core, (core,)))
+        pieces = pieces + list(
+            _PER_COMPOUNDS.get(core) or _CRASIS_COMPOUNDS.get(core) or (core,)
+        )
     pieces = pieces + trailing
     return pieces
+
+
+def _merge_multiword_tokens(words: List[str]) -> List[str]:
+    """Pre-pass over one fragment's whitespace-split word list: scans
+    adjacent pairs, and whenever their punctuation-stripped cores match a
+    _MULTIWORD_TOKENS entry (e.g. ("ὅ", "τι")), merges the two RAW words
+    (punctuation and all) into one space-joined string and advances past
+    both; otherwise keeps the word as its own unit and advances by one.
+
+    Run this before _split_word() ever sees the word list -- once "ὅ" and
+    "τι," are merged into "ὅ τι,", the existing _split_word() logic handles
+    the rest with no changes at all (see its own docstring)."""
+    merged: List[str] = []
+    i = 0
+    while i < len(words):
+        if i + 1 < len(words):
+            _, first_core, _ = _strip_punctuation(words[i])
+            _, second_core, _ = _strip_punctuation(words[i + 1])
+            if (first_core, second_core) in _MULTIWORD_TOKENS:
+                merged.append(f"{words[i]} {words[i + 1]}")
+                i += 2
+                continue
+        merged.append(words[i])
+        i += 1
+    return merged
 
 
 def segment_sources(sources: List[CitedText]) -> List[Sentence]:
@@ -246,7 +382,7 @@ def segment_sources(sources: List[CitedText]) -> List[Sentence]:
     for fragments in _group_into_sentences(sources):
         tokens: List[Token] = []
         for citation, text in fragments:
-            for word in text.split():
+            for word in _merge_multiword_tokens(text.split()):
                 for piece in _split_word(word):
                     tokens.append(Token(id=f"t{next_id}", text=piece, citation=citation))
                     next_id += 1

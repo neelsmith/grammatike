@@ -553,6 +553,146 @@ SEGMENTATION_EXAMPLES = [
         },
     ),
     SegmentationExample(
+        slug="crasis_kago_splits_into_two_tokens",
+        sources=[
+            CitedText(citation="ex.9", text="ταῦτα εἶδε κἀγώ."),
+        ],
+        tags=["crasis"],
+        expected_sentences={
+            "reasoning": (
+                "syntax_model.md's own 'Two special notes' example: κἀγώ is "
+                "crasis for καὶ ἐγώ, and must be entered as two lexical "
+                "tokens, κ and ἀγώ (lemma assignment -- κ to καί, ἀγώ to "
+                "ἐγώ -- is SyntaxAnalysis's job later, not this stage's; "
+                "Token here has no lemma field at all). Architecturally "
+                "identical to the -περ enclitic split, just via its own "
+                "lookup table (_CRASIS_COMPOUNDS) for a different "
+                "phenomenon: an explicit, documented-example-only table, "
+                "not a general rule."
+            ),
+            "sentences": [
+                {"tokens": [
+                    {"id": "t0", "text": "ταῦτα", "citation": "ex.9"},
+                    {"id": "t1", "text": "εἶδε", "citation": "ex.9"},
+                    {"id": "t2", "text": "κ", "citation": "ex.9"},
+                    {"id": "t3", "text": "ἀγώ", "citation": "ex.9"},
+                    {"id": "t4", "text": ".", "citation": "ex.9"},
+                ]},
+            ],
+        },
+    ),
+    SegmentationExample(
+        slug="crasis_ho_autos_acute_and_grave_and_oblique_and_neuter_and_plural",
+        sources=[
+            CitedText(citation="ex.13", text="ἀνὴρ ἦν ὡυτός."),
+            CitedText(citation="ex.14", text="ὡυτὸς ἀνὴρ ἦλθεν."),
+            CitedText(citation="ex.15", text="τοῦτο ὡυτοῦ ἐστιν."),
+            CitedText(citation="ex.16", text="τὠυτό ἐστιν."),
+            CitedText(citation="ex.17", text="ὡυτοί εἰσιν ἄνδρες."),
+        ],
+        tags=["crasis"],
+        expected_sentences={
+            "reasoning": (
+                "Unlike κἀγώ's one-off idiom, ὁ αὐτός ('the same'), crased, "
+                "is a whole paradigm that recurs constantly in Ionic prose, "
+                "so _CRASIS_COMPOUNDS seeds several of its forms at once. "
+                "ex.13/ex.14 are the same word, ὡυτός, in its two accent "
+                "states -- acute before the final period, grave mid-clause "
+                "before ἀνὴρ -- both need their own literal table entry "
+                "since the lookup is an exact string match, and both split "
+                "the same way. ex.15's ὡυτοῦ is accented with a circumflex "
+                "(genitive singular), which never shifts to grave, so it "
+                "needs only the one spelling. ex.16's τὠυτό (neuter) keeps "
+                "the article's own leading τ ahead of the crased vowel. "
+                "ex.17's ὡυτοί is the masculine plural. Editors write the "
+                "crasis 'ὡυτός', not 'αὑτός', specifically to keep it "
+                "visually distinct from the reflexive pronoun αὑτός -- the "
+                "same visual-confusion concern that motivates writing 'ὅ "
+                "τι' as two words below."
+            ),
+            "sentences": [
+                {"tokens": [
+                    {"id": "t0", "text": "ἀνὴρ", "citation": "ex.13"},
+                    {"id": "t1", "text": "ἦν", "citation": "ex.13"},
+                    {"id": "t2", "text": "ὡ", "citation": "ex.13"},
+                    {"id": "t3", "text": "υτός", "citation": "ex.13"},
+                    {"id": "t4", "text": ".", "citation": "ex.13"},
+                ]},
+                {"tokens": [
+                    {"id": "t5", "text": "ὡ", "citation": "ex.14"},
+                    {"id": "t6", "text": "υτὸς", "citation": "ex.14"},
+                    {"id": "t7", "text": "ἀνὴρ", "citation": "ex.14"},
+                    {"id": "t8", "text": "ἦλθεν", "citation": "ex.14"},
+                    {"id": "t9", "text": ".", "citation": "ex.14"},
+                ]},
+                {"tokens": [
+                    {"id": "t10", "text": "τοῦτο", "citation": "ex.15"},
+                    {"id": "t11", "text": "ὡ", "citation": "ex.15"},
+                    {"id": "t12", "text": "υτοῦ", "citation": "ex.15"},
+                    {"id": "t13", "text": "ἐστιν", "citation": "ex.15"},
+                    {"id": "t14", "text": ".", "citation": "ex.15"},
+                ]},
+                {"tokens": [
+                    {"id": "t15", "text": "τὠ", "citation": "ex.16"},
+                    {"id": "t16", "text": "υτό", "citation": "ex.16"},
+                    {"id": "t17", "text": "ἐστιν", "citation": "ex.16"},
+                    {"id": "t18", "text": ".", "citation": "ex.16"},
+                ]},
+                {"tokens": [
+                    {"id": "t19", "text": "ὡ", "citation": "ex.17"},
+                    {"id": "t20", "text": "υτοί", "citation": "ex.17"},
+                    {"id": "t21", "text": "εἰσιν", "citation": "ex.17"},
+                    {"id": "t22", "text": "ἄνδρες", "citation": "ex.17"},
+                    {"id": "t23", "text": ".", "citation": "ex.17"},
+                ]},
+            ],
+        },
+    ),
+    SegmentationExample(
+        slug="ho_ti_pronoun_merges_vs_hoti_conjunction_stays_one_word",
+        sources=[
+            CitedText(citation="ex.10", text="οὐκ οἶδα ὅ τι λέγεις."),
+            CitedText(citation="ex.11", text="εὖ οἶδα ὅτι ἀληθῆ λέγεις."),
+        ],
+        tags=["multiword merge"],
+        expected_sentences={
+            "reasoning": (
+                "syntax_model.md's other 'Two special notes' example: in "
+                "ex.10, 'ὅ τι' is the neuter nom./acc. singular of ὅστις, "
+                "conventionally written as two words to keep it visually "
+                "distinct from the one-word conjunction ὅτι ('that') -- but "
+                "it must be tokenized as a SINGLE lexical token, so 'ὅ' and "
+                "'τι' merge into one token 'ὅ τι' even though they started "
+                "out space-delimited. This is the mirror image of the "
+                "other three tokenization decisions (which all split one "
+                "already-delimited word into more), so it needs its own "
+                "pre-pass (_merge_multiword_tokens) rather than fitting the "
+                "_split_word() lookup-table mechanism. ex.11's ὅτι, by "
+                "contrast, is already written as one word (the ordinary "
+                "conjunction) and is completely untouched by this "
+                "mechanism -- it's not even a candidate pair, since there's "
+                "no second word to merge it with."
+            ),
+            "sentences": [
+                {"tokens": [
+                    {"id": "t0", "text": "οὐκ", "citation": "ex.10"},
+                    {"id": "t1", "text": "οἶδα", "citation": "ex.10"},
+                    {"id": "t2", "text": "ὅ τι", "citation": "ex.10"},
+                    {"id": "t3", "text": "λέγεις", "citation": "ex.10"},
+                    {"id": "t4", "text": ".", "citation": "ex.10"},
+                ]},
+                {"tokens": [
+                    {"id": "t5", "text": "εὖ", "citation": "ex.11"},
+                    {"id": "t6", "text": "οἶδα", "citation": "ex.11"},
+                    {"id": "t7", "text": "ὅτι", "citation": "ex.11"},
+                    {"id": "t8", "text": "ἀληθῆ", "citation": "ex.11"},
+                    {"id": "t9", "text": "λέγεις", "citation": "ex.11"},
+                    {"id": "t10", "text": ".", "citation": "ex.11"},
+                ]},
+            ],
+        },
+    ),
+    SegmentationExample(
         slug="enclitic_classification_tis_indefinite_vs_interrogative",
         sources=[
             CitedText(citation="ex.7", text="ἀνήρ τις ἦλθεν."),

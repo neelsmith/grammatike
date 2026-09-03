@@ -68,7 +68,8 @@ Analyzing a citable passage of Greek requires keeing track of the citation conte
 
 #### Two special notes
 
-1. Words written in *crasis* must be tokenized separately. Example: κἀγώ is crasis for καὶ ἐγώ. We would enter two lexical tokens κ and ἀγώ. The token κ will have καὶ for its lemma, and ἀγώ will have ἐγώ.
+1. Words written in *crasis* must be tokenized separately. Example: κἀγώ is crasis for καὶ ἐγώ. We would enter two lexical tokens κ and ἀγώ. The token κ will have καὶ for its lemma, and ἀγώ will have ἐγώ. Other examples:
+ὡυτὸς for  ὁ αὐτὸς.
 2. In the neuter nominative or accusative singular of the pronoun ὅστις, editors regularly write "ὅ τι" to prevent confusion with the conjunction ὅτι. "ὅ τι" must be tokenized as a single lexical token.
 
 

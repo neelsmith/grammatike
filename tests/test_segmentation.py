@@ -107,6 +107,104 @@ SOURCES_SPANNING_TWO_UNITS = [
 ]
 
 
+def test_crasis_splits_kago_into_two_tokens():
+    """syntax_model.md's 'Two special notes': κἀγώ, crasis for καὶ ἐγώ,
+    must be entered as two lexical tokens κ and ἀγώ -- not lemmatized here
+    (Token at this stage has no lemma field), just split, the same shape
+    as the existing -περ enclitic split but via segmentation.py's own
+    _CRASIS_COMPOUNDS table."""
+    sentences = segment_sources([
+        CitedText(citation="ex.9", text="ταῦτα εἶδε κἀγώ."),
+    ])
+    assert len(sentences) == 1
+    tokens = sentences[0].tokens
+    assert [t.text for t in tokens] == ["ταῦτα", "εἶδε", "κ", "ἀγώ", "."]
+    assert [t.id for t in tokens] == [f"t{i}" for i in range(5)]
+    assert all(t.citation == "ex.9" for t in tokens)
+
+
+def test_crasis_of_ho_autos_splits_in_both_its_accent_states():
+    """ὡυτός (crasis of ὁ αὐτός, 'the same') is a whole recurring paradigm,
+    not a one-off idiom like κἀγώ -- and because _CRASIS_COMPOUNDS matches
+    literally, its oxytone forms need BOTH accent-states registered: the
+    acute spelling used sentence-finally/before punctuation ('ὡυτός') and
+    the grave spelling used mid-clause ('ὡυτὸς'), per the regular Greek
+    acute-to-grave shift. Both must split the same way."""
+    acute = segment_sources([
+        CitedText(citation="ex.13", text="ἀνὴρ ἦν ὡυτός."),
+    ])
+    assert [t.text for t in acute[0].tokens] == ["ἀνὴρ", "ἦν", "ὡ", "υτός", "."]
+
+    grave = segment_sources([
+        CitedText(citation="ex.14", text="ὡυτὸς ἀνὴρ ἦλθεν."),
+    ])
+    assert [t.text for t in grave[0].tokens] == ["ὡ", "υτὸς", "ἀνὴρ", "ἦλθεν", "."]
+
+
+def test_crasis_of_ho_autos_oblique_and_neuter_and_plural_forms():
+    """Spot-checks the rest of the seeded ὁ αὐτός paradigm beyond the
+    nominative singular: a circumflex-accented oblique case (ὡυτοῦ, which
+    -- unlike ὡυτός -- never shifts to grave, so it needs only the one
+    spelling), the neuter τὠυτό (which keeps the article's own leading
+    τ), and the masculine plural ὡυτοί."""
+    genitive = segment_sources([
+        CitedText(citation="ex.15", text="τοῦτο ὡυτοῦ ἐστιν."),
+    ])
+    assert [t.text for t in genitive[0].tokens] == ["τοῦτο", "ὡ", "υτοῦ", "ἐστιν", "."]
+
+    neuter = segment_sources([
+        CitedText(citation="ex.16", text="τὠυτό ἐστιν."),
+    ])
+    assert [t.text for t in neuter[0].tokens] == ["τὠ", "υτό", "ἐστιν", "."]
+
+    plural = segment_sources([
+        CitedText(citation="ex.17", text="ὡυτοί εἰσιν ἄνδρες."),
+    ])
+    assert [t.text for t in plural[0].tokens] == ["ὡ", "υτοί", "εἰσιν", "ἄνδρες", "."]
+
+
+def test_ho_ti_pronoun_merges_but_hoti_conjunction_does_not():
+    """The other of syntax_model.md's 'Two special notes': the two
+    space-delimited words 'ὅ' and 'τι' (neuter nom./acc. singular of
+    ὅστις) must merge into a SINGLE lexical token 'ὅ τι', to keep it
+    distinct from the one-word conjunction ὅτι, which stays exactly as
+    written -- one word, one token, untouched by the merge pre-pass."""
+    sentences = segment_sources([
+        CitedText(citation="ex.10", text="οὐκ οἶδα ὅ τι λέγεις."),
+        CitedText(citation="ex.11", text="εὖ οἶδα ὅτι ἀληθῆ λέγεις."),
+    ])
+    assert len(sentences) == 2
+
+    ho_ti_tokens = sentences[0].tokens
+    assert [t.text for t in ho_ti_tokens] == ["οὐκ", "οἶδα", "ὅ τι", "λέγεις", "."]
+    assert [t.id for t in ho_ti_tokens] == [f"t{i}" for i in range(5)]
+
+    hoti_tokens = sentences[1].tokens
+    assert [t.text for t in hoti_tokens] == ["εὖ", "οἶδα", "ὅτι", "ἀληθῆ", "λέγεις", "."]
+    assert [t.id for t in hoti_tokens] == [f"t{i}" for i in range(5, 11)]
+
+    # ids stay globally sequential and unique across both sentences, exactly
+    # as the existing citation-spanning test above already checks.
+    all_ids = [t.id for s in sentences for t in s.tokens]
+    assert len(all_ids) == len(set(all_ids))
+
+
+def test_ho_ti_merges_correctly_with_trailing_punctuation_attached():
+    """'ὅ τι' followed directly by internal punctuation (a comma here, not
+    the final period) must still merge into one token, with the comma
+    split off separately as its own token -- exercising _strip_punctuation
+    being shared correctly between _merge_multiword_tokens() and
+    _split_word()."""
+    sentences = segment_sources([
+        CitedText(citation="ex.12", text="ὅ τι, βούλει, ποίει."),
+    ])
+    assert len(sentences) == 1
+    tokens = sentences[0].tokens
+    assert [t.text for t in tokens] == [
+        "ὅ τι", ",", "βούλει", ",", "ποίει", ".",
+    ]
+
+
 def test_one_sentence_spanning_two_citation_units_keeps_each_token_attributed():
     sentences = segment_sources(SOURCES_SPANNING_TWO_UNITS)
 
