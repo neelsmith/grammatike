@@ -48,10 +48,15 @@ real node and was never supposed to be one, so it's not a gap worth
 reporting.
 """
 
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from .models import IMPLIED_TOKENTYPES, TokenAnalysis
-from .verbal_units import _IMPLIED_TOKEN_COLOR, assign_verbal_units, assign_verbal_unit_colors
+from .verbal_units import (
+    _IMPLIED_TOKEN_COLOR,
+    assign_verbal_units,
+    assign_verbal_unit_colors,
+    compute_subordination_depths,
+)
 
 # Characters that need escaping inside a Mermaid quoted label.
 _LABEL_ESCAPES = {
@@ -114,6 +119,7 @@ def tokengraph_to_mermaid(
     tokengraph: List[TokenAnalysis],
     orientation: str = "BT",
     color_by_verbal_unit: bool = True,
+    aat_depth: Optional[int] = None,
 ) -> Tuple[str, List[str]]:
     """Build a Mermaid `graph` diagram from a tokengraph.
 
@@ -137,15 +143,61 @@ def tokengraph_to_mermaid(
     False to skip coloring and get a plain diagram, as before this
     parameter existed.
 
+    `aat_depth`, if given, OMITS nodes entirely rather than just changing
+    their color: every token takes the depth of subordination (verbal_units.
+    compute_subordination_depths() -- the CLAUSE-level notion, "AAT graph"
+    depth in arsgrammatica's own terms, that rendering.
+    tokengraph_to_depth_html()'s `depth` parameter also uses) of the verbal
+    unit it belongs to (per assign_verbal_units()); a token whose unit's
+    depth exceeds `aat_depth` is dropped as a node, exactly as if it had
+    never been in `tokengraph` -- unlike tokengraph_to_html()'s own new
+    `depth` parameter, which only limits coloring and never omits anything.
+    A token with no verbal-unit assignment at all, or one whose unit's depth
+    couldn't be resolved (see compute_subordination_depths()), defaults to
+    depth 0 and is kept. Dropping a node can leave a KEPT node's edge
+    pointing at a now-excluded one; such an edge is skipped with the same
+    warning already used for an edge targeting punctuation or an id not in
+    `tokengraph` (see Returns below). Omit `aat_depth` (or pass `None`, the
+    default) to show every node, same as before this parameter existed. A
+    negative `aat_depth` raises ValueError. This is a SEPARATE notion from
+    `orientation`/`color_by_verbal_unit` above and composes freely with
+    both; dot.py's tokengraph_to_dot() has an analogous `aat_depth`
+    parameter (alongside its own, differently-scoped `depth`).
+
     Returns (diagram_text, warnings). `warnings` lists any edges that were
-    skipped because they referenced a punctuation token or an id not present
-    in `tokengraph` -- worth checking, since it usually means the id came
-    from a validation problem upstream (see greek_syntax_dspy.validate) --
-    plus, if `color_by_verbal_unit` is True and the passage has more than 8
-    verbal units, one warning that colors are repeating rather than staying
-    distinct (the palette has 8 slots; see _VERBAL_UNIT_PALETTE).
+    skipped because they referenced a punctuation token, a token excluded by
+    the `aat_depth` cutoff, or an id not present in `tokengraph` -- worth
+    checking, since it usually means the id came from a validation problem
+    upstream (see greek_syntax_dspy.validate) -- plus, if
+    `color_by_verbal_unit` is True and the passage has more than 8 verbal
+    units, one warning that colors are repeating rather than staying
+    distinct (the palette has 8 slots; see _VERBAL_UNIT_PALETTE); if
+    `aat_depth` is given, also compute_subordination_depths()'s own warning
+    about any verbal unit whose depth couldn't be resolved (a relation
+    cycle, or no governing verbal expression found) -- folded in here the
+    same way tokengraph_to_dot()'s `rank_by_depth` folds it in.
     """
+    if aat_depth is not None and aat_depth < 0:
+        raise ValueError(f"aat_depth must be >= 0 (root clauses only), got {aat_depth!r}")
+
     node_ids = {tok.id for tok in tokengraph if tok.tokentype != "punctuation"}
+
+    aat_depth_warnings: List[str] = []
+    if aat_depth is not None:
+        vu_assignment_for_depth = assign_verbal_units(tokengraph)
+        sub_depths, sub_depth_warnings = compute_subordination_depths(tokengraph)
+        aat_depth_warnings.extend(sub_depth_warnings)
+        aat_excluded_ids = set()
+        for tok in tokengraph:
+            if tok.id not in node_ids:
+                continue
+            unit_id = vu_assignment_for_depth.get(tok.id)
+            unit_depth = sub_depths.get(unit_id) if unit_id is not None else 0
+            if unit_depth is None:
+                unit_depth = 0
+            if unit_depth > aat_depth:
+                aat_excluded_ids.add(tok.id)
+        node_ids -= aat_excluded_ids
 
     lines = [f"graph {orientation}"]
     for tok in tokengraph:
@@ -162,7 +214,7 @@ def tokengraph_to_mermaid(
         label = token_label(tok)
         lines.append(f'    {tok.id}["{_escape_label(label)}"]')
 
-    warnings = []
+    warnings = list(aat_depth_warnings)
     for tok in tokengraph:
         if tok.id not in node_ids:
             continue
@@ -182,7 +234,8 @@ def tokengraph_to_mermaid(
             if related_id not in node_ids:
                 warnings.append(
                     f"skipped edge {tok.id} -[{label}]-> {related_id}: "
-                    f"target is punctuation or not in tokengraph"
+                    f"target is punctuation, excluded by the aat_depth "
+                    f"cutoff, or not in tokengraph"
                 )
                 continue
             lines.append(f'    {tok.id} -->|{_escape_label(label)}| {related_id}')
@@ -263,11 +316,15 @@ def save_mermaid(
     path: str,
     orientation: str = "BT",
     color_by_verbal_unit: bool = True,
+    aat_depth: Optional[int] = None,
 ) -> List[str]:
     """Write the diagram to `path` (e.g. 'analysis.mmd') and return any
     warnings from tokengraph_to_mermaid."""
     diagram, warnings = tokengraph_to_mermaid(
-        tokengraph, orientation=orientation, color_by_verbal_unit=color_by_verbal_unit
+        tokengraph,
+        orientation=orientation,
+        color_by_verbal_unit=color_by_verbal_unit,
+        aat_depth=aat_depth,
     )
     with open(path, "w", encoding="utf-8") as f:
         f.write(diagram + "\n")

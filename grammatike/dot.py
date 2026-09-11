@@ -278,6 +278,7 @@ def tokengraph_to_dot(
     color_by_verbal_unit: bool = True,
     rank_by_depth: bool = True,
     depth: Optional[int] = None,
+    aat_depth: Optional[int] = None,
 ) -> Tuple[str, List[str]]:
     """Build a Graphviz DOT `digraph` from a tokengraph -- the same diagram
     tokengraph_to_mermaid() draws (same nodes, same edges, same coloring),
@@ -348,20 +349,47 @@ def tokengraph_to_dot(
     Returns below) -- `depth` filtering degrades visibly rather than
     emitting a dangling `->` line Graphviz would reject.
 
+    `aat_depth`, if given, is a SECOND, independent node-omission cutoff,
+    additive alongside `depth` above -- a node is kept only if it survives
+    BOTH cutoffs. Where `depth` follows compute_graph_depths() (per-token
+    graph-edge distance), `aat_depth` follows verbal_units.
+    compute_subordination_depths() -- the CLAUSE-level notion `rank_by_depth`
+    above also uses, and arsgrammatica's own "AAT graph" depth (see this
+    module's docstring, "Two adaptations" (1)): every token takes the
+    subordination depth of the verbal unit it belongs to (per
+    assign_verbal_units()), so a whole clause's subject, object, and other
+    ordinary dependents share ONE `aat_depth` with their governing verb,
+    unlike `depth`, which gives each of them its own hop. A token with no
+    verbal-unit assignment, or whose unit's depth couldn't be resolved (a
+    relation cycle, or no governing verbal expression found), defaults to
+    depth 0 and is kept. `aat_depth=0` shows only root-clause material (and
+    any other depth-0 construction); `aat_depth` unset (the default) shows
+    everything, same as before this parameter existed. A negative
+    `aat_depth` raises ValueError. rendering.tokengraph_to_depth_html()'s own
+    `depth` parameter uses this same underlying notion, block-level rather
+    than node-level; mermaid.py's tokengraph_to_mermaid() has an analogous
+    `aat_depth` parameter of its own.
+
     Returns `(dot_source, warnings)` -- same shape and same warnings as
     tokengraph_to_mermaid(): an edge skipped because it targets a
-    punctuation token, a token excluded by the `depth` cutoff, or an id not
-    present in `tokengraph` (except the 'root' sentinel, skipped silently,
-    same as there); if `color_by_verbal_unit` is True and the passage has
-    more than 8 verbal units, one warning that colors are repeating.
-    `depth` filtering itself never adds a warning (compute_graph_depths()
-    has no unresolved state -- an unrelated or cyclic token just defaults
-    to depth 0), but `rank_by_depth` CAN add one -- see above, and the "Two
-    adaptations" section of this module's own docstring for why this
-    differs from arsgrammatica's own version.
+    punctuation token, a token excluded by the `depth` or `aat_depth`
+    cutoff, or an id not present in `tokengraph` (except the 'root'
+    sentinel, skipped silently, same as there); if `color_by_verbal_unit` is
+    True and the passage has more than 8 verbal units, one warning that
+    colors are repeating. `depth` filtering itself never adds a warning
+    (compute_graph_depths() has no unresolved state -- an unrelated or
+    cyclic token just defaults to depth 0), but `rank_by_depth` and
+    `aat_depth` CAN both add one, since both rely on
+    compute_subordination_depths() -- see above, and the "Two adaptations"
+    section of this module's own docstring for why this differs from
+    arsgrammatica's own version. When both `rank_by_depth` and `aat_depth`
+    are active, compute_subordination_depths() is only called once and its
+    warning (if any) only appears once in the returned list, not twice.
     """
     if depth is not None and depth < 0:
         raise ValueError(f"depth must be >= 0 (root nodes only), got {depth!r}")
+    if aat_depth is not None and aat_depth < 0:
+        raise ValueError(f"aat_depth must be >= 0 (root clauses only), got {aat_depth!r}")
 
     node_ids = {tok.id for tok in tokengraph if tok.tokentype != "punctuation"}
 
@@ -370,6 +398,28 @@ def tokengraph_to_dot(
         graph_depths = compute_graph_depths(tokengraph)
         depth_excluded_ids = {tok_id for tok_id, d in graph_depths.items() if d > depth}
         node_ids -= depth_excluded_ids
+
+    # Computed here (rather than only inside `if rank_by_depth:` below) only
+    # when `aat_depth` needs it early to filter nodes before any lines are
+    # built -- cached so `rank_by_depth`, if also active, reuses the same
+    # result instead of calling compute_subordination_depths() (and folding
+    # in its warning) a second time.
+    sub_depths_cache: Optional[Dict[str, Optional[int]]] = None
+    if aat_depth is not None:
+        vu_assignment_for_depth = assign_verbal_units(tokengraph)
+        sub_depths_cache, sub_depth_warnings = compute_subordination_depths(tokengraph)
+        warnings.extend(sub_depth_warnings)
+        aat_excluded_ids = set()
+        for tok in tokengraph:
+            if tok.id not in node_ids:
+                continue
+            unit_id = vu_assignment_for_depth.get(tok.id)
+            unit_depth = sub_depths_cache.get(unit_id) if unit_id is not None else 0
+            if unit_depth is None:
+                unit_depth = 0
+            if unit_depth > aat_depth:
+                aat_excluded_ids.add(tok.id)
+        node_ids -= aat_excluded_ids
 
     colors_by_unit: Dict[str, Tuple[str, str, str]] = {}
     assignment: Dict[str, Optional[str]] = {}
@@ -434,15 +484,21 @@ def tokengraph_to_dot(
             if related_id not in node_ids:
                 warnings.append(
                     f"skipped edge {tok.id} -[{label}]-> {related_id}: "
-                    f"target is punctuation, excluded by the depth cutoff, "
-                    f"or not in tokengraph"
+                    f"target is punctuation, excluded by the depth cutoff "
+                    f"or the aat_depth cutoff, or not in tokengraph"
                 )
                 continue
             lines.append(f'    {tok.id} -> {related_id} [label="{_escape_label(label)}"];')
 
     if rank_by_depth:
-        sub_depths, depth_warnings = compute_subordination_depths(tokengraph)
-        warnings.extend(depth_warnings)
+        if sub_depths_cache is not None:
+            # Already computed above because `aat_depth` was also given --
+            # reused here rather than calling compute_subordination_depths()
+            # (and folding in its warning) a second time.
+            sub_depths = sub_depths_cache
+        else:
+            sub_depths, depth_warnings = compute_subordination_depths(tokengraph)
+            warnings.extend(depth_warnings)
 
         # Same grouping tokengraph_to_mermaid() would build for a `~~~`
         # chain if it had one -- see this module's own docstring, "Two
@@ -483,6 +539,7 @@ def save_dot(
     color_by_verbal_unit: bool = True,
     rank_by_depth: bool = True,
     depth: Optional[int] = None,
+    aat_depth: Optional[int] = None,
 ) -> List[str]:
     """Write the diagram to `path` (e.g. 'analysis.dot') and return any
     warnings from tokengraph_to_dot()."""
@@ -492,6 +549,7 @@ def save_dot(
         color_by_verbal_unit=color_by_verbal_unit,
         rank_by_depth=rank_by_depth,
         depth=depth,
+        aat_depth=aat_depth,
     )
     with open(path, "w", encoding="utf-8") as f:
         f.write(diagram + "\n")

@@ -41,6 +41,21 @@ machinery rather than trusting the raw line far past the calibrated range.
 itself* (not the fitted result) -- generous by default so calibration runs
 aren't the ones getting truncated; --limit runs a quick smoke test over
 just the first N examples instead of the whole corpus.
+
+Every calibration call always bypasses DSPy's own LM response cache
+(`config={"cache": False, ...}`), the same "force a fresh call" bypass
+`token_budget.analyze_with_retry()`'s own `disable_cache` parameter offers a
+human resubmitting a passage. This isn't optional here the way it is there:
+DSPy's cache layer deliberately blanks out `usage` on every cache hit --
+"no LM call is made", so there's nothing to report (see dspy's own
+`clients/cache.py`, `_prepare_cached_response()`) -- and GOLD_EXAMPLES
+passages are exactly the ones most likely to already be sitting in that
+cache (this script's own prior runs, the test suite, or other real-LM
+sessions over the same fixtures). Without the bypass, a warm cache silently
+turns every single example into a "no completion_tokens in usage" skip --
+not a provider problem at all, just a stale local cache -- and calibration
+can look completely broken (0/N calibrated) even though the LM itself is
+working fine.
 """
 
 import argparse
@@ -178,19 +193,60 @@ def main():
             analyze(
                 passage=example.passage,
                 tokens=tokens,
-                config={"max_tokens": args.calibration_ceiling},
+                # cache=False always -- see this script's own module
+                # docstring for why calibration can never afford a cache
+                # hit here (DSPy blanks out usage entirely on one).
+                config={"max_tokens": args.calibration_ceiling, "cache": False},
             )
         except Exception as exc:  # noqa: BLE001 -- report and keep calibrating
             skipped.append((example.slug, f"raised {exc.__class__.__name__}: {exc}"))
             continue
 
-        usage = lm.history[-1].get("usage") or {}
+        history_entry = lm.history[-1]
+
+        # Recent DSPy versions (>= ~3.x) store each history entry as an
+        # `LMHistoryEntry` object -- dict-STYLE access (`entry.get(...)`,
+        # `entry["..."]`) is supported for backward compatibility, but it
+        # goes through that object's own `Mapping` implementation, which
+        # re-serializes `entry.response` via `model_dump()` -- and that
+        # serialization deliberately DROPS the raw provider response
+        # (`provider_response` is marked `exclude=True`, since it isn't
+        # JSON-safe in general). Reading `history_entry.response` as a
+        # plain ATTRIBUTE instead bypasses that re-serialization and gives
+        # back the real, unserialized `LMResponse`, `provider_response`
+        # (the actual litellm/provider object, with its real `.choices`)
+        # included. On an OLDER DSPy version, `history_entry` is a plain
+        # dict rather than an object with a `.response` attribute at all --
+        # there, `entry["response"]` WAS always the raw provider response
+        # directly, so the `.get()` fallback below still gets the right
+        # thing.
+        response_obj = (
+            history_entry.response
+            if hasattr(history_entry, "response")
+            else history_entry.get("response")
+        )
+
+        usage = history_entry.get("usage") or {}
         completion_tokens = usage.get("completion_tokens")
         if completion_tokens is None:
-            skipped.append((example.slug, "no completion_tokens in usage -- provider didn't report it"))
+            # Diagnose rather than just report "missing" -- this exact
+            # message used to fire for every example whenever the cache
+            # bypass above was missing (see this script's own docstring),
+            # so a genuine provider-reporting gap is now worth telling
+            # apart from that at a glance if it ever recurs.
+            cache_hit = bool(getattr(response_obj, "cache_hit", False))
+            detail = "usage dict is empty" if not usage else f"usage={usage!r}"
+            if cache_hit:
+                detail += " (served from DSPy's own cache despite cache=False -- unexpected; check DSPy's cache config)"
+            skipped.append((example.slug, f"no completion_tokens in usage -- provider didn't report it ({detail})"))
             continue
 
-        choices = getattr(lm.history[-1].get("response"), "choices", [])
+        # `.provider_response` is only present on the newer, normalized
+        # `LMResponse` (see above) -- on the older shape, response_obj IS
+        # already the raw provider response, so getattr's default just
+        # returns it unchanged.
+        provider_response = getattr(response_obj, "provider_response", None) or response_obj
+        choices = getattr(provider_response, "choices", [])
         if any(getattr(c, "finish_reason", None) == "length" for c in choices):
             skipped.append((example.slug, f"still truncated even at max_tokens={args.calibration_ceiling}"))
             continue

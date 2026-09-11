@@ -214,7 +214,7 @@ def tokengraph_to_text(tokengraph: List[TokenAnalysis]) -> str:
     return "".join(pieces)
 
 
-def tokengraph_to_html(tokengraph: List[TokenAnalysis]) -> str:
+def tokengraph_to_html(tokengraph: List[TokenAnalysis], depth: Optional[int] = None) -> str:
     """Render `tokengraph` as an HTML string: the same continuous text
     `tokengraph_to_text()` produces -- identical spacing rules, and the same
     punctuation/enclitic/quote-pair handling -- except every **lexical**
@@ -300,9 +300,39 @@ def tokengraph_to_html(tokengraph: List[TokenAnalysis]) -> str:
     the latter so the token reads correctly regardless of whatever text
     color the surrounding page has set, matching the explicit black
     `color:` every Mermaid node in that unit also gets.
+
+    `depth`, if given, limits which verbal units still get colored: only a
+    unit whose own depth of subordination (verbal_units.
+    compute_subordination_depths() -- the same clause-level notion
+    tokengraph_to_depth_html()'s own `depth` parameter uses) is <= `depth`
+    keeps its color; a deeper unit's tokens still render, just as plain
+    (escaped) text instead of inside a colored `<span>`. This is
+    color-LIMITING only -- unlike tokengraph_to_depth_html(), no token is
+    ever omitted here, since this function reconstructs continuous prose,
+    not indented blocks -- mirroring arsgrammatica's own
+    tokengraph_to_html(depth=...). Omit `depth` (or pass `None`, the
+    default) to color every unit, same as before this parameter existed. A
+    verbal unit whose depth couldn't be resolved (see
+    compute_subordination_depths()) is treated as depth 0 -- kept colored --
+    the same "unresolved defaults to root" convention used elsewhere in this
+    module; a negative `depth` raises ValueError, since there's no clause
+    shallower than root.
     """
+    if depth is not None and depth < 0:
+        raise ValueError(f"depth must be >= 0 (root clauses only), got {depth!r}")
+
     assignment = assign_verbal_units(tokengraph)
     colors, _warnings = assign_verbal_unit_colors(tokengraph, assignment=assignment)
+    if depth is not None:
+        unit_depths, _depth_warnings = compute_subordination_depths(tokengraph)
+        colors = {
+            unit_id: color
+            for unit_id, color in colors.items()
+            if (
+                unit_depths.get(unit_id) if unit_depths.get(unit_id) is not None else 0
+            )
+            <= depth
+        }
     return _tokens_to_html(tokengraph, assignment, colors)
 
 

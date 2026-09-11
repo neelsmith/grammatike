@@ -24,7 +24,7 @@ so this was the default, not an edge case; and (2) even once there's a
 understates a multi-sentence analysis -- `analyze_sources()`/
 `analyze_passage()` make one LM call for segmentation plus one more per
 sentence, so "cost of the last call" isn't the cost of the click that
-triggered them, despite one notebook (`greek_syntaxer_workflow.py`)
+triggered them, despite one notebook (`greek_syntaxer_textinput.py`)
 having labeled it "Total cost" as if it were.
 
 Greek analogue of arsgrammatica's `arsgrammatica/lm_cost.py`

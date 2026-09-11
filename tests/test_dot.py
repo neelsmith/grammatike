@@ -32,7 +32,7 @@ import pytest
 from grammatike import tokengraph_to_dot
 from grammatike.dot import compute_graph_depths, max_graph_depth
 from grammatike.models import TokenAnalysis
-from grammatike.verbal_units import compute_subordination_depths
+from grammatike.verbal_units import compute_subordination_depths, max_subordination_depth
 
 from conftest import run_gold_example
 from fixtures.gold_examples import GOLD_EXAMPLES
@@ -447,3 +447,115 @@ def test_depth_filtering_never_leaves_a_dangling_edge(example):
         for source, target in re.findall(r"^    (\S+) -> (\S+) \[", diagram, re.MULTILINE):
             assert source in node_ids, f"{example.slug} depth={cap}: edge source {source} has no node"
             assert target in node_ids, f"{example.slug} depth={cap}: edge target {target} has no node"
+
+
+# ---------------------------------------------------------------------------
+# `aat_depth` -- a SECOND, independent node-omission cutoff, additive
+# alongside `depth` above: verbal_units.compute_subordination_depths()'s
+# CLAUSE-level notion (the same one `rank_by_depth` groups by, and
+# rendering.tokengraph_to_depth_html()'s own `depth` uses at the block
+# level), rather than compute_graph_depths()'s per-token graph-edge
+# distance. mermaid.py's tokengraph_to_mermaid() has an analogous
+# `aat_depth` parameter of its own.
+# ---------------------------------------------------------------------------
+
+
+def test_aat_depth_zero_drops_the_subordinate_clause_entirely():
+    """circumstantial_fits_clause_ego_hapanta_epideixo has one root clause
+    (ἐπιδείξω's, depth 0) and two circumstantial participles (παραλείπων/
+    λέγων, both depth 1, anchors t8/t11) subordinate to it. aat_depth=0 must
+    drop t8/t11 and everything that resolves to their unit (t7, t10, t12) as
+    NODES entirely -- unlike `depth` (compute_graph_depths()), which would
+    give each of those tokens its own separate hop count."""
+    example = _example("circumstantial_fits_clause_ego_hapanta_epideixo")
+    tokens, result = run_gold_example(example)
+    diagram, warnings = tokengraph_to_dot(result.tokengraph, aat_depth=0)
+    assert warnings == []
+
+    for kept_id in ("t0", "t1", "t2", "t3", "t4", "t5"):
+        assert re.search(rf"^    {kept_id} \[", diagram, re.MULTILINE), kept_id
+    for dropped_id in ("t7", "t8", "t10", "t11", "t12"):
+        assert f"{dropped_id} [" not in diagram, dropped_id
+
+
+def test_aat_depth_at_or_beyond_passage_max_matches_aat_depth_none():
+    example = _example("circumstantial_fits_clause_ego_hapanta_epideixo")
+    tokens, result = run_gold_example(example)
+    maxd = max_subordination_depth(result.tokengraph)
+    diagram_max, warnings_max = tokengraph_to_dot(result.tokengraph, aat_depth=maxd)
+    diagram_none, warnings_none = tokengraph_to_dot(result.tokengraph, aat_depth=None)
+    assert diagram_max == diagram_none
+    assert warnings_max == warnings_none
+
+
+def test_aat_depth_negative_raises():
+    example = _example("unit_verb_root_ten_thuran_anoixen")
+    tokens, result = run_gold_example(example)
+    with pytest.raises(ValueError, match="aat_depth must be >= 0"):
+        tokengraph_to_dot(result.tokengraph, aat_depth=-1)
+
+
+def test_aat_depth_and_coloring_compose():
+    example = _example("circumstantial_fits_clause_ego_hapanta_epideixo")
+    tokens, result = run_gold_example(example)
+    diagram, _warnings = tokengraph_to_dot(result.tokengraph, aat_depth=0)
+    assert "fillcolor" in diagram  # kept nodes still get colored
+
+
+def test_aat_depth_and_graph_depth_compose_independently():
+    """`depth` and `aat_depth` are independent cutoffs -- a node survives
+    only if it passes BOTH. dependent_verb_epeide_de_en_hos_hekeen: ἧκεν
+    (t6) is the only root anchor (graph depth 0, subordination depth 0);
+    δέ (t1, sentence connector) and ἐκείνη (t7, subject) are both graph
+    depth 1 but STILL subordination depth 0 (same clause as ἧκεν, per
+    assign_verbal_units()), so depth=1 + aat_depth=0 together keep all
+    three. ἐπειδή (t0), despite ALSO being graph depth 1, resolves (per
+    assign_verbal_units()) to the SUBORDINATE clause's own unit (t2, the
+    ἦν clause it introduces) -- subordination depth 1 -- so `aat_depth=0`
+    excludes it even though `depth=1` alone would have kept it; the
+    doubly-nested ἦν clause itself (t2/t3/t4) is excluded by both cutoffs
+    regardless."""
+    example = _example("dependent_verb_epeide_de_en_hos_hekeen")
+    tokens, result = run_gold_example(example)
+    diagram, warnings = tokengraph_to_dot(result.tokengraph, depth=1, aat_depth=0)
+    assert warnings == []
+    for kept_id in ("t1", "t6", "t7"):
+        assert re.search(rf"^    {kept_id} \[", diagram, re.MULTILINE), kept_id
+    for dropped_id in ("t0", "t2", "t3", "t4"):
+        assert f"{dropped_id} [" not in diagram, dropped_id
+
+
+def test_aat_depth_and_ranking_compose_without_duplicate_warnings():
+    """rank_by_depth (default True) and aat_depth both rely on
+    compute_subordination_depths() -- this must be called only once, so a
+    resolution warning (were one to occur) would appear only once in the
+    returned list, not twice. For circumstantial_fits_clause_ego_hapanta_
+    epideixo (which resolves cleanly, per test_ranking_adds_no_new_warnings
+    above) that means simply: no warnings at all, and the surviving
+    depth-0 anchor (t2, alone at its rank) gets no rank=same statement,
+    same as when rank_by_depth runs without aat_depth."""
+    example = _example("circumstantial_fits_clause_ego_hapanta_epideixo")
+    tokens, result = run_gold_example(example)
+    diagram, warnings = tokengraph_to_dot(result.tokengraph, aat_depth=0, rank_by_depth=True)
+    assert warnings == []
+    assert "rank=same" not in diagram  # t2 is the only surviving anchor
+
+
+@pytest.mark.parametrize("example", GOLD_EXAMPLES, ids=lambda e: e.slug)
+def test_aat_depth_filtering_never_leaves_a_dangling_edge(example):
+    """Property check across every gold example, at every aat_depth level
+    from 0 up to that passage's own max_subordination_depth(): no edge may
+    be left whose source or target has no node line of its own -- mirrors
+    test_depth_filtering_never_leaves_a_dangling_edge above, for `depth`."""
+    tokens, result = run_gold_example(example)
+    tokengraph = result.tokengraph
+    maxd = max_subordination_depth(tokengraph)
+    if maxd is None:
+        return
+
+    for cap in range(0, maxd + 1):
+        diagram, _warnings = tokengraph_to_dot(tokengraph, aat_depth=cap)
+        node_ids = set(re.findall(r"^    (\S+) \[", diagram, re.MULTILINE))
+        for source, target in re.findall(r"^    (\S+) -> (\S+) \[", diagram, re.MULTILINE):
+            assert source in node_ids, f"{example.slug} aat_depth={cap}: edge source {source} has no node"
+            assert target in node_ids, f"{example.slug} aat_depth={cap}: edge target {target} has no node"

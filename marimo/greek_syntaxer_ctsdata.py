@@ -268,7 +268,7 @@ def _(ctsdata_file_browser, read_ctsdata):
 def _(Path, mo):
     # Browse for the delimited-text file listing passages to analyze (see
     # grammatike/ctsdata.py for the '#!ctsdata' block format). Unlike
-    # the "choose a folder to save to" field greek_syntaxer_workflow.py used to
+    # the "choose a folder to save to" field greek_syntaxer_textinput.py used to
     # have (see that notebook's own history: mo.ui.file_browser's
     # "directory" selection mode has no way to select the folder currently
     # being browsed, only a subfolder shown in its listing), selecting a
@@ -383,7 +383,7 @@ def sentence_preview_text(sentence):
 # Format one menu entry as "<n>. <citation>: <first eight words>…" -- the
 # citation comes from the sentence's own first token (sentences drawn from
 # different selected passages carry different citations, unlike
-# greek_syntaxer_workflow.py's single-source case), and the number keeps entries
+# greek_syntaxer_textinput.py's single-source case), and the number keeps entries
 # unique even when two sentences share a citation or opening words.
 def sentence_menu_label(index, sentence):
     preview_text = sentence_preview_text(sentence)
@@ -446,6 +446,16 @@ def _(finaltokens, max_subordination_depth, mo):
     return (maxdepth,)
 
 
+@app.cell
+def _(maxdepth):
+    # One shared depth value driving all four display types below (colored
+    # HTML, indented HTML, Mermaid, and Graphviz DOT) -- guarded against
+    # maxdepth being None (nothing analyzed yet) rather than each of those
+    # four cells calling maxdepth.value unconditionally.
+    depth_value = maxdepth.value if maxdepth is not None else None
+    return (depth_value,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
@@ -467,7 +477,7 @@ def _(sentences):
     # A readable default filename base, drawn from every analyzed
     # sentence's own citation (falling back to "analysis" if nothing's
     # been analyzed yet), deduplicated and in analysis order -- unlike
-    # greek_syntaxer_workflow.py's single passage, here `sentences` is already
+    # greek_syntaxer_textinput.py's single passage, here `sentences` is already
     # the *selected, analyzed* subset (see the Analysis cell below), not
     # every sentence segmentation found -- so the filename reflects what's
     # actually in the downloaded file. This can get long with many
@@ -560,22 +570,41 @@ def _(dspy):
 
 
 @app.cell
-def _(combined_tokengraph, results, tokengraph_to_mermaid):
-    # Compose Mermaid diagram:
+def _(combined_tokengraph, results):
+    # finaltokens lives in its own cell (rather than bundled into the
+    # Mermaid-composing cell below, as it used to be) specifically so that
+    # depth_value -- itself derived, via maxdepth, FROM finaltokens -- can
+    # feed back into the Mermaid diagram without creating a circular
+    # dependency (finaltokens -> maxdepth -> depth_value -> diagram would
+    # otherwise need finaltokens again to produce diagram in the same
+    # cell).
     finaltokens = combined_tokengraph(results)
-    diagram, mermaid_warnings = tokengraph_to_mermaid(finaltokens)
-    return diagram, finaltokens
+    return (finaltokens,)
 
 
 @app.cell
-def _(finaltokens, tokengraph_to_dot):
+def _(depth_value, finaltokens, tokengraph_to_mermaid):
+    # Compose Mermaid diagram. aat_depth=depth_value shares the same
+    # subordination-depth cutoff as the colored HTML, indented HTML, and
+    # Graphviz DOT views below -- see the depth_value cell's own comment --
+    # omitting whole nodes (and any edge that would dangle from one) beyond
+    # that depth, rather than just re-coloring them.
+    diagram, mermaid_warnings = tokengraph_to_mermaid(finaltokens, aat_depth=depth_value)
+    return (diagram,)
+
+
+@app.cell
+def _(depth_value, finaltokens, tokengraph_to_dot):
     # Compose Graphviz diagram: cheap to always compute regardless of
     # which tool is currently selected -- tokengraph_to_dot() is pure
     # string building with no dependency of its own (see
     # notes/dot_diagrams.md), unlike actually rendering it, which needs
     # the graphviz package and the `dot` executable (handled in
-    # diagram_display above).
-    dot_source, dot_warnings = tokengraph_to_dot(finaltokens)
+    # diagram_display above). aat_depth=depth_value is the same
+    # subordination-depth cutoff the Mermaid diagram above uses -- a SECOND,
+    # independent cutoff from this function's own `depth` parameter (graph-
+    # edge distance), which is left at its default (unset) here.
+    dot_source, dot_warnings = tokengraph_to_dot(finaltokens, aat_depth=depth_value)
     return dot_source, dot_warnings
 
 
@@ -720,14 +749,14 @@ def _(finaltokens, mo, sentences, tokengraph_to_text):
 
 
 @app.cell
-def _(finaltokens, mo, tokengraph_to_html):
-    vuhtml = mo.Html("<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(finaltokens))
+def _(depth_value, finaltokens, mo, tokengraph_to_html):
+    vuhtml = mo.Html("<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(finaltokens, depth=depth_value))
     return (vuhtml,)
 
 
 @app.cell
-def _(finaltokens, maxdepth, mo, tokengraph_to_depth_html):
-    indenthtml, indentwarnings = tokengraph_to_depth_html(finaltokens,depth=maxdepth.value)
+def _(depth_value, finaltokens, mo, tokengraph_to_depth_html):
+    indenthtml, indentwarnings = tokengraph_to_depth_html(finaltokens, depth=depth_value)
     indentpsg = mo.Html("<b><i>Indented by verbal unit</i></b>: " + indenthtml)
     return (indentpsg,)
 

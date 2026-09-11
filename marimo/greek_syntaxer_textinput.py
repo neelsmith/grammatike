@@ -68,6 +68,12 @@ def _(vuhtml):
 
 
 @app.cell(hide_code=True)
+def _(maxdepth):
+    maxdepth
+    return
+
+
+@app.cell(hide_code=True)
 def _(indentpsg):
     indentpsg
     return
@@ -220,22 +226,41 @@ def _(analyze_passage, input_form):
 
 
 @app.cell
-def _(combined_tokengraph, results, tokengraph_to_mermaid):
-    # Compose Mermaid diagram:
+def _(combined_tokengraph, results):
+    # finaltokens lives in its own cell (rather than bundled into the
+    # Mermaid-composing cell below, as it used to be) specifically so that
+    # depth_value -- itself derived, via maxdepth, FROM finaltokens -- can
+    # feed back into the Mermaid diagram without creating a circular
+    # dependency (finaltokens -> maxdepth -> depth_value -> diagram would
+    # otherwise need finaltokens again to produce diagram in the same
+    # cell).
     finaltokens = combined_tokengraph(results)
-    diagram, mermaid_warnings = tokengraph_to_mermaid(finaltokens)
-    return diagram, finaltokens
+    return (finaltokens,)
 
 
 @app.cell
-def _(finaltokens, tokengraph_to_dot):
+def _(depth_value, finaltokens, tokengraph_to_mermaid):
+    # Compose Mermaid diagram. aat_depth=depth_value shares the same
+    # subordination-depth cutoff as the colored HTML, indented HTML, and
+    # Graphviz DOT views below -- see the depth_value cell's own comment --
+    # omitting whole nodes (and any edge that would dangle from one) beyond
+    # that depth, rather than just re-coloring them.
+    diagram, mermaid_warnings = tokengraph_to_mermaid(finaltokens, aat_depth=depth_value)
+    return (diagram,)
+
+
+@app.cell
+def _(depth_value, finaltokens, tokengraph_to_dot):
     # Compose Graphviz diagram: cheap to always compute regardless of
     # which tool is currently selected -- tokengraph_to_dot() is pure
     # string building with no dependency of its own (see
     # notes/dot_diagrams.md), unlike actually rendering it, which needs
     # the graphviz package and the `dot` executable (handled in
-    # diagram_display above).
-    dot_source, dot_warnings = tokengraph_to_dot(finaltokens)
+    # diagram_display above). aat_depth=depth_value is the same
+    # subordination-depth cutoff the Mermaid diagram above uses -- a SECOND,
+    # independent cutoff from this function's own `depth` parameter (graph-
+    # edge distance), which is left at its default (unset) here.
+    dot_source, dot_warnings = tokengraph_to_dot(finaltokens, aat_depth=depth_value)
     return dot_source, dot_warnings
 
 
@@ -300,14 +325,40 @@ def _(finaltokens, input_form, mo, tokengraph_to_text):
 
 
 @app.cell
-def _(finaltokens, mo, tokengraph_to_html):
-    vuhtml = mo.Html("<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(finaltokens))
+def _(depth_value, finaltokens, mo, tokengraph_to_html):
+    vuhtml = mo.Html("<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(finaltokens, depth=depth_value))
     return (vuhtml,)
 
 
 @app.cell
-def _(finaltokens, mo, tokengraph_to_depth_html):
-    indenthtml, indentwarnings = tokengraph_to_depth_html(finaltokens)
+def _(finaltokens, max_subordination_depth, mo):
+    # Same depth-cap slider as greek_syntaxer_ctsdata.py/greek_syntaxer_review.py --
+    # left None until at least one sentence has been analyzed.
+    maxdepth = None
+    if finaltokens:
+        maxdepth = mo.ui.slider(
+            start=0,
+            stop=max_subordination_depth(finaltokens),
+            label="*Maximum depth of subordination to display*:",
+            show_value=True,
+            value=max_subordination_depth(finaltokens),
+        )
+    return (maxdepth,)
+
+
+@app.cell
+def _(maxdepth):
+    # One shared depth value driving all four display types (colored HTML,
+    # indented HTML, Mermaid, and Graphviz DOT) -- guarded against maxdepth
+    # being None (nothing analyzed yet) rather than each of those four
+    # cells calling maxdepth.value unconditionally.
+    depth_value = maxdepth.value if maxdepth is not None else None
+    return (depth_value,)
+
+
+@app.cell
+def _(depth_value, finaltokens, mo, tokengraph_to_depth_html):
+    indenthtml, indentwarnings = tokengraph_to_depth_html(finaltokens, depth=depth_value)
     indentpsg = mo.Html("<b><i>Indented by verbal unit</i></b>: " + indenthtml)
     return (indentpsg,)
 
@@ -490,6 +541,7 @@ def _(Path):
         serialize_analyses,
         summarize_lm_cost,
         format_lm_cost,
+        max_subordination_depth,
     )
 
     # graphviz (the PyPI package -- a thin subprocess wrapper around the
@@ -511,6 +563,7 @@ def _(Path):
         format_lm_cost,
         graphviz,
         graphviz_available,
+        max_subordination_depth,
         serialize_analyses,
         summarize_lm_cost,
         tokengraph_to_depth_html,

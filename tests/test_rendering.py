@@ -467,6 +467,48 @@ def test_html_colors_match_mermaid_colors_for_every_gold_example(example):
     assert actual_fills == expected_fills, example.slug
 
 
+def test_html_depth_limits_coloring_without_omitting_tokens():
+    """tokengraph_to_html()'s new `depth` parameter only removes color --
+    every token still appears in the output, unlike tokengraph_to_depth_html()'s
+    `depth`, which drops whole blocks. Same ταῦρον fixture used below (three
+    units at subordination depths 0/1/0): depth=0 must leave ὅν/εἶδον (the
+    depth-1 relative clause) as PLAIN text, not colored, while ταῦρον/ζῶντα/
+    ἤγαγον (depth 0) keep their color."""
+    tokengraph = _tauron_relative_clause_tokengraph()
+    html_full = tokengraph_to_html(tokengraph)
+    html_capped = tokengraph_to_html(tokengraph, depth=0)
+
+    for word in ("ταῦρον", "ὅν", "εἶδον", "ζῶντα", "ἤγαγον"):
+        assert word in html_capped, word
+
+    words_full = [m[2] for m in _SPAN_RE.findall(html_full)]
+    words_capped = [m[2] for m in _SPAN_RE.findall(html_capped)]
+    assert "ὅν" in words_full and "εἶδον" in words_full
+    assert "ὅν" not in words_capped and "εἶδον" not in words_capped
+    assert all(w in words_capped for w in ("ταῦρον", "ζῶντα", "ἤγαγον"))
+
+
+def test_html_depth_at_or_beyond_passage_max_matches_depth_none():
+    tokengraph = _tauron_relative_clause_tokengraph()
+    html_max = tokengraph_to_html(tokengraph, depth=1)
+    html_none = tokengraph_to_html(tokengraph, depth=None)
+    assert html_max == html_none
+
+
+def test_html_negative_depth_raises():
+    tokengraph = _tauron_relative_clause_tokengraph()
+    with pytest.raises(ValueError, match="depth must be >= 0"):
+        tokengraph_to_html(tokengraph, depth=-1)
+
+
+@pytest.mark.parametrize("example", GOLD_EXAMPLES, ids=lambda e: e.slug)
+def test_html_depth_none_matches_plain_call_for_every_gold_example(example):
+    """Leaving `depth` unset must render identically to before this
+    parameter existed, for every gold fixture."""
+    tokengraph = [TokenAnalysis(**tok) for tok in example.canned_answer["tokengraph"]]
+    assert tokengraph_to_html(tokengraph) == tokengraph_to_html(tokengraph, depth=None)
+
+
 # ---------------------------------------------------------------------------
 # tokengraph_to_depth_html()
 # ---------------------------------------------------------------------------

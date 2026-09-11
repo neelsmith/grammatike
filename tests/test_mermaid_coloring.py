@@ -11,6 +11,7 @@ import re
 import pytest
 
 from grammatike import tokengraph_to_mermaid, validate
+from grammatike.verbal_units import max_subordination_depth
 from conftest import run_gold_example
 from fixtures.gold_examples import GOLD_EXAMPLES
 
@@ -199,3 +200,89 @@ def test_exclamation_o_gets_the_vocatives_own_unit_color():
 
     assert "t4" in class_of  # ὦ now gets a class, unlike before 'exclamation' existed
     assert class_of["t4"] == class_of["t5"]  # same class as ἄνδρες, the vocative it introduces
+
+
+# ---------------------------------------------------------------------------
+# `aat_depth` -- node-OMISSION filtering by subordination depth (verbal_units.
+# compute_subordination_depths()), a SEPARATE, additional parameter from
+# color_by_verbal_unit above. dot.py's tokengraph_to_dot() has an analogous
+# `aat_depth` parameter alongside its own, differently-scoped `depth`.
+# ---------------------------------------------------------------------------
+
+
+def test_aat_depth_zero_drops_the_subordinate_clause_entirely():
+    """circumstantial_fits_clause_ego_hapanta_epideixo has one root clause
+    (ἐπιδείξω's, depth 0) and two circumstantial participles (παραλείπων/
+    λέγων, both depth 1, anchors t8/t11) subordinate to it. aat_depth=0 must
+    drop t8/t11 and everything that resolves to their unit (t7, t9 is
+    punctuation already excluded, t10, t12) as NODES entirely, leaving the
+    root clause's own tokens untouched."""
+    example = next(
+        e for e in GOLD_EXAMPLES if e.slug == "circumstantial_fits_clause_ego_hapanta_epideixo"
+    )
+    tokens, result = run_gold_example(example)
+    diagram, warnings = tokengraph_to_mermaid(result.tokengraph, aat_depth=0)
+    assert warnings == []
+
+    for kept_id in ("t0", "t1", "t2", "t3", "t4", "t5"):
+        assert f'{kept_id}[' in diagram, kept_id
+    for dropped_id in ("t7", "t8", "t10", "t11", "t12"):
+        assert f'{dropped_id}[' not in diagram, dropped_id
+
+
+def test_aat_depth_at_or_beyond_passage_max_matches_aat_depth_none():
+    example = next(
+        e for e in GOLD_EXAMPLES if e.slug == "circumstantial_fits_clause_ego_hapanta_epideixo"
+    )
+    tokens, result = run_gold_example(example)
+    maxd = max_subordination_depth(result.tokengraph)
+    diagram_max, warnings_max = tokengraph_to_mermaid(result.tokengraph, aat_depth=maxd)
+    diagram_none, warnings_none = tokengraph_to_mermaid(result.tokengraph, aat_depth=None)
+    assert diagram_max == diagram_none
+    assert warnings_max == warnings_none
+
+
+def test_aat_depth_negative_raises():
+    example = next(e for e in GOLD_EXAMPLES if e.slug == "unit_verb_root_ten_thuran_anoixen")
+    tokens, result = run_gold_example(example)
+    with pytest.raises(ValueError, match="aat_depth must be >= 0"):
+        tokengraph_to_mermaid(result.tokengraph, aat_depth=-1)
+
+
+def test_aat_depth_and_coloring_compose():
+    """Kept nodes (the root clause) still get colored. The dropped depth-1
+    unit's `classDef` may still be declared -- assign_verbal_unit_colors()
+    computes colors for every verbal unit in the whole tokengraph,
+    unfiltered -- but no `class ... vuN;` line may assign it to any node,
+    since every one of its member tokens was excluded as a node."""
+    example = next(
+        e for e in GOLD_EXAMPLES if e.slug == "circumstantial_fits_clause_ego_hapanta_epideixo"
+    )
+    tokens, result = run_gold_example(example)
+    diagram, _warnings = tokengraph_to_mermaid(result.tokengraph, aat_depth=0)
+    assert "classDef vu0" in diagram
+    class_lines = [
+        line for line in diagram.splitlines() if re.match(r"\s*class ([\w,]+) vu\d+;", line)
+    ]
+    assert len(class_lines) == 1
+    assert class_lines[0].split()[1] == "t0,t1,t2,t3,t4,t5"
+
+
+@pytest.mark.parametrize("example", GOLD_EXAMPLES, ids=lambda e: e.slug)
+def test_aat_depth_filtering_never_leaves_a_dangling_edge(example):
+    """Property check across every gold example, at every aat_depth level
+    from 0 up to that passage's own max_subordination_depth(): no edge may
+    be left whose source or target has no node line of its own -- mirrors
+    test_dot.py's identical property check for `depth`."""
+    tokens, result = run_gold_example(example)
+    tokengraph = result.tokengraph
+    maxd = max_subordination_depth(tokengraph)
+    if maxd is None:
+        return
+
+    for cap in range(0, maxd + 1):
+        diagram, _warnings = tokengraph_to_mermaid(tokengraph, aat_depth=cap)
+        node_ids = set(re.findall(r'^    (\S+)\["', diagram, re.MULTILINE))
+        for source, target in re.findall(r"^    (\S+) -->\|[^|]*\| (\S+)$", diagram, re.MULTILINE):
+            assert source in node_ids, f"{example.slug} aat_depth={cap}: edge source {source} has no node"
+            assert target in node_ids, f"{example.slug} aat_depth={cap}: edge target {target} has no node"

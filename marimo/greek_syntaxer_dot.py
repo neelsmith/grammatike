@@ -330,9 +330,9 @@ def _(dot_source, dot_warnings, graphviz, graphviz_available, mo, selected_token
 
 @app.cell
 def _(selected_citation, sentence_dropdown):
-    # Same alphanumeric-sanitizing convention greek_syntaxer_workflow.py's
+    # Same alphanumeric-sanitizing convention greek_syntaxer_textinput.py's
     # own filename_base and greek_syntaxer_review.py's own
-    # mermaid_filename_stem use -- the sentence's own 1-based menu number
+    # diagram_filename_stem use -- the sentence's own 1-based menu number
     # goes first (matching sentence_label()'s "<n>. ..." prefix) so every
     # download gets a distinct, stable name even across sentences that
     # share (or lack) a citation.

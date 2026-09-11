@@ -267,20 +267,28 @@ def _(mo):
 
 
 @app.cell
-def _(selected_tokengraph, tokengraph_to_mermaid):
-    diagram, mermaid_warnings = tokengraph_to_mermaid(selected_tokengraph)
+def _(depth_value, selected_tokengraph, tokengraph_to_mermaid):
+    # aat_depth=depth_value shares the same subordination-depth cutoff as
+    # the colored HTML, indented HTML, and Graphviz DOT views below -- see
+    # the depth_value cell's own comment -- omitting whole nodes (and any
+    # edge that would dangle from one) beyond that depth, rather than just
+    # re-coloring them.
+    diagram, mermaid_warnings = tokengraph_to_mermaid(selected_tokengraph, aat_depth=depth_value)
     return (diagram,)
 
 
 @app.cell
-def _(selected_tokengraph, tokengraph_to_dot):
+def _(depth_value, selected_tokengraph, tokengraph_to_dot):
     # Compose Graphviz diagram: cheap to always compute regardless of
     # which tool is currently selected -- tokengraph_to_dot() is pure
     # string building with no dependency of its own (see
     # notes/dot_diagrams.md), unlike actually rendering it, which needs
     # the graphviz package and the `dot` executable (handled in
-    # diagram_display above).
-    dot_source, dot_warnings = tokengraph_to_dot(selected_tokengraph)
+    # diagram_display above). aat_depth=depth_value is the same
+    # subordination-depth cutoff the Mermaid diagram above uses -- a SECOND,
+    # independent cutoff from this function's own `depth` parameter (graph-
+    # edge distance), which is left at its default (unset) here.
+    dot_source, dot_warnings = tokengraph_to_dot(selected_tokengraph, aat_depth=depth_value)
     return dot_source, dot_warnings
 
 
@@ -303,7 +311,7 @@ def _(graphviz_available, mo):
 
 @app.cell
 def _(selected_citation, sentence_dropdown):
-    # Same alphanumeric-sanitizing convention greek_syntaxer_workflow.py's own
+    # Same alphanumeric-sanitizing convention greek_syntaxer_textinput.py's own
     # filename_base uses -- the sentence's own 1-based menu number goes
     # first (matching sentence_label()'s "<n>. ..." prefix) so every
     # download gets a distinct, stable name even across sentences that
@@ -321,7 +329,7 @@ def _(selected_citation, sentence_dropdown):
 def _(diagram, diagram_filename_stem, diagram_tool, dot_source, mo, selected_tokengraph):
     # Downloads whichever diagram is currently selected/displayed above,
     # not both -- same reactive "follows the widget" convention
-    # greek_syntaxer_workflow.py's own diagram_download cell uses. Mermaid
+    # greek_syntaxer_textinput.py's own diagram_download cell uses. Mermaid
     # source is saved raw as .mmd (unchanged from before this notebook
     # offered a choice of diagram tool at all); Graphviz source is
     # likewise saved raw, as .dot -- both are renderable elsewhere
@@ -360,14 +368,14 @@ def _(mo, selected_tokengraph, tokengraph_to_text):
 
 
 @app.cell
-def _(mo, selected_tokengraph, tokengraph_to_html):
-    vuhtml = mo.Html("<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(selected_tokengraph))
+def _(depth_value, mo, selected_tokengraph, tokengraph_to_html):
+    vuhtml = mo.Html("<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(selected_tokengraph, depth=depth_value))
     return (vuhtml,)
 
 
 @app.cell
 def _(max_subordination_depth, mo, selected_tokengraph):
-    # Same depth-cap slider as greek_syntaxer_workflow.py/greek_syntaxer_ctsdata.py --
+    # Same depth-cap slider as greek_syntaxer_textinput.py/greek_syntaxer_ctsdata.py --
     # left None until a sentence with at least one token is selected.
     maxdepth = None
     if selected_tokengraph:
@@ -382,12 +390,18 @@ def _(max_subordination_depth, mo, selected_tokengraph):
 
 
 @app.cell
-def _(maxdepth, mo, selected_tokengraph, tokengraph_to_depth_html):
-    # Guard against maxdepth being None (nothing selected yet) rather than
-    # calling .value unconditionally -- unlike the other two notebooks'
-    # otherwise-identical cell, which would raise AttributeError here.
-    depth = maxdepth.value if maxdepth is not None else None
-    indenthtml, indentwarnings = tokengraph_to_depth_html(selected_tokengraph, depth=depth)
+def _(maxdepth):
+    # One shared depth value driving all four display types below (colored
+    # HTML, indented HTML, Mermaid, and Graphviz DOT) -- guarded against
+    # maxdepth being None (nothing selected yet) rather than each of those
+    # four cells calling maxdepth.value unconditionally.
+    depth_value = maxdepth.value if maxdepth is not None else None
+    return (depth_value,)
+
+
+@app.cell
+def _(depth_value, mo, selected_tokengraph, tokengraph_to_depth_html):
+    indenthtml, indentwarnings = tokengraph_to_depth_html(selected_tokengraph, depth=depth_value)
     indentpsg = mo.Html("<b><i>Indented by verbal unit</i></b>: " + indenthtml)
     return (indentpsg,)
 
