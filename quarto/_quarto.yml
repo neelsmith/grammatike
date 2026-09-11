@@ -27,8 +27,13 @@ website:
             
     right:   
       - icon: github
-        href: https://github.com/neelsmith/arsgrammatica
-        aria-label: GitHub
+        menu:
+          - text: "grammatike on github"
+            href: https://github.com/neelsmith/grammatike
+          - text: "About me"
+            href: https://neelsmith.github.io
+          - text: "Other projects"
+            href: https://neelsmith.github.io/projects 
 
   sidebar:
     - title: "Tutorials"

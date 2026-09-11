@@ -16,12 +16,12 @@ marimo/greek_syntaxer_dot.py instead if you want to pick a single sentence
 out of a multi-sentence file.
 
 Usage:
-    python analysis_to_dot.py analysis.cex > analysis.dot
-    python analysis_to_dot.py analysis.cex --orientation LR > analysis.dot
-    python analysis_to_dot.py analysis.cex --no-color --no-rank > analysis.dot
+    python utilities/analysis_to_dot.py analysis.cex > analysis.dot
+    python utilities/analysis_to_dot.py analysis.cex --orientation LR > analysis.dot
+    python utilities/analysis_to_dot.py analysis.cex --no-color --no-rank > analysis.dot
 
     # Piped straight into Graphviz, if it's installed (see notes/dot_diagrams.md):
-    python analysis_to_dot.py analysis.cex | dot -Tsvg > analysis.svg
+    python utilities/analysis_to_dot.py analysis.cex | dot -Tsvg > analysis.svg
 """
 
 import argparse

@@ -18,7 +18,7 @@ token_budget.estimate_max_tokens() picks it up automatically.
 
 Usage:
 
-    python3 calibrate_max_tokens.py
+    python3 utilities/calibrate_max_tokens.py
 
 Needs the same .env this project's other scripts use (see USAGE.md's
 "Running an analysis from the command line"):
@@ -47,15 +47,24 @@ import argparse
 import datetime
 import json
 import os
+import sys
 from pathlib import Path
 
 import dspy
 from dotenv import load_dotenv
 
 from grammatike import analyze, IMPLIED_TOKENTYPES, Token
-from tests.fixtures.gold_examples import GOLD_EXAMPLES
 
-CALIBRATION_FILE = Path(__file__).parent / "grammatike" / "grammatike_token_budget_calibration.json"
+# tests/ isn't an installed package, and this script now lives in utilities/
+# rather than the repo root -- a plain `from tests.fixtures.gold_examples
+# import ...` would otherwise only resolve when Python's automatic sys.path[0]
+# (a directly-run script's own directory) happened to be the repo root.
+# Add the repo root itself, so `tests` still resolves as a (namespace)
+# package the same way it did before this script moved.
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from tests.fixtures.gold_examples import GOLD_EXAMPLES  # noqa: E402
+
+CALIBRATION_FILE = Path(__file__).parent.parent / "grammatike" / "grammatike_token_budget_calibration.json"
 
 
 def _env(name: str, fallback_name: str, default: "str | None" = None) -> "str | None":
@@ -156,7 +165,7 @@ def main():
     )
     args = parser.parse_args()
 
-    load_dotenv(dotenv_path=Path(__file__).with_name(".env"), override=True)
+    load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env", override=True)
     lm = _configure_lm()
 
     examples = GOLD_EXAMPLES[: args.limit] if args.limit else GOLD_EXAMPLES

@@ -23,9 +23,9 @@ different directories) get '_2', '_3', ... appended to keep every output
 distinct rather than one silently overwriting another.
 
 Usage:
-    python analyses_to_png.py --outdir diagrams analysis1.cex analysis2.cex
-    python analyses_to_png.py --outdir diagrams *.cex --orientation LR
-    python analyses_to_png.py --outdir diagrams *.cex --no-color --no-rank --depth 2
+    python utilities/analyses_to_png.py --outdir diagrams analysis1.cex analysis2.cex
+    python utilities/analyses_to_png.py --outdir diagrams *.cex --orientation LR
+    python utilities/analyses_to_png.py --outdir diagrams *.cex --no-color --no-rank --depth 2
 
 Requires the `graphviz` package (`pip install graphviz`, already covered by
 `pip install -e ".[dev]"` -- see notes/dot_diagrams.md) AND Graphviz's own `dot`

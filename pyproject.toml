@@ -17,7 +17,7 @@ dependencies = [
     "pydantic>=2.0",
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python :: 3",
@@ -33,10 +33,10 @@ test = [
     "python-dotenv",
 ]
 # Everything `test` needs, plus the tools DEVELOPMENT.md/USAGE.md's other
-# workflows call for: `docs/build_api_docs.py` (pdoc), the `marimo/`
-# notebooks, `optimize_gepa.py`/`model_bakeoff.py`'s GEPA runs, and
-# rendering Graphviz DOT diagrams (marimo/greek_syntaxer_dot.py,
-# analyses_to_png.py -- see notes/dot_diagrams.md). The `graphviz` package
+# workflows call for: `utilities/build_api_docs.py` (pdoc), the `marimo/`
+# notebooks, `utilities/optimize_gepa.py`/`utilities/model_bakeoff.py`'s GEPA
+# runs, and rendering Graphviz DOT diagrams (marimo/greek_syntaxer_dot.py,
+# utilities/analyses_to_png.py -- see notes/dot_diagrams.md). The `graphviz` package
 # here is only a thin subprocess wrapper -- actually rendering a diagram
 # also needs Graphviz's own `dot` command-line tool installed separately
 # (e.g. `brew install graphviz` on macOS, `apt install graphviz` on Linux);

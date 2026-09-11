@@ -34,7 +34,7 @@ tokentype value -- the label/type vocabulary lives entirely in models.py,
 so this metric works unchanged for any set of Greek labels defined there.
 
 This module has no dependency on tests/fixtures/gold_examples.py or dspy's
-GEPA machinery itself -- optimize_gepa.py wires this metric, GOLD_EXAMPLES,
+GEPA machinery itself -- utilities/optimize_gepa.py wires this metric, GOLD_EXAMPLES,
 and dspy.GEPA together. Keeping the metric here, dependency-free, makes it
 importable and unit-testable (see tests/test_gepa_metric.py) without ever
 touching the network or the GOLD_EXAMPLES fixtures module.
@@ -90,7 +90,7 @@ def syntax_metric(
     program_trace: Optional[Any] = None,
 ) -> "dspy.Prediction":
     """Score a SyntaxAnalysis prediction against a gold answer built from a
-    GoldExample (see optimize_gepa.py's build_trainset()).
+    GoldExample (see utilities/optimize_gepa.py's build_trainset()).
 
     `gold` must have `.tokengraph` (list of TokenAnalysis) and
     `.verbalunits` (list of VerbalExpression) fields -- the same shape

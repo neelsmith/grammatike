@@ -44,7 +44,7 @@ def _configure_lm():
 
     # Distinguish "API_KEY isn't in .env at all" (a likely oversight -- keep
     # raising) from "API_KEY= is there but deliberately empty" (fine for a
-    # local, unauthenticated model like Ollama -- see model_bakeoff.py's own
+    # local, unauthenticated model like Ollama -- see utilities/model_bakeoff.py's own
     # "ollama: no API key needed" comment for the same convention). _env()'s
     # own truthiness check can't tell these apart (both look like "falsy"),
     # so this checks os.environ directly instead.

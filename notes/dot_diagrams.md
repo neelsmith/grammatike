@@ -72,29 +72,29 @@ A dedicated notebook doing exactly that, end to end: browse for a previously-sav
 
 It degrades visibly through both Graphviz failure modes rather than crashing the cell: the `graphviz` package missing entirely (`pip install -e ".[dev]"` covers it) versus the package present but the `dot` executable not on PATH (`graphviz.ExecutableNotFound`, only raised once you actually try to render) -- either way you still get the "Download .dot source" button to render elsewhere.
 
-## `analysis_to_dot.py`
+## `utilities/analysis_to_dot.py`
 
 A command-line counterpart to the notebook above, for scripting/piping instead of interactive use: reads a saved analysis file (`read_analyses()`'s own format) and writes its tokengraph's Graphviz DOT source to standard output, with `--orientation`/`--no-color`/`--no-rank` flags covering `tokengraph_to_dot()`'s own parameters. Only the DOT source goes to stdout -- warnings go to stderr instead -- so redirection and piping both work cleanly:
 
 ```sh
-python analysis_to_dot.py analysis.cex > analysis.dot
-python analysis_to_dot.py analysis.cex --orientation LR > analysis.dot
-python analysis_to_dot.py analysis.cex --no-color --no-rank > analysis.dot
+python utilities/analysis_to_dot.py analysis.cex > analysis.dot
+python utilities/analysis_to_dot.py analysis.cex --orientation LR > analysis.dot
+python utilities/analysis_to_dot.py analysis.cex --no-color --no-rank > analysis.dot
 
 # Piped straight into Graphviz, if it's installed:
-python analysis_to_dot.py analysis.cex | dot -Tsvg > analysis.svg
+python utilities/analysis_to_dot.py analysis.cex | dot -Tsvg > analysis.svg
 ```
 
 Unlike the notebook, it operates on the file's whole tokengraph as `read_analyses()` returns it -- one flat list spanning every sentence in the file, not split by sentence -- so use `marimo/greek_syntaxer_dot.py` instead if you want to pick a single sentence out of a multi-sentence file. No LM access needed, same as the notebook. No dedicated test file, matching `syntaxer_main.py`'s own precedent of no pytest coverage for CLI entry points -- it's a thin wrapper around `read_analyses()` and `tokengraph_to_dot()`, which are both already covered. It doesn't yet expose `tokengraph_to_dot()`'s `depth` parameter as a flag -- only the notebook's slider (and `analyses_to_png.py`'s own `--depth` flag, below) does, for now.
 
-## `analyses_to_png.py`
+## `utilities/analyses_to_png.py`
 
 A grammatike-specific addition, with no arsgrammatica counterpart to port: batch-renders one or more saved analysis files straight to PNG -- one image per FILE (the file's whole tokengraph, same granularity `analysis_to_dot.py` uses, not one image per sentence), written into a given output directory:
 
 ```sh
-python analyses_to_png.py --outdir diagrams analysis1.cex analysis2.cex
-python analyses_to_png.py --outdir diagrams *.cex --orientation LR
-python analyses_to_png.py --outdir diagrams *.cex --no-color --no-rank --depth 2
+python utilities/analyses_to_png.py --outdir diagrams analysis1.cex analysis2.cex
+python utilities/analyses_to_png.py --outdir diagrams *.cex --orientation LR
+python utilities/analyses_to_png.py --outdir diagrams *.cex --no-color --no-rank --depth 2
 ```
 
 Each output filename is the input file's own stem plus `.png` (e.g. `iliad_1.cex` -> `iliad_1.png`); two inputs that would collide on that stem (e.g. from different directories) get `_2`, `_3`, ... appended rather than one silently overwriting another. Requires both the `graphviz` package AND the Graphviz `dot` executable up front (it always renders all the way to PNG, unlike the notebook's graceful two-tier degradation) -- a missing package or executable is reported once, clearly, rather than as a wall of identical per-file errors. If you want a single sentence's own diagram out of a multi-sentence file, use `marimo/greek_syntaxer_dot.py`'s interactive sentence picker instead -- this script is for turning a batch of already-separate analysis files into a batch of pictures, not for splitting one file up.
