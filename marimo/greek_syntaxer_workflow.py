@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.23.16"
+__generated_with = "0.24.0"
 app = marimo.App(width="medium")
 
 
@@ -35,6 +35,21 @@ def _(input_form):
 
 
 @app.cell(hide_code=True)
+def _(seecost):
+    seecost
+    return
+
+
+@app.cell(hide_code=True)
+def _(cost_summary, format_lm_cost, mo, seecost):
+    costdisplay = mo.md("**Cost**: no LM calls yet.")
+    if seecost.value:
+        costdisplay = mo.md(f"**Total cost**: {format_lm_cost(cost_summary)}")
+    costdisplay    
+    return
+
+
+@app.cell(hide_code=True)
 def _(mo, results):
     mo.md("**Discussion**:\n\n" + "\n\n".join(f"> {result.reasoning}" for result in results))
     return
@@ -59,8 +74,52 @@ def _(indentpsg):
 
 
 @app.cell(hide_code=True)
-def _(diagram, mo):
-    mo.mermaid(diagram)
+def _(diagram_tool):
+    diagram_tool
+    return
+
+
+@app.cell(hide_code=True)
+def _(diagram, diagram_tool, dot_source, dot_warnings, graphviz, mo):
+    # Two distinct failure modes to degrade visibly from when
+    # diagram_tool.value == "graphviz", same convention greek_syntaxer_dot.py's
+    # own dot_display cell uses (see notes/dot_diagrams.md):
+    #   - the `graphviz` package itself isn't installed -- not actually
+    #     reachable here, since diagram_tool's own options only offer
+    #     "graphviz" at all when graphviz_available is True (see that
+    #     widget's own definition), but the "mermaid"-only fallback is
+    #     what a user without the package ever sees instead;
+    #   - it IS installed, but the Graphviz `dot` executable isn't on PATH
+    #     (graphviz.ExecutableNotFound, only raised once you actually try
+    #     to render something) -- this one genuinely can't be known ahead
+    #     of time without trying, so it's still handled here.
+    if diagram_tool.value == "graphviz":
+        try:
+            svg_bytes = graphviz.Source(dot_source).pipe(format="svg")
+            diagram_display = mo.vstack(
+                [mo.Html(svg_bytes.decode("utf-8"))]
+                + (
+                    [mo.callout(mo.md("\n".join(f"- {w}" for w in dot_warnings)), kind="warn")]
+                    if dot_warnings
+                    else []
+                )
+            )
+        except graphviz.ExecutableNotFound:
+            diagram_display = mo.callout(
+                mo.md(
+                    "The `graphviz` package is installed, but the Graphviz "
+                    "`dot` command itself isn't on your system's PATH -- "
+                    "install Graphviz separately (e.g. `brew install "
+                    "graphviz` on macOS, `apt install graphviz` on Linux), "
+                    "or switch back to *Mermaid* above. See "
+                    "notes/dot_diagrams.md."
+                ),
+                kind="warn",
+            )
+    else:
+        diagram_display = mo.mermaid(diagram)
+
+    diagram_display
     return
 
 
@@ -80,17 +139,17 @@ def _(analysis_warnings, download_widget, mo, save_extension):
 
 
 @app.cell(hide_code=True)
-def _(download_mermaid):
-    download_mermaid
+def _(diagram_download):
+    diagram_download
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
     seetokens = mo.ui.checkbox(label="*See list of tokens*")
     seecost = mo.ui.checkbox(label="*See cost*")
     seeprompts = mo.ui.checkbox(label="*See prompts*")
-    mo.hstack([seetokens, seeprompts, seecost], justify="start")
+    mo.hstack([seetokens, seeprompts], justify="start")
     return seecost, seeprompts, seetokens
 
 
@@ -105,11 +164,9 @@ def _(finaltokens, seetokens):
 
 
 @app.cell(hide_code=True)
-def _(cost, mo, seecost):
-    costdisplay = None
-    if seecost.value:
-        costdisplay = mo.md(f"**Total cost**: {cost}")
-    costdisplay
+def _():
+
+
     return
 
 
@@ -171,6 +228,35 @@ def _(combined_tokengraph, results, tokengraph_to_mermaid):
 
 
 @app.cell
+def _(finaltokens, tokengraph_to_dot):
+    # Compose Graphviz diagram: cheap to always compute regardless of
+    # which tool is currently selected -- tokengraph_to_dot() is pure
+    # string building with no dependency of its own (see
+    # notes/dot_diagrams.md), unlike actually rendering it, which needs
+    # the graphviz package and the `dot` executable (handled in
+    # diagram_display above).
+    dot_source, dot_warnings = tokengraph_to_dot(finaltokens)
+    return dot_source, dot_warnings
+
+
+@app.cell
+def _(graphviz_available, mo):
+    # "graphviz" is only ever offered as a choice when the graphviz PyPI
+    # package actually imported successfully below -- this can't rule out
+    # the OTHER failure mode (the package installed but the `dot`
+    # executable missing from PATH), which is why diagram_display still
+    # has to handle graphviz.ExecutableNotFound even though this list is
+    # filtered. See notes/dot_diagrams.md.
+    diagram_tool = mo.ui.radio(
+        options=["mermaid", "graphviz"] if graphviz_available else ["mermaid"],
+        value="mermaid",
+        inline=True,
+        label="*Diagram tool*:",
+    )
+    return (diagram_tool,)
+
+
+@app.cell
 def _(sentences):
     tokens = [tok for sentence in sentences for tok in sentence.tokens]
     return
@@ -183,18 +269,19 @@ def _(results):
 
 
 @app.cell
-def _(last_call):
-    cost = last_call.get('cost')
-    return (cost,)
-
-
-@app.cell
-def _(lm):
-    last_call = None
-    if lm.history:
-        last_call = lm.history[-1]
-
-    return (last_call,)
+def _(lm, results, summarize_lm_cost):
+    _ = results
+    #
+    # summarize_lm_cost() (grammatike/lm_cost.py) sums cost across EVERY
+    # call in lm.history, not just the last one -- analyze_passage()
+    # segments the submitted text into sentences internally and makes one
+    # LM call per sentence, so this is what actually makes "Total cost"
+    # above a total rather than just the last individual call's own cost.
+    # It also never crashes on an empty history (true before the form's
+    # first submission) or on a call served from dspy's own cache
+    # (cost=None) -- see that module's own docstring.
+    cost_summary = summarize_lm_cost(lm.history)
+    return (cost_summary,)
 
 
 @app.cell(hide_code=True)
@@ -340,14 +427,32 @@ def _(analysis_text, filename_base, mo, results, save_extension):
 
 
 @app.cell
-def _(diagram, filename_base, mo):
-    download_mermaid = mo.download(
-        data=("```mermaid\n\n" + diagram + "\n```\n").encode("utf-8"),
-        filename=f"{filename_base}.md",
-        label="Download mermaid diagram",
-        mimetype="text/plain",
-    )
-    return (download_mermaid,)
+def _(diagram, diagram_tool, dot_source, filename_base, finaltokens, mo):
+    # Downloads whichever diagram is currently selected/displayed above,
+    # not both -- same reactive "follows the widget" convention
+    # download_widget above uses for save_extension. Mermaid source is
+    # wrapped in a ```mermaid fenced code block and saved as .md; Graphviz
+    # source is saved raw as .dot -- both are renderable elsewhere (a
+    # Markdown viewer with Mermaid support, `dot -Tsvg`, an online DOT
+    # viewer, Quarto's fenced ```{dot}```/```{mermaid}``` blocks) without
+    # needing this notebook.
+    if diagram_tool.value == "graphviz":
+        diagram_download = mo.download(
+            data=dot_source.encode("utf-8"),
+            filename=f"{filename_base}.dot",
+            label="Download Graphviz DOT source (.dot)",
+            mimetype="text/plain",
+            disabled=not finaltokens,
+        )
+    else:
+        diagram_download = mo.download(
+            data=("```mermaid\n\n" + diagram + "\n```\n").encode("utf-8"),
+            filename=f"{filename_base}.md",
+            label="Download Mermaid diagram (.md)",
+            mimetype="text/plain",
+            disabled=not finaltokens,
+        )
+    return (diagram_download,)
 
 
 @app.cell(hide_code=True)
@@ -377,18 +482,39 @@ def _(Path):
     from grammatike import (
         analyze_passage,
         tokengraph_to_mermaid,
+        tokengraph_to_dot,
         combined_tokengraph,
         tokengraph_to_html,
         tokengraph_to_text,
         tokengraph_to_depth_html,
         serialize_analyses,
+        summarize_lm_cost,
+        format_lm_cost,
     )
 
+    # graphviz (the PyPI package -- a thin subprocess wrapper around the
+    # separately-installed Graphviz `dot` executable) is optional: importable
+    # or not, checked once here, rather than every display cell catching
+    # ImportError itself. Whether the `dot` executable is actually on PATH
+    # is a SEPARATE check (graphviz.ExecutableNotFound), made only when a
+    # diagram is actually rendered -- see the diagram_display cell above.
+    try:
+        import graphviz
+
+        graphviz_available = True
+    except ImportError:
+        graphviz = None
+        graphviz_available = False
     return (
         analyze_passage,
         combined_tokengraph,
+        format_lm_cost,
+        graphviz,
+        graphviz_available,
         serialize_analyses,
+        summarize_lm_cost,
         tokengraph_to_depth_html,
+        tokengraph_to_dot,
         tokengraph_to_html,
         tokengraph_to_mermaid,
         tokengraph_to_text,

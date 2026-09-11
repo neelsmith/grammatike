@@ -3,6 +3,13 @@
 Current version: **0.1.0**.
 
 
+
+**0.2.0**, *??*:
+
+- improved nbs: cost display, dot graphs
+
+
+
 **0.1.0**, *Sept. 3, 2026*: Initial public release, built using Opus 5. Includes a complete framework for developing, testing and optimizing Ancient Greek syntactic analyzers with a wide variety of language models using `dspy`. This release includes:
 
     - a python package with a complete implementation of the initial syntactic scheme

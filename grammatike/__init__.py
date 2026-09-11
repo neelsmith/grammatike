@@ -47,6 +47,7 @@ from .token_budget import (
     DEFAULT_CEILING,
 )
 from .gepa_metric import syntax_metric
+from .lm_cost import LMCostSummary, summarize_lm_cost, format_lm_cost
 
 __all__ = [
     "Token",
@@ -90,4 +91,7 @@ __all__ = [
     "get_calibration",
     "DEFAULT_CEILING",
     "syntax_metric",
+    "LMCostSummary",
+    "summarize_lm_cost",
+    "format_lm_cost",
 ]

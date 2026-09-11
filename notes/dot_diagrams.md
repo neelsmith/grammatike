@@ -68,9 +68,21 @@ The `graphviz` PyPI package is covered by this project's own `dev` extra: `pip i
 
 ## `marimo/greek_syntaxer_dot.py`
 
-A dedicated notebook doing exactly that, end to end: browse for a previously-saved analysis file (`read_analyses()`'s own format), pick a sentence from a menu (`split_analysis_by_sentence()`), then generate and display its Graphviz diagram inline, with `orientation`/`color_by_verbal_unit`/`rank_by_depth` exposed as live toggles, a graph-depth slider (bounded by `dot.max_graph_depth()` -- see "Depth filtering" above; NOT the same depth notion as `greek_syntaxer_review.py`'s own indented-HTML slider, despite the visual similarity), and a "Download Graphviz DOT source (.dot)" button. No LM access needed -- it only reads an already-saved analysis, the same way `greek_syntaxer_review.py` (its Mermaid-diagram counterpart) does.
+A dedicated notebook doing exactly that, end to end: browse for a previously-saved analysis file (`read_analyses()`'s own format), pick a sentence from a menu (`split_analysis_by_sentence()`), then generate and display its Graphviz diagram inline, with `orientation`/`color_by_verbal_unit`/`rank_by_depth` exposed as live toggles, a graph-depth slider (bounded by `dot.max_graph_depth()` -- see "Depth filtering" above; NOT the same depth notion as `greek_syntaxer_review.py`'s own indented-HTML slider, despite the visual similarity), and a "Download Graphviz DOT source (.dot)" button. No LM access needed -- it only reads an already-saved analysis, the same way `greek_syntaxer_review.py` does.
 
 It degrades visibly through both Graphviz failure modes rather than crashing the cell: the `graphviz` package missing entirely (`pip install -e ".[dev]"` covers it) versus the package present but the `dot` executable not on PATH (`graphviz.ExecutableNotFound`, only raised once you actually try to render) -- either way you still get the "Download .dot source" button to render elsewhere.
+
+This notebook remains the place for the FULL set of DOT-specific controls (`orientation`/`color_by_verbal_unit`/`rank_by_depth`/depth slider) -- the lighter diagram-tool toggle described next, ported into the other notebooks, deliberately doesn't duplicate all of that everywhere; it just lets you switch a notebook that already shows a diagram between Mermaid and Graphviz's own (default-parameter) rendering of the same tokengraph.
+
+## Diagram-tool toggle in the other notebooks
+
+Ported from arsgrammatica's own `latin_syntaxer_ctsdata.py`/`latin_syntaxer_textinput.py`/`latin_syntaxer_review.py`: `marimo/greek_syntaxer_ctsdata.py`, `marimo/greek_syntaxer_workflow.py`, and `marimo/greek_syntaxer_review.py` -- every notebook in this project that shows a Mermaid diagram of a tokengraph -- now also offer a `*Diagram tool*:` radio (`mermaid` / `graphviz`) right above that diagram. Both diagrams are always computed (`tokengraph_to_mermaid()` and `tokengraph_to_dot()` are both pure string building -- see "Rendering" above), but only the selected one is actually rendered and only it is downloadable at a time -- switching the radio swaps both the display and what the download button underneath it offers, the same "follows the widget" pattern each of these notebooks' own `save_extension` radio already used for its serialized-analysis download.
+
+Unlike `greek_syntaxer_dot.py`, these three don't expose `tokengraph_to_dot()`'s own `orientation`/`color_by_verbal_unit`/`rank_by_depth`/`depth` parameters as separate widgets -- the Graphviz branch here just calls `tokengraph_to_dot(tokengraph)` with its own defaults (matching `tokengraph_to_mermaid()`'s defaults: `orientation="BT"`, colored). Reach for `greek_syntaxer_dot.py` instead when you want to tune those.
+
+`graphviz` availability is checked the same way `greek_syntaxer_dot.py` checks it (see "Rendering" above): the radio only offers `"graphviz"` as an option when the package actually imported, and rendering still degrades visibly (a `mo.callout` pointing back at *Mermaid*, or at "download the source and render elsewhere") if the `dot` executable itself isn't on PATH.
+
+Each notebook's download button keeps its own established filename/format convention for the Mermaid branch (`greek_syntaxer_ctsdata.py`/`greek_syntaxer_workflow.py`: a ```` ```mermaid ```` fenced code block saved as `.md`; `greek_syntaxer_review.py`: raw Mermaid source saved as `.mmd`) and adds a raw `.dot` file for the Graphviz branch, same as `greek_syntaxer_dot.py`'s own download.
 
 ## `utilities/analysis_to_dot.py`
 
