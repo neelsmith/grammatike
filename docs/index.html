@@ -114,11 +114,27 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/neelsmith/arsgrammatica"> <i class="bi bi-github" role="img" aria-label="GitHub">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-bi-github" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-github" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-bi-github">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/neelsmith/grammatike">
+ <span class="dropdown-text">grammatike on github</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="https://neelsmith.github.io">
+ <span class="dropdown-text">About me</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://neelsmith.github.io/projects">
+ <span class="dropdown-text">Other projects</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -186,10 +202,15 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="related-work" class="level2">
 <h2 class="anchored" data-anchor-id="related-work">Related work</h2>
+<p><em>Universal models</em> for cross-lingual syntactic alignment:</p>
+<ul>
+<li><a href="https://github.com/neelsmith/udsyntax">udsyntax</a> : get Universal Dependency data from spaCy into a simple syntax graph format</li>
+<li><a href="https://github.com/neelsmith/aat">aat</a> : Agent-Action-Target model, a reductive model of natural-language syntax</li>
+</ul>
+<p><em>Language-specific models</em> for detailed syntactic analysis:</p>
 <ul>
 <li><a href="https://github.com/neelsmith/arsgrammatica">arsgrammatica</a>: a parallel Python package for analyzing passages of Latin with LMs</li>
 <li><a href="https://github.com/neelsmith/diqduq">diqduq</a>: a parallel Python package for analyzing passages of Biblical Hebrew with LMs</li>
-<li><a href="https://github.com/neelsmith/aat">aat</a> : Agent-Action-Target model, a reductive model of natural-language syntax</li>
 </ul>
 
 

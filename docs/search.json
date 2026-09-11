@@ -191,7 +191,7 @@
     "href": "index.html#related-work",
     "title": "grammatike / γραμματικὴ τέχνη",
     "section": "Related work",
-    "text": "Related work\n\narsgrammatica: a parallel Python package for analyzing passages of Latin with LMs\ndiqduq: a parallel Python package for analyzing passages of Biblical Hebrew with LMs\naat : Agent-Action-Target model, a reductive model of natural-language syntax"
+    "text": "Related work\nUniversal models for cross-lingual syntactic alignment:\n\nudsyntax : get Universal Dependency data from spaCy into a simple syntax graph format\naat : Agent-Action-Target model, a reductive model of natural-language syntax\n\nLanguage-specific models for detailed syntactic analysis:\n\narsgrammatica: a parallel Python package for analyzing passages of Latin with LMs\ndiqduq: a parallel Python package for analyzing passages of Biblical Hebrew with LMs"
   },
   {
     "objectID": "guides/serialization.html",
