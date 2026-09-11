@@ -20,7 +20,7 @@ This module takes a hybrid approach instead:
 
 1. `estimate_max_tokens()` picks a per-call budget from a simple linear
    model (`completion_tokens ≈ intercept + slope * num_input_tokens`),
-   calibrated empirically by `calibrate_max_tokens.py` against real LM
+   calibrated empirically by `utilities/calibrate_max_tokens.py` against real LM
    output over the gold-example corpus (see that script's own docstring),
    with a safety margin on top. Until you've run that script, a
    conservative, deliberately-generous fallback fit is used instead (see
@@ -39,7 +39,7 @@ This module takes a hybrid approach instead:
    a one-off sampling glitch a fresh call clears up, not something a
    bigger budget would fix.
 
-Re-run `calibrate_max_tokens.py` whenever the configured model, the
+Re-run `utilities/calibrate_max_tokens.py` whenever the configured model, the
 SyntaxAnalysis prompt, or the shape of `TokenAnalysis`/`VerbalExpression`
 changes substantially -- all three shift how many output tokens a given
 passage actually needs.
@@ -63,7 +63,7 @@ from .models import Token
 # Calibration data
 # ---------------------------------------------------------------------------
 
-# calibrate_max_tokens.py writes its fitted (intercept, slope) here. Kept
+# utilities/calibrate_max_tokens.py writes its fitted (intercept, slope) here. Kept
 # next to this module (not under tests/) since it's runtime configuration,
 # not test fixture data -- any script or notebook using grammatike benefits
 # from it, not just the test suite. Named distinctly from arsgrammatica's
@@ -71,7 +71,7 @@ from .models import Token
 # files never collide if both are ever installed/checked out side by side.
 CALIBRATION_FILE = Path(__file__).with_name("grammatike_token_budget_calibration.json")
 
-# Untuned stand-ins, used only until calibrate_max_tokens.py has actually
+# Untuned stand-ins, used only until utilities/calibrate_max_tokens.py has actually
 # been run once against the real configured model. Deliberately generous
 # (60 output tokens per input token, plus a 500-token allowance for the
 # reasoning field and the verbalunits list) -- an overestimate here just
@@ -79,9 +79,9 @@ CALIBRATION_FILE = Path(__file__).with_name("grammatike_token_budget_calibration
 # underestimate is what causes the truncation this module exists to avoid.
 #
 # Inherited as-is from arsgrammatica's own Latin fallback fit -- neither
-# language has actually run calibrate_max_tokens.py against a real model
+# language has actually run utilities/calibrate_max_tokens.py against a real model
 # yet, so there's no Greek-specific measurement to prefer over it. Re-tune
-# for Greek once real calibration data exists (calibrate_max_tokens.py
+# for Greek once real calibration data exists (utilities/calibrate_max_tokens.py
 # writes CALIBRATION_FILE, which takes over from these two constants
 # automatically -- see _load_calibration() below).
 _FALLBACK_INTERCEPT = 500.0
@@ -106,7 +106,7 @@ DEFAULT_CEILING = 32000
 
 
 def _load_calibration() -> dict:
-    """Read calibrate_max_tokens.py's saved fit, if any.
+    """Read utilities/calibrate_max_tokens.py's saved fit, if any.
 
     Returns a dict with at least "intercept", "slope", and "source" keys.
     "source" is "calibrated" when CALIBRATION_FILE was read successfully,
@@ -138,7 +138,7 @@ def _load_calibration() -> dict:
 
 def get_calibration() -> dict:
     """Public introspection: what (intercept, slope) is estimate_max_tokens()
-    currently using, and did it come from calibrate_max_tokens.py's fit or
+    currently using, and did it come from utilities/calibrate_max_tokens.py's fit or
     from this module's untuned fallback? See _load_calibration()'s
     docstring for the shape returned."""
     return _load_calibration()
@@ -246,7 +246,7 @@ def analyze_with_retry(
     then 2x, 4x, and 8x that, capped at `ceiling` along the way. One retry
     wasn't enough headroom in practice for a real (not GOLD_EXAMPLES-sized)
     passage with a long `reasoning` field and many `tokengraph` entries --
-    calibrate_max_tokens.py's own docstring already flags that its fit is
+    utilities/calibrate_max_tokens.py's own docstring already flags that its fit is
     measured only against GOLD_EXAMPLES' short, single-construction
     sentences, so even a properly calibrated estimate is an extrapolation,
     not a guarantee, for a longer or more syntactically loaded real

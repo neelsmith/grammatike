@@ -14,8 +14,20 @@ title: grammatike / γραμματικὴ τέχνη
 | **Understanding** | [Modelling the syntax of ancient Greek](./concepts/)   | See [reference information](./reference/) (including API documentation for all exported functions) |
 
 
+
+
+
+
 ## Related work
+
+*Universal models* for cross-lingual syntactic alignment:
+
+
+- [udsyntax](https://github.com/neelsmith/udsyntax) : get Universal Dependency data from spaCy into a simple syntax graph format
+- [aat](https://github.com/neelsmith/aat) : Agent-Action-Target model, a reductive model of natural-language syntax
+
+*Language-specific models* for detailed syntactic analysis:
 
 - [arsgrammatica](https://github.com/neelsmith/arsgrammatica): a parallel Python package for analyzing passages of Latin with LMs
 - [diqduq](https://github.com/neelsmith/diqduq): a parallel Python package for analyzing passages of Biblical Hebrew with LMs
-- [aat](https://github.com/neelsmith/aat) : Agent-Action-Target model, a reductive model of natural-language syntax
+

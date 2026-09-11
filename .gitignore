@@ -10,7 +10,7 @@ gepa_logs/
 build/
 dist/
 *.egg-info/
-# Written by calibrate_max_tokens.py; specific to whatever MODEL your own
+# Written by utilities/calibrate_max_tokens.py; specific to whatever MODEL your own
 # .env points at, so it doesn't belong in version control -- re-run the
 # script after cloning rather than committing its output.
 grammatike/grammatike_token_budget_calibration.json

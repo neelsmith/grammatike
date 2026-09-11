@@ -25,10 +25,10 @@ well without a guarantee it generalizes to new ones. Revisit this once
 there are enough gold examples to hold some out.
 
 Usage:
-    python optimize_gepa.py                       # --auto light (default)
-    python optimize_gepa.py --auto medium
-    python optimize_gepa.py --max-metric-calls 40
-    python optimize_gepa.py --skip-baseline        # skip the pre-GEPA scoring pass
+    python utilities/optimize_gepa.py                       # --auto light (default)
+    python utilities/optimize_gepa.py --auto medium
+    python utilities/optimize_gepa.py --max-metric-calls 40
+    python utilities/optimize_gepa.py --skip-baseline        # skip the pre-GEPA scoring pass
 
 Needs the same .env as syntaxer_main.py (API_BASE/MODEL/API_KEY). Optionally
 set REFLECTION_MODEL (and REFLECTION_API_BASE/REFLECTION_API_KEY, if they
@@ -45,16 +45,19 @@ from pathlib import Path
 import dspy
 
 # Reuse syntaxer_main.py's own .env-loading + LM-config helpers rather than
-# duplicating them.
-sys.path.insert(0, str(Path(__file__).parent))
+# duplicating them. syntaxer_main.py stays at the repo root (this script
+# lives in utilities/), so this points at the repo root explicitly rather
+# than this script's own directory.
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from syntaxer_main import _configure_lm, _env  # noqa: E402
 
 # tests/ isn't an installed package -- add it to sys.path the same way
 # pytest does (see pytest.ini's own comment about this) so
 # "from fixtures.gold_examples import GOLD_EXAMPLES" and
 # "from conftest import tokens_from_canned_answer" resolve the same way
-# they do under pytest, without duplicating either helper here.
-sys.path.insert(0, str(Path(__file__).parent / "tests"))
+# they do under pytest, without duplicating either helper here. tests/ is
+# a repo-root sibling, not a sibling of this script, hence .parent.parent.
+sys.path.insert(0, str(Path(__file__).parent.parent / "tests"))
 from conftest import tokens_from_canned_answer  # noqa: E402
 from fixtures.gold_examples import GOLD_EXAMPLES  # noqa: E402
 
@@ -165,7 +168,7 @@ def main():
         metric=syntax_metric,
         reflection_lm=reflection_lm,
         track_stats=True,
-        log_dir=str(Path(__file__).parent / "gepa_logs"),
+        log_dir=str(Path(__file__).parent.parent / "gepa_logs"),
     )
     if args.max_metric_calls is not None:
         optimizer_kwargs["max_metric_calls"] = args.max_metric_calls

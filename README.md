@@ -7,7 +7,7 @@
 
 It offers an alternative analytic scheme to [Universal Dependencies](https://universaldependencies.org), designed to describe the syntax of ancient Greek in familiar terms that are practical for research and teaching focused on ancient Greek.
 
-Released under the [GNU General Public License v3 or later](LICENSE).
+Released under the [GNU General Public License v3 or later](https://github.com/neelsmith/grammatike/blob/main/LICENSE).
 
 
 Documentation on [github pages](https://neelsmith.github.io/grammatike/).
