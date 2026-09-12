@@ -376,10 +376,11 @@ def _(finaltokens, results, sentences, serialize_analyses):
     # Flatten every sentence's own verbalunits into the one flat list
     # serialize_analyses()/write_analyses() expect, matching how
     # combined_tokengraph() already flattens tokengraph across sentences.
-    # results=results adds one '#!llm' block per sentence (MODEL env var +
-    # that sentence's own result.reasoning) -- see serialization.py's
-    # module docstring. Purely additive: read_analyses() ignores these
-    # blocks, so older saved files (and this one, read back) still work.
+    # results=results adds one '#!lm' block per sentence (MODEL env var +
+    # that sentence's own context + result.reasoning) -- see
+    # serialization.py's module docstring. Purely additive: read_analyses()
+    # ignores these blocks, so older saved files (and this one, read back)
+    # still work.
     all_verbalunits = [vu for result in results for vu in result.verbalunits]
     analysis_text, analysis_warnings = serialize_analyses(
         sentences, all_verbalunits, finaltokens, results=results

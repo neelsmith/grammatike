@@ -659,6 +659,14 @@ class SyntaxAnalysis(dspy.Signature):
         would have appeared, among the tokens of its own clause -- this
         keeps it grouped with the rest of its verbal expression for
         anything that reads `tokengraph` in order.
+
+    (4) Flagging ambiguity: when a specific call above is genuinely
+        ambiguous -- the passage plausibly supports more than one
+        defensible reading, not just an ordinary judgment call you're
+        confident in -- say so explicitly in your reasoning, rather than
+        silently picking one reading and moving on. Name the specific
+        token(s) or construction involved, the alternative reading you
+        considered, and briefly why you chose the one you did.
     """
 
     passage: str = dspy.InputField(desc="The Ancient Greek passage to analyze, exactly as written.")

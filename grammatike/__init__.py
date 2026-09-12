@@ -36,7 +36,7 @@ from .serialization import (
     serialize_analyses,
     write_analyses,
     read_analyses,
-    read_llm_notes,
+    read_lm_notes,
     split_analysis_by_sentence,
 )
 from .ctsdata import CtsDataRow, read_ctsdata
@@ -82,7 +82,7 @@ __all__ = [
     "serialize_analyses",
     "write_analyses",
     "read_analyses",
-    "read_llm_notes",
+    "read_lm_notes",
     "split_analysis_by_sentence",
     "CtsDataRow",
     "read_ctsdata",

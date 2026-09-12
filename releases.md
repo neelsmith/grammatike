@@ -7,6 +7,9 @@ Current version: **0.1.0**.
 **0.2.0**, *??*:
 
 - improved nbs: cost display, dot graphs
+- serialization mods
+- falggin ambigutiyt
+- bug fix in calibrtion and in cost diply in nbb
 
 
 

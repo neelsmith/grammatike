@@ -29,8 +29,8 @@ its own line) immediately followed by a fixed header line naming that
 block's columns, then one data line per record. Blocks may appear in any
 order (the label is what identifies a block, not its position), blank
 lines between blocks are ignored, and all three blocks are required. A
-fourth, optional kind of block, labelled '#!llm', holds the LM's own
-`reasoning` output for one sentence's analysis -- see below.
+fourth, optional kind of block, labelled '#!lm', holds the LM's own
+context and `reasoning` for one sentence's analysis -- see below.
 
 Each of the three core labels may also appear MORE THAN ONCE -- e.g.
 several '#!tokens' blocks, each with its own repeated header line,
@@ -43,9 +43,9 @@ their sentences/verbalunits/tokengraph rows had been passed to a single
 write_analyses() call to begin with. write_analyses() itself still only
 ever emits one instance of each of the three core blocks; multiple
 instances are something read_analyses() accepts, not something this
-module produces for them. '#!llm' blocks are the one exception: when
+module produces for them. '#!lm' blocks are the one exception: when
 `results` is given, write_analyses()/serialize_analyses() emit ONE
-'#!llm' block per sentence (in the same order as `sentences`), so a
+'#!lm' block per sentence (in the same order as `sentences`), so a
 single write already produces several.
 
     #!sentences
@@ -60,38 +60,54 @@ single write already produces several.
     context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
     Lysias 1.1|t0|lexical|ἐγὼ|ἐγώ|||||
 
-    #!llm
+    #!lm
     MODEL=openai/gpt-4o-mini
-    ἄειδε is the independent main verb (root, transitive active), with
-    μῆνιν as its direct object and θεά as its subject.
+    CONTEXT=Lysias 1.1.t0-Lysias 1.1.t9
+    REASONING=ἄειδε is the independent main verb (root, transitive active), with μῆνιν as its direct object and θεά as its subject.
 
-An '#!llm' block is unlike the three core blocks: it has no fixed header
-line or pipe-delimited columns. Its first line always has the form
+An '#!lm' block is unlike the three core blocks: it has no header line or
+pipe-delimited columns, and it is always exactly three lines long, each
+with its own fixed 'KEY=' prefix. The first line always has the form
 'MODEL=<value>', recording the `MODEL` environment variable's value at
-analysis time (written as an empty field, 'MODEL=', if that variable was
-unset -- same None-as-empty-field convention as everywhere else in this
-format); every following line, up to (but not including) the next
-recognized block-label line or end of file, is that sentence's own
-`result.reasoning` text, written verbatim, one file line per line of the
-original string -- so, unlike every other block here, blank lines INSIDE
-an '#!llm' block are significant (a real paragraph break in the
-reasoning) and are not skipped the way blank lines between blocks
-normally are. Exactly one blank line is still written after each '#!llm'
-block as a separator (matching every other block), and exactly one
-trailing blank line is stripped back off when reading -- so a reasoning
-string that happens to end in its own blank line loses just that one
-trailing blank line, not the paragraph breaks before it. This block is
-purely additive: it exists so a saved analysis keeps the LM's own
-rationale alongside it (useful for later review, or for building/curating
-a GEPA optimization trainset -- see OPTIMIZING.md), not because any of
+analysis time -- written as an empty field ('MODEL=') if that variable was
+unset, same None-as-empty-field convention as everywhere else in this
+format. The second has the form 'CONTEXT=<value>', recording that
+sentence's own citation range as a single composed string:
+'<context_begin>.<first_token>-<context_end>.<last_token>', built from the
+exact same four values its own '#!sentences' row records (see the
+module's "Why sentences/verbalunits/tokengraph aren't each self-contained"
+note below for what "context" means throughout this format) -- e.g. a
+sentence whose '#!sentences' row is
+'urn:cts:greekLit:tlg0016.tlg001.omar:1.66.4|t0|urn:cts:greekLit:tlg0016.tlg001.omar:1.66.4|t23'
+gets the '#!lm' line
+'CONTEXT=urn:cts:greekLit:tlg0016.tlg001.omar:1.66.4.t0-urn:cts:greekLit:tlg0016.tlg001.omar:1.66.4.t23'.
+A missing `context_begin`/`context_end` (a citation-free sentence)
+contributes an empty component rather than the literal text 'None', e.g.
+'CONTEXT=.t4-.t9' -- but unlike MODEL=, the CONTEXT= line as a whole is
+never empty and never parses back to None, since `first_token`/
+`last_token` are always present. The third line always has the form
+'REASONING=<value>', recording that sentence's own `result.reasoning` text
+FLATTENED ONTO THIS SINGLE LINE: internal newlines (a real paragraph break
+in the original text) are replaced with a single space each, so a
+multi-paragraph `reasoning` string, unlike everywhere else in this format,
+does not round-trip its own internal line breaks -- only its text does.
+Like CONTEXT=, REASONING='s value is never treated as optional/None --
+`result.reasoning` is expected to always be a real string, and an empty
+one still writes and reads back as an empty string. Because each '#!lm'
+block is always exactly these three physical lines, no scanning for "the
+next recognized block label" is needed to find where one ends, unlike the
+free-form design this block used before. This block is purely additive:
+it exists so a saved analysis keeps the LM's own context and rationale
+alongside it (useful for later review, or for building/curating a GEPA
+optimization trainset -- see OPTIMIZING.md), not because any of
 Sentence/VerbalExpression/TokenAnalysis has a `reasoning` field to
 reconstruct one into. Passing `results` is optional everywhere it's
-accepted; a file with no '#!llm' blocks at all reads back exactly as
-before. read_analyses() itself does not return '#!llm' content (its
+accepted; a file with no '#!lm' blocks at all reads back exactly as
+before. read_analyses() itself does not return '#!lm' content (its
 return shape has nowhere to put it, and this way every existing caller's
-3-tuple unpacking keeps working unchanged) -- it only checks each '#!llm'
+3-tuple unpacking keeps working unchanged) -- it only checks each '#!lm'
 block it encounters is well-formed and skips over it. Use the dedicated
-read_llm_notes() to get the (model, reasoning) pairs back out.
+read_lm_notes() to get the (model, context, reasoning) triples back out.
 
 Why sentences/verbalunits/tokengraph aren't each self-contained: neither
 VerbalExpression nor TokenAnalysis carries its own citation (only the
@@ -154,11 +170,12 @@ that same id, all raise ValueError immediately rather than silently
 reconstructing something partial or wrong. The whole point of this format
 is a faithful round trip; a malformed file should fail loudly and
 specifically (naming the line and the problem) rather than hand back
-subtly incorrect objects. An '#!llm' block is held to the same standard:
-read_analyses() (and read_llm_notes()) both raise ValueError, naming the
-line, for one whose first line doesn't have the form 'MODEL=...' -- even
+subtly incorrect objects. An '#!lm' block is held to the same standard:
+read_analyses() (and read_lm_notes()) both raise ValueError, naming the
+line, for one that isn't exactly its three well-formed 'MODEL='/
+'CONTEXT='/'REASONING=' lines before the next block or end of file -- even
 though read_analyses() itself goes on to discard that block's content,
-since it's not returned unless '#!llm' is well-formed either.
+since it's not returned unless '#!lm' is well-formed either.
 """
 
 import os
@@ -169,7 +186,7 @@ from .models import IMPLIED_TOKENTYPES, Sentence, Token, TokenAnalysis, VerbalEx
 SENTENCES_LABEL = "#!sentences"
 VERBAL_UNITS_LABEL = "#!verbal_units"
 TOKENS_LABEL = "#!tokens"
-LLM_LABEL = "#!llm"
+LM_LABEL = "#!lm"
 
 SENTENCES_HEADER = "context_begin|first_token|context_end|last_token"
 VERBAL_UNITS_HEADER = "context|token|syntactic_type|semantic_type"
@@ -184,14 +201,18 @@ _EXPECTED_HEADERS = {
     TOKENS_LABEL: TOKENS_HEADER,
 }
 
-# Every recognized block-label line, core blocks plus '#!llm' -- used to
-# tell where an '#!llm' block's own free-form body ends (see
-# _scan_llm_block() below): unlike the three core blocks, '#!llm' has no
-# fixed-column data rows to count, so its extent is bounded purely by
-# "until the next line that is itself one of these labels, or EOF".
-_ALL_LABELS = frozenset(_EXPECTED_HEADERS) | {LLM_LABEL}
+# Every recognized block-label line, core blocks plus '#!lm' -- read_analyses()
+# checks a line against this set to decide whether it's the start of a new
+# block (see its own scanning loop below). Unlike the three core blocks,
+# '#!lm' has no data rows at all -- it's always exactly the label line plus
+# three fixed 'KEY=' lines (see _scan_lm_block() below), so (unlike this
+# block's own earlier free-form design) nothing needs to scan for one of
+# these labels to find where an '#!lm' block ends.
+_ALL_LABELS = frozenset(_EXPECTED_HEADERS) | {LM_LABEL}
 
 _MODEL_PREFIX = "MODEL="
+_CONTEXT_PREFIX = "CONTEXT="
+_REASONING_PREFIX = "REASONING="
 
 
 def _field(value: Optional[str], *, where: str) -> str:
@@ -216,20 +237,6 @@ def _parse_optional(value: str) -> Optional[str]:
     return value if value != "" else None
 
 
-def _validate_llm_body_line(line: str, *, where: str) -> None:
-    """A reasoning line must not itself equal a recognized block label
-    (`_ALL_LABELS`) -- otherwise reading the file back would mistake it
-    for the start of the next block, silently truncating the reasoning
-    text at that point. Vanishingly unlikely for real LM-generated prose,
-    but checked anyway, matching `_field`'s own "no escaping mechanism, so
-    reject whatever would corrupt the structure" philosophy."""
-    if line in _ALL_LABELS:
-        raise ValueError(
-            f"{where}: a reasoning line is exactly {line!r}, which this "
-            "format would misread as the start of a new block"
-        )
-
-
 def serialize_analyses(
     sentences: List[Sentence],
     verbalunits: List[VerbalExpression],
@@ -250,12 +257,15 @@ def serialize_analyses(
     sentence, each with a `.reasoning` attribute; a dspy prediction from
     SyntaxAnalysis has exactly this shape). When given, it must have
     exactly one entry per entry of `sentences` (raises ValueError
-    otherwise, naming the mismatched lengths) -- one '#!llm' block is
+    otherwise, naming the mismatched lengths) -- one '#!lm' block is
     written per sentence, in order, each recording the `MODEL` environment
-    variable's current value and that sentence's own `result.reasoning`
-    text (see the module docstring for the exact block shape). Omit
-    `results` (the default) to write a file with no '#!llm' blocks at all,
-    exactly as before this parameter existed.
+    variable's current value, that sentence's own context range (composed
+    from the same four values its own '#!sentences' row records --
+    `context_begin`/`first_token`/`context_end`/`last_token`), and that
+    sentence's own `result.reasoning` text, flattened onto a single line
+    (see the module docstring for the exact block shape). Omit `results`
+    (the default) to write a file with no '#!lm' blocks at all, exactly as
+    before this parameter existed.
 
     `content` is the complete file body, including its trailing newline,
     exactly as write_analyses() would have written it. `warnings` is a
@@ -402,18 +412,50 @@ def serialize_analyses(
             raise ValueError(
                 f"results has {len(results)} entries but sentences has "
                 f"{len(sentences)} -- serialize_analyses() needs exactly "
-                "one result per sentence to label each '#!llm' block"
+                "one result per sentence to label each '#!lm' block"
             )
         model = os.environ.get("MODEL")
-        for s_idx, result in enumerate(results):
-            where = f"#!llm block for sentence {s_idx}"
+        for s_idx, (sentence, result) in enumerate(zip(sentences, results)):
+            where = f"#!lm block for sentence {s_idx}"
+            # A single composed range string, built from the exact same
+            # four values this sentence's own #!sentences row records:
+            # '<context_begin>.<first_token>-<context_end>.<last_token>'
+            # (see the module docstring's "Why sentences/verbalunits/
+            # tokengraph aren't each self-contained" note for what
+            # "context" means here). `sentence.tokens` is guaranteed
+            # non-empty by this point -- the #!sentences loop above
+            # already raised ValueError for any empty sentence. A missing
+            # citation contributes an empty component rather than the
+            # literal text 'None' -- but the composed value as a whole is
+            # never itself empty, since first_tok.id/last_tok.id always
+            # are.
+            first_tok = sentence.tokens[0]
+            last_tok = sentence.tokens[-1]
+            context = (
+                f"{first_tok.citation or ''}.{first_tok.id}"
+                f"-{last_tok.citation or ''}.{last_tok.id}"
+            )
+            # REASONING= is always exactly one physical line -- an
+            # internal newline (a real paragraph break in the original
+            # `result.reasoning`) is flattened to a single space rather
+            # than preserved, unlike everywhere else in this format (see
+            # the module docstring). Not passed through `_field`: unlike
+            # every pipe-delimited column, free-form reasoning prose may
+            # legitimately contain a '|' character, and there is no
+            # ambiguity in allowing it here since this line is never
+            # split by '|' on read, only stripped of its 'REASONING='
+            # prefix.
+            reasoning = (
+                str(result.reasoning)
+                .replace("\r\n", "\n")
+                .replace("\r", "\n")
+                .replace("\n", " ")
+            )
             lines.append("")
-            lines.append(LLM_LABEL)
+            lines.append(LM_LABEL)
             lines.append(_MODEL_PREFIX + _field(model, where=where))
-            normalized_reasoning = str(result.reasoning).replace("\r\n", "\n").replace("\r", "\n")
-            for reasoning_line in normalized_reasoning.split("\n"):
-                _validate_llm_body_line(reasoning_line, where=where)
-                lines.append(reasoning_line)
+            lines.append(_CONTEXT_PREFIX + _field(context, where=where))
+            lines.append(_REASONING_PREFIX + reasoning)
 
     return "\n".join(lines) + "\n", warnings
 
@@ -430,16 +472,15 @@ def write_analyses(
     this is a thin wrapper around) for what's actually written and for the
     full list of warnings this can return. `results` is optional and
     passed straight through -- see serialize_analyses()'s own docstring
-    for the '#!llm' blocks it produces when given.
+    for the '#!lm' blocks it produces when given.
 
     Returns a list of warning strings (empty if nothing looks wrong); see
     serialize_analyses()'s docstring for what each one means. Raises
     ValueError for a sentence with no tokens at all (nothing to derive
     first_token/last_token from), if any field value contains '|' or a
-    newline (see `_field`), if `results` is given with a different length
-    than `sentences`, or if a reasoning line collides with a block label
-    (see `_validate_llm_body_line`) -- all raised by serialize_analyses()
-    before this function ever opens `path`.
+    newline (see `_field`), or if `results` is given with a different
+    length than `sentences` -- all raised by serialize_analyses() before
+    this function ever opens `path`.
     """
     content, warnings = serialize_analyses(sentences, verbalunits, tokengraph, results=results)
     with open(path, "w", encoding="utf-8") as f:
@@ -447,52 +488,63 @@ def write_analyses(
     return warnings
 
 
-def _scan_llm_block(
+def _scan_lm_block(
     raw_lines: List[str], start: int, label_line_no: int
-) -> Tuple[Optional[str], str, int]:
-    """Parse one '#!llm' block's body, given `raw_lines` and `start` (the
-    0-based index of the line right after the '#!llm' label line itself,
-    which was found at 1-based `label_line_no`). Consumes every line up to
-    (but not including) the next line that is itself one of `_ALL_LABELS`,
-    or end of file -- see the module docstring for why blank lines are
-    significant inside this block, unlike everywhere else in the format.
+) -> Tuple[Optional[str], str, str, int]:
+    """Parse one '#!lm' block, given `raw_lines` and `start` (the 0-based
+    index of the line right after the '#!lm' label line itself, which was
+    found at 1-based `label_line_no`). Unlike this block's earlier
+    free-form design, an '#!lm' block is always exactly three physical
+    lines -- 'MODEL=', 'CONTEXT=', 'REASONING=', in that order -- so this
+    simply reads `raw_lines[start:start+3]` rather than scanning for where
+    the block ends.
 
-    Returns `(model, reasoning, next_index)`: `model` is the 'MODEL='
-    line's value (None if empty, same None-as-empty-field convention as
-    `_parse_optional`); `reasoning` is every following line joined by
-    '\\n', with exactly one trailing blank line stripped (the writer's own
-    separator, not part of the reasoning itself -- see the module
-    docstring); `next_index` is the 0-based index of the first line NOT
-    consumed (the next label line, or `len(raw_lines)` at EOF), for the
-    caller to resume scanning from.
+    Returns `(model, context, reasoning, next_index)`: `model` is None if
+    its line's value is empty (same None-as-empty-field convention as
+    `_parse_optional`); `context` and `reasoning` are each their line's
+    value verbatim, never converted to None even if empty -- neither is
+    ever actually empty in a file this module itself writes (`context` is
+    a composed range string that always includes a first/last token id;
+    see the module docstring), but a hand-edited file could still have an
+    empty one, and this function does not treat that as an error; `next_index`
+    is the 0-based index of the first line after the block (`start + 3`),
+    for the caller to resume scanning from.
 
     Raises ValueError, naming `label_line_no` or the offending line, if
-    the block has no line at all before the next label/EOF, or if its
-    first line doesn't start with 'MODEL='.
+    fewer than three lines remain before the next block/EOF, or if any of
+    the three lines doesn't start with its expected 'MODEL='/'CONTEXT='/
+    'REASONING=' prefix, in order.
     """
-    if start >= len(raw_lines) or raw_lines[start] in _ALL_LABELS:
+    end = start + 3
+    if end > len(raw_lines):
         raise ValueError(
-            f"line {label_line_no}: {LLM_LABEL!r} block has a label line "
-            "but no 'MODEL=' line before the next block starts (or the "
-            "file ends)"
+            f"line {label_line_no}: {LM_LABEL!r} block needs 3 lines "
+            "('MODEL=', 'CONTEXT=', 'REASONING=') before the next block "
+            "starts (or the file ends)"
         )
-    first_line = raw_lines[start]
-    if not first_line.startswith(_MODEL_PREFIX):
+    model_line, context_line, reasoning_line = raw_lines[start:end]
+
+    if not model_line.startswith(_MODEL_PREFIX):
         raise ValueError(
-            f"line {start + 1}: expected an {LLM_LABEL!r} block's first "
-            f"line to start with {_MODEL_PREFIX!r}, got {first_line!r}"
+            f"line {start + 1}: expected an {LM_LABEL!r} block's first "
+            f"line to start with {_MODEL_PREFIX!r}, got {model_line!r}"
         )
-    model = _parse_optional(first_line[len(_MODEL_PREFIX):])
+    if not context_line.startswith(_CONTEXT_PREFIX):
+        raise ValueError(
+            f"line {start + 2}: expected an {LM_LABEL!r} block's second "
+            f"line to start with {_CONTEXT_PREFIX!r}, got {context_line!r}"
+        )
+    if not reasoning_line.startswith(_REASONING_PREFIX):
+        raise ValueError(
+            f"line {start + 3}: expected an {LM_LABEL!r} block's third "
+            f"line to start with {_REASONING_PREFIX!r}, got {reasoning_line!r}"
+        )
 
-    i = start + 1
-    body_lines: List[str] = []
-    while i < len(raw_lines) and raw_lines[i] not in _ALL_LABELS:
-        body_lines.append(raw_lines[i])
-        i += 1
-    while body_lines and body_lines[-1] == "":
-        body_lines.pop()
+    model = _parse_optional(model_line[len(_MODEL_PREFIX):])
+    context = context_line[len(_CONTEXT_PREFIX):]
+    reasoning = reasoning_line[len(_REASONING_PREFIX):]
 
-    return model, "\n".join(body_lines), i
+    return model, context, reasoning, end
 
 
 def read_analyses(
@@ -508,10 +560,10 @@ def read_analyses(
     (see the module docstring) -- every instance contributes its own rows,
     in file order, to that label's combined row list, as if the file were
     the concatenation of however many separate write_analyses()/
-    serialize_analyses() outputs it actually is. Any '#!llm' blocks in
+    serialize_analyses() outputs it actually is. Any '#!lm' blocks in
     `path` are checked for well-formedness and then skipped -- their
-    (model, reasoning) content isn't part of this function's return shape;
-    use read_llm_notes() to get it.
+    (model, context, reasoning) content isn't part of this function's
+    return shape; use read_lm_notes() to get it.
 
     Raises ValueError, naming the offending line and problem, for anything
     that isn't a faithful, internally-consistent file written by
@@ -542,18 +594,18 @@ def read_analyses(
         line_no = i + 1
         line = raw_lines[i]
 
-        if line == LLM_LABEL:
+        if line == LM_LABEL:
             if awaiting_header:
                 raise ValueError(
                     f"line {line_no}: block {current_label!r} has a label "
                     "line but no header line before the next block starts"
                 )
             # Validated and discarded here -- current_label/awaiting_header
-            # are left exactly as they were, so an '#!llm' block can sit
+            # are left exactly as they were, so an '#!lm' block can sit
             # between two other blocks (or inside one's own data run,
             # though this module never writes it that way itself) without
             # disturbing whatever block was already in progress.
-            _model, _reasoning, i = _scan_llm_block(raw_lines, i + 1, line_no)
+            _model, _context, _reasoning, i = _scan_lm_block(raw_lines, i + 1, line_no)
             continue
 
         if line.strip() == "":
@@ -752,49 +804,56 @@ def read_analyses(
     return tokengraph, verbalunits, sentences
 
 
-def read_llm_notes(path: str) -> List[Tuple[Optional[str], str]]:
+def read_lm_notes(path: str) -> List[Tuple[Optional[str], str, str]]:
     """Read `path` (as written by write_analyses()/serialize_analyses())
-    and return every '#!llm' block's own `(model, reasoning)` pair, in
-    file order -- the counterpart to read_analyses(), which parses the
-    same file but deliberately discards '#!llm' content (see the module
-    docstring for why: none of Sentence/VerbalExpression/TokenAnalysis has
-    a `reasoning` field to reconstruct one into, and changing
-    read_analyses()'s own 3-tuple return would break every existing
-    caller). Concatenates every '#!llm' block found in `path`, the same
-    "multiple instances, in file order" convention read_analyses() already
-    applies to the three core blocks -- so a file built by literally
-    concatenating several write_analyses(..., results=...) outputs returns
-    every one of their reasoning entries, in order, exactly as if they'd
-    all been written by a single call with a longer `results` list.
+    and return every '#!lm' block's own `(model, context, reasoning)`
+    triple, in file order -- the counterpart to read_analyses(), which
+    parses the same file but deliberately discards '#!lm' content (see the
+    module docstring for why: none of Sentence/VerbalExpression/
+    TokenAnalysis has a `reasoning` field to reconstruct one into, and
+    changing read_analyses()'s own 3-tuple return would break every
+    existing caller). Concatenates every '#!lm' block found in `path`, the
+    same "multiple instances, in file order" convention read_analyses()
+    already applies to the three core blocks -- so a file built by
+    literally concatenating several write_analyses(..., results=...)
+    outputs returns every one of their entries, in order, exactly as if
+    they'd all been written by a single call with a longer `results` list.
 
-    `model` is None wherever the 'MODEL' environment variable was unset at
-    write time (an empty 'MODEL=' line, same None-as-empty-field
-    convention used everywhere else in this format); `reasoning` is the
-    exact, verbatim multiline text originally passed as that sentence's
-    own `result.reasoning`, with exactly one trailing blank line stripped
-    (the writer's own block separator -- see the module docstring).
+    `model` is None wherever its line was written empty ('MODEL=' alone,
+    same None-as-empty-field convention used everywhere else in this
+    format). `context` is the 'CONTEXT=' line's value verbatim -- the
+    composed '<context_begin>.<first_token>-<context_end>.<last_token>'
+    range string this module's own writer builds (see the module
+    docstring); it is never None, even when the sentence itself had no
+    citation (a missing `context_begin`/`context_end` contributes an empty
+    component, not an absent line -- e.g. '.t4-.t9'). `reasoning` is the
+    'REASONING=' line's value verbatim -- the exact single-line text
+    originally passed as that sentence's own `result.reasoning`, already
+    flattened onto one line at write time (internal newlines replaced with
+    spaces -- see the module docstring; this function does not undo that,
+    since the original line breaks were never preserved to begin with).
 
-    Returns an empty list for a file with no '#!llm' blocks at all --
+    Returns an empty list for a file with no '#!lm' blocks at all --
     including any file written before this parameter existed, or any
     write_analyses()/serialize_analyses() call that omitted `results`.
 
-    Raises ValueError, naming the line, for a malformed '#!llm' block (a
-    label line with nothing after it before the next block or EOF, or a
-    first line that doesn't start with 'MODEL=') -- the same check
-    read_analyses() applies to every '#!llm' block it skips over, so a
-    file that reads cleanly with one of these two functions reads cleanly
-    with the other.
+    Raises ValueError, naming the line, for a malformed '#!lm' block (fewer
+    than three lines before the next block or EOF, or any of the three
+    lines not starting with its expected 'MODEL='/'CONTEXT='/'REASONING='
+    prefix) -- the same check read_analyses() applies to every '#!lm'
+    block it skips over, so a file that reads cleanly with one of these
+    two functions reads cleanly with the other.
     """
     with open(path, "r", encoding="utf-8") as f:
         raw_lines = f.read().splitlines()
 
-    notes: List[Tuple[Optional[str], str]] = []
+    notes: List[Tuple[Optional[str], str, str]] = []
     i = 0
     n = len(raw_lines)
     while i < n:
-        if raw_lines[i] == LLM_LABEL:
-            model, reasoning, i = _scan_llm_block(raw_lines, i + 1, i + 1)
-            notes.append((model, reasoning))
+        if raw_lines[i] == LM_LABEL:
+            model, context, reasoning, i = _scan_lm_block(raw_lines, i + 1, i + 1)
+            notes.append((model, context, reasoning))
         else:
             i += 1
 
